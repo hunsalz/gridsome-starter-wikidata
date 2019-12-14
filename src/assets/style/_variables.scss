@@ -1,0 +1,46 @@
+// default variables
+html {
+  --base-font-size: 20px;
+}
+
+// default theme light
+body {
+  --body-color: #444;
+  --bg-color: #f3f7f9;
+  --bg-content-color: #fff;
+  --bg-code: #fffbf3;
+  --header-bg: #0d2538;
+  --header-color: #fff;
+  --header-height: 80px;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --title-color: #111;
+  --link-color: #6b17e6;
+  --space: 3.5rem;
+  --max-content-width: 768px;
+  --radius: 10px;
+}
+
+// dark theme
+body[data-theme="dark"] {
+  --body-color: #ced8de;
+  --bg-color: #0d2538;
+  --bg-content-color: #0f2d44;
+  --bg-code: rgba(0, 0, 0, 0.3);
+  --header-bg: #fff;
+  --header-color: #0d2538;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --title-color: #fff;
+  --link-color: #af9cef;
+}
+
+// make things smaller for mobile
+@media screen and (max-width: 650px) {
+  html {
+    --base-font-size: 17px;
+  }
+  body {
+    --space: 1.5rem;
+    --header-height: 60px;
+    --radius: 5px;
+  }
+}
