@@ -11,23 +11,16 @@
 
 <page-query>
 query {
-  entries: allEntry(filter: { visible: { eq: true }}, sortBy: "title", order: ASC) {
+  records: allRecord(sortBy: "title", order: ASC) {
     edges {
       node {
         id
-        title
-        path
+        object
+        creator
         cover_image (width: 770, height: 380, blur: 10)
-        tags
-        data {
-          title
-          labels
-          values
-          unit
-          type
-          color
-        }
-        content
+  			location
+        materials
+        depicts
       }
     }
   }
@@ -54,7 +47,7 @@ export default {
   },
   computed: {
     computedCards: function() {
-      let edges = this.$page.entries.edges;
+      let edges = this.$page.records.edges;
 
       //console.log("edges", edges);
 
@@ -62,7 +55,7 @@ export default {
       let result = edges.filter(
         edge =>
           // compose intersection between tags per node and given filter array.
-          _.intersection(edge.node.tags, this.selectedTags).length ===
+          _.intersection(edge.node.depicts, this.selectedTags).length ===
           // force exact match of all filtered tag elements
           this.selectedTags.length
       );

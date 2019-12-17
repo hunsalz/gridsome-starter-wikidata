@@ -9,9 +9,11 @@
     </div>
     <div class="card-layout__main">
       <h2 class="card-layout__title" v-html="entry.title" />
-      <TagCloud class="card-layout__tags" :event="'addTag'" :tags="entry.tags" />
+      <h3 class="card-layout__creator" v-html="entry.creator" />
+      <h3 class="card-layout__location" v-html="entry.location" />
+      <TagCloud class="card-layout__tags" :event="'addTag'" :tags="entry.depicts" />
     </div>
-    <g-link class="card-layout__link" :to="entry.path" />
+    <!--g-link class="card-layout__link" :to="entry.path" /-->
   </div>
 </template>
 
