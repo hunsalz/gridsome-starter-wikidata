@@ -2,18 +2,24 @@
   <div class="card-layout content-box">
     <div class="card-layout__header">
       <g-image
-        v-if="entry.cover_image"
-        :src="entry.cover_image"
+        v-if="record.cover_image"
+        :src="record.cover_image"
         alt="Cover image"
       />
     </div>
     <div class="card-layout__main">
-      <h2 class="card-layout__title" v-html="entry.title" />
-      <h3 class="card-layout__creator" v-html="entry.creator" />
-      <h3 class="card-layout__location" v-html="entry.location" />
-      <TagCloud class="card-layout__tags" :event="'addTag'" :tags="entry.depicts" />
+      <h2 class="card-layout__title">{{ record.painting }}</h2>
+      <div>From: {{ record.date }}</div>
+      <div>Collection: {{ record.location }}</div>
+      <div>Material: {{ record.materials.join(", ") }}</div>
+      <!-- <g-link class="card-layout__link2" :to="record.source">Source</g-link> -->
+      <TagCloud
+        class="card-layout__tags"
+        :event="'addTag'"
+        :tags="record.depicts"
+      />
     </div>
-    <!--g-link class="card-layout__link" :to="entry.path" /-->
+    <g-link class="card-layout__link" :to="record.path" />
   </div>
 </template>
 
@@ -24,7 +30,12 @@ export default {
   components: {
     TagCloud
   },
-  props: ["entry"]
+  props: {
+    record: {
+      type: Object,
+      required: true
+    }
+  }
 };
 </script>
 

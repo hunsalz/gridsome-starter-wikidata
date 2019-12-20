@@ -23,31 +23,31 @@ class SPARQLQueryDispatcher {
 }
 
 const endpointUrl = "https://query.wikidata.org/sparql";
-const sparqlQuery = `
-SELECT ?itemLabel ?objectLabel ?image ?creatorLabel ?from ?locationLabel (GROUP_CONCAT(DISTINCT ?materialLabel;separator=", ") AS ?materials) (GROUP_CONCAT(DISTINCT ?depictLabel;separator=", ") AS ?depicts)
+const sparqlQuery = `SELECT DISTINCT ?painting ?paintingLabel (MIN(?images) as ?image) (MIN(?dates) as ?date) (MIN(?locationLabels) as ?locationLabel) (GROUP_CONCAT(DISTINCT ?materialLabel;separator=", ") AS ?materials) (GROUP_CONCAT(DISTINCT ?depictLabel;separator=", ") AS ?depicts)
 WHERE
 {
-  ?item wdt:P31/wdt:P279* wd:Q3305213 .
-  ?item wdt:P180 ?object .
-  ?object wdt:P279* wd:Q47652 . 
-  OPTIONAL { ?item wdt:P18 ?image }
-  OPTIONAL { ?item wdt:P170 ?creator }
-  OPTIONAL { ?item wdt:P571 ?from }
-  OPTIONAL { ?item wdt:P276 ?location }
-  OPTIONAL { ?item wdt:P186 ?material }
-  OPTIONAL { ?item wdt:P180 ?depict }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],de,en".
-                         ?item rdfs:label ?itemLabel .
-                         ?object rdfs:label ?objectLabel .
-                         ?creator rdfs:label ?creatorLabel .
-                    
-                         ?location rdfs:label ?locationLabel .
+  ?painting wdt:P31/wdt:P279* wd:Q3305213 ;
+        wdt:P170 wd:Q762 ;
+        wdt:P18 ?images ;
+        wdt:P571 ?dates ;
+  OPTIONAL { ?painting wdt:P276 ?locations }
+  OPTIONAL { ?painting wdt:P186 ?material }
+  OPTIONAL { ?painting wdt:P180 ?depict }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" .
+                         ?painting rdfs:label ?paintingLabel .
+                         ?locations rdfs:label ?locationLabels .
                          ?material rdfs:label ?materialLabel .
-                         ?depict rdfs:label ?depictLabel .}
+                         ?depict rdfs:label ?depictLabel . }
 }
-GROUP BY ?itemLabel ?objectLabel ?image ?creatorLabel ?from ?locationLabel ?materials ?depicts
-ORDER BY ?from
-LIMIT 10`;
+GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
+ORDER BY ASC(?date)`;
+
+async function run(iterator) {
+  for (let [index, item] of iterator) {
+    console.log(index + " : Downloading " + item.url);
+    //download(item.url, item.path);
+  }
+}
 
 const download = (url, image_path) =>
   axios({
@@ -68,22 +68,26 @@ module.exports = function(api) {
   api.loadSource(async actions => {
     const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
     const collection = actions.addCollection("Record");
+    var downloads = [];
     await queryDispatcher.query(sparqlQuery).then(response => {
       response.results.bindings.forEach(item => {
         let path;
         if (item.image) {
           let url = item.image.value;
           var filename = url.substring(url.lastIndexOf("/") + 1);
-          path = CWD + "/content/images/" + filename + ".jpeg";
-          download(item.image.value, path);
+          filename = decodeURI(filename).replace(/%2C/g, ",");
+          path = CWD + "/content/images/" + filename;
+
+          downloads.push({ url: item.image.value, path: path });
         }
         collection.addNode({
           id: item.id,
-          title: item.itemLabel ? item.itemLabel.value : "",
-          object: item.objectLabel ? item.objectLabel.value : "",
-          creator: item.creatorLabel ? item.creatorLabel.value : "",
+          source: item.painting.value,
+          painting: item.paintingLabel ? item.paintingLabel.value : "unknown",
           cover_image: path,
-          location: item.location ? item.image.location : "",
+          image: path,
+          location: item.locationLabel ? item.locationLabel.value : "unknown",
+          date: item.date ? item.date.value : "",
           materials: item.materials
             ? String(item.materials.value).split(", ")
             : [],
@@ -91,5 +95,8 @@ module.exports = function(api) {
         });
       });
     });
+
+    const workers = new Array(5).fill(downloads.entries()).map(run);
+    await Promise.all(workers).then(() => console.log("Downloads done"));
   });
 };

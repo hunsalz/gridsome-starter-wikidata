@@ -10,14 +10,14 @@ module.exports = {
   siteUrl: process.env.SITE_URL,
   pathPrefix: process.env.PATH_PREFIX,
   templates: {
-    Entry: "/:title"
+    Record: "/:painting"
   },
 
   plugins: [
     {
       use: "@gridsome/source-filesystem",
       options: {
-        typeName: "Entry",
+        // typeName: "Record",
         baseDir: "./content",
         path: "*.md"
       }

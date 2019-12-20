@@ -1,19 +1,26 @@
 <template>
-  <Layout class="entry">
-    <div class="entry__title">
-      <h1 class="entry__title__text">{{ $page.entry.title }}</h1>
+  <Layout class="record">
+    <div class="record__title">
+      <h1 class="record__title__text">{{ $page.record.painting }}</h1>
     </div>
     <div class="content-box">
-      <div class="entry__header">
+      <div class="record__header">
         <g-image
-          v-if="$page.entry.cover_image"
-          :src="$page.entry.cover_image"
+          v-if="$page.record.cover_image"
+          :src="$page.record.cover_image"
           alt="Cover image"
         />
       </div>
-      <div class="entry__main">>
-        <div class="entry__content" v-html="$page.entry.content" />
-        <TagCloud class="entry__tags" :entry="$page.entry" />
+      <div class="record__main">
+        <div class="record__content">{{ $page.record.content }}</div>
+        <div>From: {{ $page.record.date }}</div>
+        <div>Collection: {{ $page.record.location }}</div>
+        <div>Material: {{ $page.record.materials.join(", ") }}</div>
+        <TagCloud
+          class="record__tags"
+          :event="'addTag'"
+          :tags="$page.record.depicts"
+        />
       </div>
     </div>
   </Layout>
@@ -28,11 +35,11 @@ export default {
   },
   metaInfo() {
     return {
-      title: this.$page.entry.title,
+      title: this.$page.record.title,
       meta: [
         {
           name: "description",
-          content: this.$page.entry.content
+          content: this.$page.record.content
         }
       ]
     };
@@ -41,26 +48,23 @@ export default {
 </script>
 
 <page-query>
-query Entry ($id: ID!) {
-  entry: entry (id: $id) {
-    title
-    path
-    cover_image (width: 860, blur: 10)
-    tags
-    data {
-      title
-      labels
-      values
-      unit
-      type
-    }
-    content
+query record ($id: ID!) {
+  record: record (id: $id) {
+    id
+    source
+    painting
+    cover_image (width: 770, height: 380, blur: 10)
+    image
+    date
+  	location
+    materials
+    depicts
   }
 }
 </page-query>
 
 <style lang="scss">
-.entry {
+.record {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,7 +75,7 @@ query Entry ($id: ID!) {
   }
 }
 
-.entry {
+.record {
   &__header {
     border-radius: var(--radius) var(--radius) 0 0;
     overflow: hidden;

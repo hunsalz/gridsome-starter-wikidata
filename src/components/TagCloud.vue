@@ -1,9 +1,9 @@
 <template>
   <div class="tag-filter">
     <button
-      class="tag-filter__button"
       v-for="(tag, index) in tags"
       :key="index"
+      class="tag-filter__button"
       @click="emitEvent(tag)"
     >
       <span># {{ tag }}</span>
@@ -14,8 +14,14 @@
 <script>
 export default {
   props: {
-    event: String,
-    tags: Array
+    event: {
+      type: String,
+      required: true
+    },
+    tags: {
+      type: Array,
+      required: true
+    }
   },
   methods: {
     emitEvent(tag) {
@@ -40,7 +46,7 @@ export default {
     white-space: nowrap;
   }
   button:hover {
-    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2)
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2);
   }
 }
 </style>

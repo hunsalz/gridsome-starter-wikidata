@@ -3,7 +3,7 @@
     <TagCloud :event="'removeTag'" :tags="selectedTags" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
-        <CardLayout :entry="edge.node" />
+        <CardLayout :record="edge.node" />
       </div>
     </div>
   </Layout>
@@ -11,13 +11,16 @@
 
 <page-query>
 query {
-  records: allRecord(sortBy: "title", order: ASC) {
+  records: allRecord(sortBy: "date", order: ASC) {
     edges {
       node {
         id
-        object
-        creator
+        path
+        source
+        painting
         cover_image (width: 770, height: 380, blur: 10)
+        image
+        date
   			location
         materials
         depicts
@@ -65,6 +68,14 @@ export default {
       return result;
     }
   },
+  created() {
+    this.$eventBus.$on("addTag", this.onAddTag);
+    this.$eventBus.$on("removeTag", this.onRemoveTag);
+  },
+  beforeDestroy() {
+    this.$eventBus.$off("addTag");
+    this.$eventBus.$off("removeTag");
+  },
   methods: {
     // TODO explain
     onAddTag: function(tag) {
@@ -76,14 +87,6 @@ export default {
       //console.log("remove", tag);
       this.selectedTags = _.without(this.selectedTags, tag);
     }
-  },
-  created() {
-    this.$eventBus.$on("addTag", this.onAddTag);
-    this.$eventBus.$on("removeTag", this.onRemoveTag);
-  },
-  beforeDestroy() {
-    this.$eventBus.$off("addTag");
-    this.$eventBus.$off("removeTag");
   }
 };
 </script>

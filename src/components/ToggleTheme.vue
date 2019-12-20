@@ -2,8 +2,8 @@
   <button
     role="button"
     aria-label="Toggle dark/light"
-    @click.prevent="toggleTheme"
     class="toggle-theme"
+    @click.prevent="toggleTheme"
   >
     <svg
       v-if="darkTheme"
