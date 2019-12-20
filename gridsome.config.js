@@ -6,20 +6,19 @@
 
 module.exports = {
   siteName: "Gridsome Starter Wikidata",
-  siteDescription: "Gridsome Starter using Wikidata",
+  siteDescription: "Gridsome Starter from Wikidata",
   siteUrl: process.env.SITE_URL,
   pathPrefix: process.env.PATH_PREFIX,
   templates: {
-    Record: "/:painting"
+    Record: "/:item"
   },
 
   plugins: [
     {
       use: "@gridsome/source-filesystem",
       options: {
-        // typeName: "Record",
         baseDir: "./content",
-        path: "*.md"
+        path: "*.*"
       }
     }
     /*     {

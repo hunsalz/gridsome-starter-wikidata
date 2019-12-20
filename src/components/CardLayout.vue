@@ -9,10 +9,10 @@
     </div>
     <div class="card-layout__main">
       <h2 class="card-layout__title">{{ record.painting }}</h2>
-      <div>From: {{ record.date }}</div>
+      <div>Year: {{ record.year }}</div>
       <div>Collection: {{ record.location }}</div>
       <div>Material: {{ record.materials.join(", ") }}</div>
-      <!-- <g-link class="card-layout__link2" :to="record.source">Source</g-link> -->
+      <!-- <g-link class="card-layout__link2" :to="'https://www.wikidata.org/wiki/'record.item">Source</g-link> -->
       <TagCloud
         class="card-layout__tags"
         :event="'addTag'"

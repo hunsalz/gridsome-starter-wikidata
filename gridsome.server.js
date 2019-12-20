@@ -7,7 +7,6 @@
 
 const fetch = require("node-fetch");
 const fs = require("fs");
-const axios = require("axios");
 
 class SPARQLQueryDispatcher {
   constructor(endpoint) {
@@ -42,61 +41,56 @@ WHERE
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
 ORDER BY ASC(?date)`;
 
-async function run(iterator) {
-  for (let [index, item] of iterator) {
-    console.log(index + " : Downloading " + item.url);
-    //  download(item.url, item.path);
-  }
-}
+const fetchImage = async (url, path) => {
+  const res = await fetch(url);
+  const fileStream = fs.createWriteStream(path);
+  await new Promise((resolve, reject) => {
+    res.body.pipe(fileStream);
+    res.body.on("error", err => {
+      reject(err);
+    });
+    fileStream.on("finish", function() {
+      resolve();
+    });
+  });
+};
 
-const download = (url, image_path) =>
-  axios({
-    url,
-    responseType: "stream"
-  }).then(
-    response =>
-      new Promise((resolve, reject) => {
-        response.data
-          .pipe(fs.createWriteStream(image_path))
-          .on("finish", () => resolve())
-          .on("error", e => reject(e));
-      })
-  );
-
-module.exports = function(api) {
+const fetchWikidata = async actions => {
   const CWD = process.cwd();
-  api.loadSource(async actions => {
-    const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
-    const collection = actions.addCollection("Record");
-    var downloads = [];
-    await queryDispatcher.query(sparqlQuery).then(response => {
-      response.results.bindings.forEach(item => {
-        let path;
-        if (item.image) {
-          let url = item.image.value;
-          var filename = url.substring(url.lastIndexOf("/") + 1);
-          filename = decodeURI(filename).replace(/%2C/g, ",");
-          path = CWD + "/content/images/" + filename;
+  const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
+  const collection = actions.addCollection("Record");
+  await queryDispatcher.query(sparqlQuery).then(response => {
+    response.results.bindings.forEach(function(item, index) {
+      console.log(index + 1, " add node: ", item);
 
-          downloads.push({ url: item.image.value, path: path });
-        }
-        collection.addNode({
-          id: item.id,
-          source: item.painting.value,
-          painting: item.paintingLabel ? item.paintingLabel.value : "unknown",
-          cover_image: path,
-          image: path,
-          location: item.locationLabel ? item.locationLabel.value : "unknown",
-          date: item.date ? item.date.value.substr(0, 10) : "",
-          materials: item.materials
-            ? String(item.materials.value).split(", ")
-            : [],
-          depicts: item.depicts ? String(item.depicts.value).split(", ") : []
-        });
+      let path = null;
+      if (item.image) {
+        let url = item.image.value;
+        var filename = url.substring(url.lastIndexOf("/") + 1);
+        filename = decodeURI(filename).replace(/%2C/g, ",");
+        path = CWD + "/content/images/" + filename;
+
+        fetchImage(url, path);
+      }
+      collection.addNode({
+        id: item.id,
+        item: item.painting.value.split(/[/]+/).pop(),
+        painting: item.paintingLabel ? item.paintingLabel.value : "unknown",
+        cover_image: path ? path : null,
+        image: path ? path : null,
+        location: item.locationLabel ? item.locationLabel.value : "unknown",
+        year: item.date ? item.date.value.substr(0, 4) : "",
+        materials: item.materials
+          ? String(item.materials.value).split(", ")
+          : [],
+        depicts: item.depicts ? String(item.depicts.value).split(", ") : []
       });
     });
+  });
+};
 
-    const workers = new Array(5).fill(downloads.entries()).map(run);
-    await Promise.all(workers).then(() => console.log("Downloads done"));
+module.exports = function(api) {
+  api.loadSource(async actions => {
+    await fetchWikidata(actions);
   });
 };

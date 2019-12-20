@@ -13,7 +13,7 @@
       </div>
       <div class="record__main">
         <div class="record__content">{{ $page.record.content }}</div>
-        <div>From: {{ $page.record.date }}</div>
+        <div>Year: {{ $page.record.year }}</div>
         <div>Collection: {{ $page.record.location }}</div>
         <div>Material: {{ $page.record.materials.join(", ") }}</div>
         <!--TagCloud
@@ -51,10 +51,11 @@ export default {
 query record ($id: ID!) {
   record: record (id: $id) {
     id
-    source
+    path
+    item
     painting
     image
-    date (format: "YYYY-MM-DD")
+    year (format: "YYYY")
   	location
     materials
     depicts

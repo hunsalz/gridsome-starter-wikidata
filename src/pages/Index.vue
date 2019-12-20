@@ -16,10 +16,10 @@ query {
       node {
         id
         path
-        source
+        item
         painting
         cover_image (width: 770, height: 380, blur: 10)
-        date (format: "YYYY-MM-DD")
+        year (format: "YYYY")
   			location
         materials
         depicts
