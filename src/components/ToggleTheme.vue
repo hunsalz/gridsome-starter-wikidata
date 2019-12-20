@@ -53,6 +53,9 @@ export default {
       darkTheme: false
     };
   },
+  mounted() {
+    if (window.__theme == "dark") this.darkTheme = true;
+  },
   methods: {
     toggleTheme() {
       this.darkTheme = !this.darkTheme;
@@ -60,9 +63,6 @@ export default {
       // This is using a script that is added in index.html
       window.__setPreferredTheme(this.darkTheme ? "dark" : "light");
     }
-  },
-  mounted() {
-    if (window.__theme == "dark") this.darkTheme = true;
   }
 };
 </script>

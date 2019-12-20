@@ -9,9 +9,11 @@
       </div>
     </header>
 
-    <div class="main">
-      <slot />
-    </div>
+    <transition name="fade" appear>
+      <div class="main">
+        <slot />
+      </div>
+    </transition>
 
     <footer class="footer">
       <span class="footer__copyright"
@@ -30,12 +32,15 @@ import BackButton from "~/components/BackButton.vue";
 import ToggleTheme from "~/components/ToggleTheme.vue";
 
 export default {
-  props: {
-    showBackButton: { default: true }
-  },
   components: {
     BackButton,
     ToggleTheme
+  },
+  props: {
+    showBackButton: {
+      type: Boolean,
+      default: true
+    }
   }
 };
 </script>
@@ -81,5 +86,13 @@ export default {
   a {
     color: currentColor;
   }
+}
+
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter {
+  opacity: 0;
 }
 </style>
