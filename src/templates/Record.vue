@@ -6,9 +6,9 @@
     <div class="content-box">
       <div class="record__header">
         <g-image
-          v-if="$page.record.cover_image"
-          :src="$page.record.cover_image"
-          alt="Cover image"
+          v-if="$page.record.image"
+          :src="$page.record.image"
+          alt="Painting"
         />
       </div>
       <div class="record__main">
@@ -53,9 +53,8 @@ query record ($id: ID!) {
     id
     source
     painting
-    cover_image (width: 770, height: 380, blur: 10)
     image
-    date
+    date (format: "YYYY-MM-DD")
   	location
     materials
     depicts

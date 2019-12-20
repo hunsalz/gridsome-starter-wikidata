@@ -19,8 +19,7 @@ query {
         source
         painting
         cover_image (width: 770, height: 380, blur: 10)
-        image
-        date
+        date (format: "YYYY-MM-DD")
   			location
         materials
         depicts
