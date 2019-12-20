@@ -16,11 +16,11 @@
         <div>From: {{ $page.record.date }}</div>
         <div>Collection: {{ $page.record.location }}</div>
         <div>Material: {{ $page.record.materials.join(", ") }}</div>
-        <TagCloud
+        <!--TagCloud
           class="record__tags"
           :event="'addTag'"
           :tags="$page.record.depicts"
-        />
+        /-->
       </div>
     </div>
   </Layout>

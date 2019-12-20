@@ -45,7 +45,7 @@ ORDER BY ASC(?date)`;
 async function run(iterator) {
   for (let [index, item] of iterator) {
     console.log(index + " : Downloading " + item.url);
-    //download(item.url, item.path);
+    download(item.url, item.path);
   }
 }
 
