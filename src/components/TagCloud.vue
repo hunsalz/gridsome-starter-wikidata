@@ -23,6 +23,12 @@ export default {
       required: true
     }
   },
+  mounted() {
+    // remove empty tags
+    this.tags = _.remove(this.tags, function(n) {
+      return n.length > 0 ? true : false;
+    });
+  },
   methods: {
     emitEvent(tag) {
       this.$eventBus.$emit(this.event, tag);

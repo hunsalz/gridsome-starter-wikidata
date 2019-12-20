@@ -80,10 +80,8 @@ const fetchWikidata = async actions => {
         image: path ? path : null,
         location: item.locationLabel ? item.locationLabel.value : "unknown",
         year: item.date ? item.date.value.substr(0, 4) : "",
-        materials: item.materials
-          ? String(item.materials.value).split(", ")
-          : [],
-        depicts: item.depicts ? String(item.depicts.value).split(", ") : []
+        materials: String(item.materials.value).split(", "),
+        depicts: String(item.depicts.value).split(", ")
       });
     });
   });
