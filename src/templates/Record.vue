@@ -12,27 +12,16 @@
         />
       </div>
       <div class="record__main">
-        <div class="record__content">{{ $page.record.content }}</div>
         <div>Year: {{ $page.record.year }}</div>
         <div>Collection: {{ $page.record.location }}</div>
         <div>Material: {{ $page.record.materials.join(", ") }}</div>
-        <!--TagCloud
-          class="record__tags"
-          :event="'addTag'"
-          :tags="$page.record.depicts"
-        /-->
       </div>
     </div>
   </Layout>
 </template>
 
 <script>
-import TagCloud from "~/components/TagCloud";
-
 export default {
-  components: {
-    TagCloud
-  },
   metaInfo() {
     return {
       title: this.$page.record.title,

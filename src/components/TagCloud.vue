@@ -25,9 +25,9 @@ export default {
   },
   mounted() {
     // remove empty tags
-    this.tags = _.remove(this.tags, function(n) {
+/*     this.tags = _.remove(this.tags, function(n) {
       return n.length > 0 ? true : false;
-    });
+    }); */
   },
   methods: {
     emitEvent(tag) {

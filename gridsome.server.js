@@ -6,7 +6,7 @@
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
 const fetch = require("node-fetch");
-const fs = require("fs");
+const fs = require("fs-extra");
 
 class SPARQLQueryDispatcher {
   constructor(endpoint) {
@@ -57,6 +57,7 @@ const fetchImage = async (url, path) => {
 
 const fetchWikidata = async actions => {
   const CWD = process.cwd();
+  fs.ensureDirSync(CWD + "/content/images/");
   const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
   const collection = actions.addCollection("Record");
   await queryDispatcher.query(sparqlQuery).then(response => {
