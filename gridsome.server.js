@@ -39,7 +39,8 @@ WHERE
                          ?depict rdfs:label ?depictLabel . }
 }
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
-ORDER BY ASC(?date)`;
+ORDER BY ASC(?date)
+LIMIT 10`;
 
 const fetchImage = async (url, path) => {
   const res = await fetch(url);
@@ -62,18 +63,17 @@ const fetchWikidata = async actions => {
   const collection = actions.addCollection("Record");
   await queryDispatcher.query(sparqlQuery).then(response => {
     response.results.bindings.forEach(function(item, index) {
-      console.log(index + 1, " add node: ", item);
       let path = null;
       if (item.image) {
         let url = item.image.value;
         var filename = url.substring(url.lastIndexOf("/") + 1);
         filename = decodeURI(filename).replace(/%2C/g, ",");
         path = CWD + "/content/images/" + filename;
-
+        // fetch remote image
         fetchImage(url, path);
       }
-      collection.addNode({
-        id: item.id,
+      // create node
+      let node = {
         item: item.painting.value.split(/[/]+/).pop(),
         painting: item.paintingLabel ? item.paintingLabel.value : "unknown",
         cover_image: path ? path : null,
@@ -82,7 +82,9 @@ const fetchWikidata = async actions => {
         year: item.date ? item.date.value.substr(0, 4) : "",
         materials: String(item.materials.value).split(", "),
         depicts: String(item.depicts.value).split(", ")
-      });
+      }
+      console.log("add node", index + 1, node);
+      collection.addNode(node);
     });
   });
 };
