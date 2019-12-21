@@ -29,5 +29,5 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 
 Mounting dist folder into nginx
 ```
-docker run --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro -d nginx
+docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro -d nginx:latest
 ```
