@@ -21,7 +21,7 @@
         :tags="record.tags"
       />
     </div>
-    <g-link class="card-layout__link_to_entire_record" :to="record.path" />
+    <g-link class="card-layout__link_to_record" :to="record.path" />
   </div>
 </template>
 
@@ -83,7 +83,7 @@ export default {
     position: relative;
   }
 
-  &__link_to_entire_record {
+  &__link_to_record {
     position: absolute;
     top: 0;
     left: 0;
