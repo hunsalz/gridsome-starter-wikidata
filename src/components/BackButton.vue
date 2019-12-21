@@ -18,7 +18,7 @@ query {
 .back-button {
   text-decoration: none;
   color: var(--header-color) !important;
-  font-size: 0.9em;
+  font-size: 1em;
 
   &__image {
     vertical-align: middle;
