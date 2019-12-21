@@ -59,8 +59,7 @@ export default {
   methods: {
     toggleTheme() {
       this.darkTheme = !this.darkTheme;
-
-      // This is using a script that is added in index.html
+      // corresponding script is added in index.html
       window.__setPreferredTheme(this.darkTheme ? "dark" : "light");
     }
   }
@@ -77,6 +76,7 @@ export default {
   &:hover {
     opacity: 0.8;
   }
+
   &:focus {
     outline: none;
   }
