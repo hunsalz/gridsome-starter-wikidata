@@ -63,12 +63,11 @@ export default {
     // subscribe to event bus
     this.$eventBus.$on("addTag", this.onAddTag);
     this.$eventBus.$on("removeTag", this.onRemoveTag);
-    // create tag clouds
-    let edges = this.$page.records.edges;
-    edges.forEach(edge => {
-      // create a tag list of unique values
+    // create tag cloud
+    this.$page.records.edges.forEach(edge => {
+      // ... of unique values
       edge.node.tags = _.union([edge.node.year], edge.node.depicts);
-      // clean up tag list from an empty string value
+      // ... remove any empty value
       _.remove(edge.node.tags, function(tag) {
         return tag.length === 0 ? true : false;
       });
@@ -83,6 +82,7 @@ export default {
     // add a new tag to existing tag filter
     onAddTag: function(tag) {
       this.tagFilter = _.union(this.tagFilter, [tag]);
+      console.log(this.$page);
     },
     // remove a tag from existing tag filter
     onRemoveTag: function(tag) {
