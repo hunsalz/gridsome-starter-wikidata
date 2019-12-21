@@ -12,14 +12,16 @@
       <div>Year: {{ record.year }}</div>
       <div>Collection: {{ record.location }}</div>
       <div>Material: {{ record.materials.join(", ") }}</div>
-      <!-- <g-link class="card-layout__link2" :to="'https://www.wikidata.org/wiki/'record.item">Source</g-link> -->
+      <g-link class="card-layout__link" :to="computedWikidataLink">
+        Visit Wikidata
+      </g-link>
       <TagCloud
         class="card-layout__tags"
         :event="'addTag'"
-        :tags="record.depicts"
+        :tags="record.tags"
       />
     </div>
-    <g-link class="card-layout__link" :to="record.path" />
+    <g-link class="card-layout__link_to_entire_record" :to="record.path" />
   </div>
 </template>
 
@@ -34,6 +36,11 @@ export default {
     record: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    computedWikidataLink: function() {
+      return "https://www.wikidata.org/wiki/" + this.record.item;
     }
   }
 };
@@ -71,6 +78,12 @@ export default {
   }
 
   &__link {
+    color: currentColor !important;
+    z-index: 1;
+    position: relative;
+  }
+
+  &__link_to_entire_record {
     position: absolute;
     top: 0;
     left: 0;
