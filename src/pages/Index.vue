@@ -1,6 +1,6 @@
 <template>
   <Layout :show-back-button="false">
-    <TagCloud :event="'removeTag'" :tags="selectedTags" />
+    <TagCloud :event="'removeTag'" :tags="tagFilter" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
         <CardLayout :record="edge.node" />
@@ -40,7 +40,7 @@ export default {
   },
   data: function() {
     return {
-      selectedTags: []
+      tagFilter: []
     };
   },
   metaInfo: {
@@ -49,42 +49,44 @@ export default {
   },
   computed: {
     computedCards: function() {
-      let edges = this.$page.records.edges;
-
-      //console.log("edges", edges);
-
       // filter matching cards
-      let result = edges.filter(
+      return this.$page.records.edges.filter(
         edge =>
-          // compose intersection between tags per node and given filter array.
-          _.intersection(edge.node.depicts, this.selectedTags).length ===
+          // compose intersection between tags per node and given tag filter
+          _.intersection(edge.node.tags, this.tagFilter).length ===
           // force exact match of all filtered tag elements
-          this.selectedTags.length
+          this.tagFilter.length
       );
-
-      //console.log("Result: ", result);
-
-      return result;
     }
   },
   created() {
+    // subscribe to event bus
     this.$eventBus.$on("addTag", this.onAddTag);
     this.$eventBus.$on("removeTag", this.onRemoveTag);
+    // create tag clouds
+    let edges = this.$page.records.edges;
+    edges.forEach(edge => {
+      // create a tag list of unique values
+      edge.node.tags = _.union([edge.node.year], edge.node.depicts);
+      // clean up tag list from an empty string value
+      _.remove(edge.node.tags, function(tag) {
+        return tag.length === 0 ? true : false;
+      });
+    });
   },
   beforeDestroy() {
+    // unsubscribe from event bus
     this.$eventBus.$off("addTag");
     this.$eventBus.$off("removeTag");
   },
   methods: {
-    // TODO explain
+    // add a new tag to existing tag filter
     onAddTag: function(tag) {
-      //console.log("add", tag);
-      this.selectedTags = _.union(this.selectedTags, [tag]);
+      this.tagFilter = _.union(this.tagFilter, [tag]);
     },
-    // TODO explain
+    // remove a tag from existing tag filter
     onRemoveTag: function(tag) {
-      //console.log("remove", tag);
-      this.selectedTags = _.without(this.selectedTags, tag);
+      this.tagFilter = _.without(this.tagFilter, tag);
     }
   }
 };
