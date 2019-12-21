@@ -63,7 +63,6 @@ const fetchWikidata = async actions => {
   await queryDispatcher.query(sparqlQuery).then(response => {
     response.results.bindings.forEach(function(item, index) {
       console.log(index + 1, " add node: ", item);
-
       let path = null;
       if (item.image) {
         let url = item.image.value;
