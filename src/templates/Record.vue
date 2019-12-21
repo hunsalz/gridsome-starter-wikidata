@@ -1,17 +1,13 @@
 <template>
   <Layout class="record">
-    <div class="record__title">
-      <h1 class="record__title__text">{{ $page.record.painting }}</h1>
-    </div>
     <div class="content-box">
-      <div class="record__header">
+      <h1 class="record__header">{{ $page.record.painting }}</h1>
+      <div class="record__main">
         <g-image
           v-if="$page.record.image"
           :src="$page.record.image"
           alt="Painting"
         />
-      </div>
-      <div class="record__main">
         <div>Year: {{ $page.record.year }}</div>
         <div>Collection: {{ $page.record.location }}</div>
         <div>Material: {{ $page.record.materials.join(", ") }}</div>
@@ -28,7 +24,7 @@ export default {
       meta: [
         {
           name: "description",
-          content: this.$page.record.content
+          content: this.$page.record.painting
         }
       ]
     };
@@ -58,38 +54,23 @@ query record ($id: ID!) {
   flex-direction: column;
   align-items: center;
 
-  &__title {
-    padding: calc(var(--space) / 2) 0 calc(var(--space) / 2);
+  &__header {
+    padding: calc(var(--space) / 2) 0 calc(var(--space) / 2) 0;
     text-align: center;
   }
-}
 
-.record {
-  &__header {
-    border-radius: var(--radius) var(--radius) 0 0;
-    overflow: hidden;
+  &__main {
+    margin: 0 1em 1em 1em;
+    padding: 0 1em 1em 1em;
 
     &:empty {
       display: none;
     }
 
     .g-image {
+      padding: 0;
       min-width: 100%;
     }
-  }
-
-  &__main {
-    margin: 1em;
-    padding: 1em;
-  }
-
-  &__content {
-    margin-top: 1em;
-  }
-
-  &__tags {
-    z-index: 1;
-    position: relative;
   }
 }
 </style>
