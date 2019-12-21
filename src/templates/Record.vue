@@ -20,7 +20,7 @@
 export default {
   metaInfo() {
     return {
-      title: this.$page.record.title,
+      title: this.$page.record.painting,
       meta: [
         {
           name: "description",
