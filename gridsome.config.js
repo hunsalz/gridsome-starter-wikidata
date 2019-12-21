@@ -6,7 +6,7 @@
 
 module.exports = {
   siteName: "Gridsome Starter Wikidata",
-  siteDescription: "Gridsome Starter from Wikidata",
+  siteDescription: "Gridsome Starter for Wikidata",
   siteUrl: process.env.SITE_URL,
   pathPrefix: process.env.PATH_PREFIX,
   templates: {
