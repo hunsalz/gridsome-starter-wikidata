@@ -1,14 +1,9 @@
-// Server API makes it possible to hook into various parts of Gridsome
-// on server-side and add custom data to the GraphQL data layer.
-// Learn more: https://gridsome.org/docs/server-api/
-
-// Changes here requires a server restart.
-// To restart press CTRL + C in terminal and run `gridsome develop`
-
 const fetch = require("node-fetch");
 const fs = require("fs-extra");
 
 const DIR = process.cwd() + "/content/images/";
+
+// SPARQL source from https://w.wiki/ENJ
 
 class SPARQLQueryDispatcher {
   constructor(endpoint) {
@@ -41,11 +36,15 @@ WHERE
                          ?depict rdfs:label ?depictLabel . }
 }
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
-ORDER BY ASC(?date)`;
+ORDER BY ASC(?date)
+LIMIT 10`;
 
-const stream = (data, path) => {
-  console.log("Save ", path);
-
+/**
+ * Store data to path
+ * @param {*} data
+ * @param {*} path
+ */
+const store = (data, path) => {
   const fileStream = fs.createWriteStream(path);
   return new Promise((resolve, reject) => {
     data.body.pipe(fileStream);
@@ -53,32 +52,33 @@ const stream = (data, path) => {
       reject(err);
     });
     fileStream.on("finish", function() {
-      resolve("Storing " + path + " was succesful!");
+      resolve("Storing " + path + " was successful!");
     });
   });
 };
 
+/**
+ * Fetch data from Wikidata
+ * @param {*} actions
+ */
 const fetchWikidata = async actions => {
-  fs.ensureDirSync(DIR);
-
   const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
   const collection = actions.addCollection("Record");
-  const mapping = [];
-
+  const images = [];
+  // query Wikidata and process each item
   await queryDispatcher.query(sparqlQuery).then(response => {
-    response.results.bindings.forEach(function(item, index) {
+    response.results.bindings.forEach(item => {
+      // prepare image src & dest
       let path = null;
       if (item.image) {
         let url = item.image.value;
-        var filename = url.substring(url.lastIndexOf("/") + 1);
+        let filename = url.substring(url.lastIndexOf("/") + 1);
         filename = decodeURI(filename).replace(/%2C/g, ",");
         path = DIR + filename;
-        // add promise to fetch image
-        //promises.push(fetchImage(url, path));
-        mapping.push({ url: url, path: path });
+        images.push({ src: url, dest: path });
       }
-      // create node
-      let node = {
+      // create node from item
+      collection.addNode({
         item: item.painting.value.split(/[/]+/).pop(),
         painting: item.paintingLabel ? item.paintingLabel.value : "unknown",
         cover_image: path ? path : null,
@@ -87,20 +87,21 @@ const fetchWikidata = async actions => {
         year: item.date ? item.date.value.substr(0, 4) : "",
         materials: String(item.materials.value).split(", "),
         depicts: String(item.depicts.value).split(", ")
-      };
-      //console.log("added", node, "as " + (index + 1) + " node");
-      collection.addNode(node);
+      });
     });
   });
-
+  // fetch & store remote images locally
+  fs.ensureDirSync(DIR);
   await Promise.all(
-    mapping.map(element =>
-      fetch(element.url)
-        .then(response => stream(response, element.path))
+    images.map(img =>
+      fetch(img.src)
+        .then(response => store(response, img.dest))
         .catch(error => console.log(`Error in executing ${error}`))
     )
   ).then(response => console.log("Overall result", response));
 };
+
+// Server API hooks
 
 module.exports = function(api) {
   api.loadSource(async actions => {
