@@ -8,6 +8,8 @@
 const fetch = require("node-fetch");
 const fs = require("fs-extra");
 
+const DIR = process.cwd() + "/content/images/";
+
 class SPARQLQueryDispatcher {
   constructor(endpoint) {
     this.endpoint = endpoint;
@@ -42,25 +44,28 @@ GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depict
 ORDER BY ASC(?date)
 LIMIT 10`;
 
-const fetchImage = async (url, path) => {
-  const res = await fetch(url);
+const stream = (data, path) => {
+  console.log("Save ", path);
+
   const fileStream = fs.createWriteStream(path);
-  await new Promise((resolve, reject) => {
-    res.body.pipe(fileStream);
-    res.body.on("error", err => {
+  return new Promise((resolve, reject) => {
+    data.body.pipe(fileStream);
+    data.body.on("error", err => {
       reject(err);
     });
     fileStream.on("finish", function() {
-      resolve();
+      resolve("Storing " + path + " was succesful!");
     });
   });
 };
 
 const fetchWikidata = async actions => {
-  const CWD = process.cwd();
-  fs.ensureDirSync(CWD + "/content/images/");
+  fs.ensureDirSync(DIR);
+
   const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
   const collection = actions.addCollection("Record");
+  const mapping = [];
+
   await queryDispatcher.query(sparqlQuery).then(response => {
     response.results.bindings.forEach(function(item, index) {
       let path = null;
@@ -68,9 +73,10 @@ const fetchWikidata = async actions => {
         let url = item.image.value;
         var filename = url.substring(url.lastIndexOf("/") + 1);
         filename = decodeURI(filename).replace(/%2C/g, ",");
-        path = CWD + "/content/images/" + filename;
-        // fetch remote image
-        fetchImage(url, path);
+        path = DIR + filename;
+        // add promise to fetch image
+        //promises.push(fetchImage(url, path));
+        mapping.push({ url: url, path: path });
       }
       // create node
       let node = {
@@ -82,11 +88,19 @@ const fetchWikidata = async actions => {
         year: item.date ? item.date.value.substr(0, 4) : "",
         materials: String(item.materials.value).split(", "),
         depicts: String(item.depicts.value).split(", ")
-      }
-      console.log("add node", index + 1, node);
+      };
+      //console.log("added", node, "as " + (index + 1) + " node");
       collection.addNode(node);
     });
   });
+
+  await Promise.all(
+    mapping.map(element =>
+      fetch(element.url)
+        .then(response => stream(response, element.path))
+        .catch(error => console.log(`Error in executing ${error}`))
+    )
+  ).then(response => console.log("Overall result", response));
 };
 
 module.exports = function(api) {
