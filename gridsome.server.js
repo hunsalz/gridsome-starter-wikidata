@@ -37,7 +37,7 @@ WHERE
 }
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
 ORDER BY ASC(?date)
-LIMIT 10`;
+LIMIT 100`;
 
 /**
  * Store data to path
