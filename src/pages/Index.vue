@@ -11,6 +11,10 @@
 
 <page-query>
 query {
+  metadata {
+    siteName
+    siteDescription
+  }
   records: allRecord(sortBy: "date", order: ASC) {
     edges {
       node {
@@ -43,9 +47,16 @@ export default {
       tagFilter: []
     };
   },
-  metaInfo: {
-    title: "Overview page",
-    titleTemplate: "%s"
+  metaInfo() {
+    return {
+      title: this.$page.metadata.siteName,
+      meta: [
+        {
+          name: "description",
+          content: this.$page.metadata.siteDescription
+        }
+      ]
+    };
   },
   computed: {
     computedCards: function() {
