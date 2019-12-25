@@ -16,9 +16,9 @@
     </transition>
 
     <footer class="footer">
-      <span class="footer__copyright"
-        >Copyright © {{ new Date().getFullYear() }}.</span
-      >
+      <span class="footer__copyright">
+        Copyright © {{ new Date().getFullYear() }}.
+      </span>
       <span class="footer__links">
         Powered by
         <a href="//gridsome.org">Gridsome</a>
