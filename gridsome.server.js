@@ -1,6 +1,17 @@
 const axios = require("axios").default;
 const fetch = require("node-fetch");
 const fs = require("fs-extra");
+const cliProgress = require("cli-progress");
+
+const multibar = new cliProgress.MultiBar(
+  {
+    format:
+      "Loading [{bar}] {filename} | {duration}sec | {value}/{total} KBytes",
+    clearOnComplete: false,
+    hideCursor: true
+  },
+  cliProgress.Presets.shades_grey
+);
 
 const DIR = process.cwd() + "/content/images/";
 
@@ -37,21 +48,24 @@ WHERE
                          ?depict rdfs:label ?depictLabel . }
 }
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
-ORDER BY ASC(?date)
-LIMIT 2`;
+ORDER BY ASC(?date)`;
 
-const store = (response, path) => {
-  let url = response.config.url;
-
+const store = (response, dir, filename) => {
+  // ensure that directory exists
+  fs.ensureDirSync(dir);
+  // get content length
   let totalLength = parseInt(response.headers["content-length"], 10);
-  //console.log(totalLength);
-
-  //console.log(`Start downloading ${url}`);
-
+  // create write stream and progress bar
+  const path = dir + filename;
   const writer = fs.createWriteStream(path);
-  //response.data.on("data", chunk => bar.update(chunk.length));
+  const bar = multibar.create(Math.round(totalLength / 1024), 0, {
+    filename: filename
+  });
+  response.data.on("data", chunk =>
+    bar.update(Math.round(chunk.length / 1024))
+  );
+  // start streaming
   response.data.pipe(writer);
-
   return new Promise((resolve, reject) => {
     writer.on("finish", () => {
       resolve();
@@ -75,21 +89,20 @@ const fetchWikidata = async actions => {
   await queryDispatcher.query(sparqlQuery).then(response => {
     response.results.bindings.forEach(item => {
       // prepare downloads
-      let path = null;
+      let filename = null;
       if (item.image) {
         let url = item.image.value;
-        let filename = url.substring(url.lastIndexOf("/") + 1);
+        filename = url.substring(url.lastIndexOf("/") + 1);
         filename = decodeURI(filename).replace(/%2C/g, ",");
-        path = DIR + filename;
-        // add src & dest to download list
-        downloads.push({ src: url, dest: path });
+        // add src and destination dir + filename to download list
+        downloads.push({ src: url, dir: DIR, filename: filename });
       }
-      // create node from item
+      // create node from item properties
       collection.addNode({
         item: item.painting.value.split(/[/]+/).pop(),
         painting: item.paintingLabel ? item.paintingLabel.value : "unknown",
-        cover_image: path ? path : null,
-        image: path ? path : null,
+        cover_image: filename ? DIR + filename : null,
+        image: filename ? DIR + filename : null,
         location: item.locationLabel ? item.locationLabel.value : "unknown",
         year: item.date ? item.date.value.substr(0, 4) : "",
         materials: String(item.materials.value).split(", "),
@@ -101,8 +114,7 @@ const fetchWikidata = async actions => {
 };
 
 const download = async downloads => {
-  fs.ensureDirSync(DIR);
-  console.log("Starting media download ...");
+  console.log("Starting media download(s) ...");
   await Promise.all(
     downloads.map(download =>
       axios({
@@ -111,17 +123,18 @@ const download = async downloads => {
         responseType: "stream"
       })
         .then(response =>
-          store(response, download.dest)
-            .then(() => console.log(`Saved ${download.dest} successful.`))
-            .catch(error =>
-              console.log(`Saving ${download.dest} failed: ${error}`)
+          store(response, download.dir, download.filename).catch(error =>
+            console.log(
+              `Saving ${download.dir}${download.filename} failed: ${error}`
             )
+          )
         )
         .catch(error =>
           console.log(`Downloading ${download.src} failed: ${error}`)
         )
     )
-  ).then(() => console.log("Media download successful."));
+  );
+  multibar.stop();
 };
 
 // Server API hooks
