@@ -1,7 +1,6 @@
 const axios = require("axios").default;
 const fetch = require("node-fetch");
 const fs = require("fs-extra");
-const progress = require("progress");
 
 const DIR = process.cwd() + "/content/images/";
 
@@ -48,20 +47,17 @@ const store = (response, path) => {
   //console.log(totalLength);
 
   //console.log(`Start downloading ${url}`);
-  const bar = new progress(`Downloading [:bar] :rate/bps :percent :etas`, {
-    complete: "=",
-    incomplete: " ",
-    width: 20,
-    total: totalLength
-  });
 
   const writer = fs.createWriteStream(path);
-  response.data.on("data", chunk => bar.tick(chunk.length));
+  //response.data.on("data", chunk => bar.update(chunk.length));
   response.data.pipe(writer);
 
   return new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
+    writer.on("finish", () => {
+      resolve();
+    });
     writer.on("error", err => {
+      fs.unlink(path);
       reject(err);
     });
   });
@@ -106,6 +102,7 @@ const fetchWikidata = async actions => {
 
 const download = async downloads => {
   fs.ensureDirSync(DIR);
+  console.log("Starting media download ...");
   await Promise.all(
     downloads.map(download =>
       axios({
