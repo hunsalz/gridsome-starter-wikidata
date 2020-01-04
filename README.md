@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](http://doge.mit-license.org)
 
-This is a boilerplate starter, aiming to showcase how Gridsome and an external data source (e.g. Wikidata) can nicely work togehter.
+This is a boilerplate starter, aiming to showcase how Gridsome and an external data source (e.g. Wikidata) can nicely work together.
 
 ## Features
 - Binding of an external data source with remote images; e.g. [Wikidata](https://www.wikidata.org/)
@@ -11,6 +11,7 @@ This is a boilerplate starter, aiming to showcase how Gridsome and an external d
 - Dark / light toggle
 - CSS variables, SCSS & BEM for styling
 - 100, 100, 100, 100, (100) score on Google Lighthouse
+- Github actions
 
 ## Demo URL
 
@@ -27,6 +28,10 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 1. `gridsome create my-gridsome-site https://github.com/hunsalz/gridsome-starter-wikidata.git`
 2. `cd my-gridsome-site` to open folder
 3. `gridsome develop` to start local dev server at `http://localhost:8080`
+
+## Setup Github build & deploy
+
+TODO
 
 ## Stage build with Docker
 
