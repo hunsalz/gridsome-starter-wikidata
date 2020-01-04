@@ -1,5 +1,7 @@
+const axios = require("axios").default;
 const fetch = require("node-fetch");
 const fs = require("fs-extra");
+const progress = require("progress");
 
 const DIR = process.cwd() + "/content/images/";
 
@@ -37,22 +39,30 @@ WHERE
 }
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
 ORDER BY ASC(?date)
-LIMIT 100`;
+LIMIT 2`;
 
-/**
- * Store data to path
- * @param {*} data
- * @param {*} path
- */
-const store = (data, path) => {
-  const fileStream = fs.createWriteStream(path);
+const store = (response, path) => {
+  let url = response.config.url;
+
+  let totalLength = parseInt(response.headers["content-length"], 10);
+  //console.log(totalLength);
+
+  //console.log(`Start downloading ${url}`);
+  const bar = new progress(`Downloading [:bar] :rate/bps :percent :etas`, {
+    complete: "=",
+    incomplete: " ",
+    width: 20,
+    total: totalLength
+  });
+
+  const writer = fs.createWriteStream(path);
+  response.data.on("data", chunk => bar.tick(chunk.length));
+  response.data.pipe(writer);
+
   return new Promise((resolve, reject) => {
-    data.body.pipe(fileStream);
-    data.body.on("error", err => {
+    writer.on("finish", resolve);
+    writer.on("error", err => {
       reject(err);
-    });
-    fileStream.on("finish", function() {
-      resolve("Storing " + path + " was successful!");
     });
   });
 };
@@ -64,18 +74,19 @@ const store = (data, path) => {
 const fetchWikidata = async actions => {
   const queryDispatcher = new SPARQLQueryDispatcher(endpointUrl);
   const collection = actions.addCollection("Record");
-  const images = [];
+  const downloads = [];
   // query Wikidata and process each item
   await queryDispatcher.query(sparqlQuery).then(response => {
     response.results.bindings.forEach(item => {
-      // prepare image src & dest
+      // prepare downloads
       let path = null;
       if (item.image) {
         let url = item.image.value;
         let filename = url.substring(url.lastIndexOf("/") + 1);
         filename = decodeURI(filename).replace(/%2C/g, ",");
         path = DIR + filename;
-        images.push({ src: url, dest: path });
+        // add src & dest to download list
+        downloads.push({ src: url, dest: path });
       }
       // create node from item
       collection.addNode({
@@ -90,21 +101,37 @@ const fetchWikidata = async actions => {
       });
     });
   });
-  // fetch & store remote images locally
+  return downloads;
+};
+
+const download = async downloads => {
   fs.ensureDirSync(DIR);
   await Promise.all(
-    images.map(img =>
-      fetch(img.src)
-        .then(response => store(response, img.dest))
-        .catch(error => console.log(`Error in executing ${error}`))
+    downloads.map(download =>
+      axios({
+        method: "get",
+        url: download.src,
+        responseType: "stream"
+      })
+        .then(response =>
+          store(response, download.dest)
+            .then(() => console.log(`Saved ${download.dest} successful.`))
+            .catch(error =>
+              console.log(`Saving ${download.dest} failed: ${error}`)
+            )
+        )
+        .catch(error =>
+          console.log(`Downloading ${download.src} failed: ${error}`)
+        )
     )
-  ).then(response => console.log("Overall result", response));
+  ).then(() => console.log("Media download successful."));
 };
 
 // Server API hooks
 
 module.exports = function(api) {
   api.loadSource(async actions => {
-    await fetchWikidata(actions);
+    const downloads = await fetchWikidata(actions);
+    await download(downloads);
   });
 };
