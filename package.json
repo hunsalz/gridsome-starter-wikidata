@@ -23,14 +23,13 @@
     "babel-eslint": "^10.0.3",
     "cli-progress": "^3.4.0",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-prettier": "^6.9.0",
     "eslint-loader": "^3.0.3",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-vue": "^6.0.1",
+    "eslint-plugin-vue": "^6.1.2",
     "node-sass": "^4.13.0",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.0",
-    "node-fetch": "^2.6.0",
     "fs-extra": "^8.1.0",
     "gh-pages": "^2.1.1"
   }

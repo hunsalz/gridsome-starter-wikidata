@@ -1,5 +1,4 @@
 const axios = require("axios").default;
-const fetch = require("node-fetch");
 const fs = require("fs-extra");
 const cliProgress = require("cli-progress");
 
@@ -24,9 +23,13 @@ class SPARQLQueryDispatcher {
 
   query(sparqlQuery) {
     const fullUrl = this.endpoint + "?query=" + encodeURIComponent(sparqlQuery);
-    const headers = { Accept: "application/sparql-results+json" };
-
-    return fetch(fullUrl, { headers }).then(body => body.json());
+    return axios({
+      method: "get",
+      url: fullUrl,
+      headers: { Accept: "application/sparql-results+json" }
+    })
+      .then(response => response.data)
+      .catch(error => console.log(`SPARQL ${fullUrl} failed: ${error}`));
   }
 }
 
@@ -48,37 +51,11 @@ WHERE
                          ?depict rdfs:label ?depictLabel . }
 }
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
-ORDER BY ASC(?date)`;
-
-const store = (response, dir, filename) => {
-  // ensure that directory exists
-  fs.ensureDirSync(dir);
-  // get content length
-  let totalLength = parseInt(response.headers["content-length"], 10);
-  // create write stream and progress bar
-  const path = dir + filename;
-  const writer = fs.createWriteStream(path);
-  const bar = multibar.create(Math.round(totalLength / 1024), 0, {
-    filename: filename
-  });
-  response.data.on("data", chunk =>
-    bar.update(Math.round(chunk.length / 1024))
-  );
-  // start streaming
-  response.data.pipe(writer);
-  return new Promise((resolve, reject) => {
-    writer.on("finish", () => {
-      resolve();
-    });
-    writer.on("error", err => {
-      fs.unlink(path);
-      reject(err);
-    });
-  });
-};
+ORDER BY ASC(?date)
+LIMIT 2`;
 
 /**
- * Fetch data from Wikidata
+ * Fetch data from Wikidata.
  * @param {*} actions
  */
 const fetchWikidata = async actions => {
@@ -113,6 +90,39 @@ const fetchWikidata = async actions => {
   return downloads;
 };
 
+/**
+ * Stream response to file.
+ * @param {*} response
+ * @param {*} dir
+ * @param {*} filename
+ */
+const stream2File = (response, dir, filename) => {
+  // ensure that directory exists
+  fs.ensureDirSync(dir);
+  // get content length
+  let totalLength = parseInt(response.headers["content-length"], 10);
+  // create write stream and progress bar
+  const path = dir + filename;
+  const writer = fs.createWriteStream(path);
+  const bar = multibar.create(Math.round(totalLength / 1024), 0, {
+    filename: filename
+  });
+  response.data.on("data", chunk =>
+    bar.update(Math.round(chunk.length / 1024))
+  );
+  // start streaming
+  response.data.pipe(writer);
+  return new Promise((resolve, reject) => {
+    writer.on("finish", () => {
+      resolve();
+    });
+    writer.on("error", err => {
+      fs.unlink(path);
+      reject(err);
+    });
+  });
+};
+
 const download = async downloads => {
   console.log("Starting media download(s) ...");
   await Promise.all(
@@ -123,7 +133,7 @@ const download = async downloads => {
         responseType: "stream"
       })
         .then(response =>
-          store(response, download.dir, download.filename).catch(error =>
+          stream2File(response, download.dir, download.filename).catch(error =>
             console.log(
               `Saving ${download.dir}${download.filename} failed: ${error}`
             )
