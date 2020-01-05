@@ -51,8 +51,7 @@ WHERE
                          ?depict rdfs:label ?depictLabel . }
 }
 GROUP BY ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
-ORDER BY ASC(?date)
-LIMIT 2`;
+ORDER BY ASC(?date)`;
 
 /**
  * Fetch data from Wikidata.
