@@ -5,7 +5,7 @@ on: [push]
 env:
   HAS_EMAIL: ${{ secrets.EMAIL }}
   HAS_GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
-  # workaround until Actions supports kind of exists()
+  # workaround until Actions supports something like exists()
 
 jobs:
   build:
@@ -14,24 +14,20 @@ jobs:
       matrix:
         node-version: [13.x]
     steps:
-    # - uses: actions/checkout@v1.2.0
-    # - name: Use Node.js ${{ matrix.node-version }}
-    #   uses: actions/setup-node@v1.1.2
-    #   with:
-    #     node-version: ${{ matrix.node-version }}
-    # - name: npm install, build, and test
-    #   run: |
-    #     npm install
-    #     npm run build --if-present
-    #   env:
-    #     CI: true
-    - name: Deploy to GitHub Pages
-      if: env.HAS_EMAIL != '' && env.HAS_GH_TOKEN != '' # run job not until both env vars are available
+    - uses: actions/checkout@v1.2.0
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1.1.2
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
       run: |
-        echo $BUILD_DIR
-        echo ${{ env.EMAIL }}
-        
-      #uses: Cecilapp/GitHub-Pages-deploy@master
+        npm install
+        npm run build --if-present
+      env:
+        CI: true
+    - name: Deploy to GitHub Pages
+      if: env.HAS_EMAIL != '' && env.HAS_GH_TOKEN != '' # run deployment not until both env vars are available  
+      uses: Cecilapp/GitHub-Pages-deploy@master
       env:
         EMAIL: ${{ secrets.EMAIL }}
         GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
