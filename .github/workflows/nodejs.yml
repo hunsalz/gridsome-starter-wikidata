@@ -4,13 +4,10 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [13.x]
-
     steps:
     - uses: actions/checkout@v1.2.0
     - name: Use Node.js ${{ matrix.node-version }}
@@ -24,8 +21,9 @@ jobs:
       env:
         CI: true
     - name: Deploy to GitHub Pages
+      if ${{ DEPLOY }}
       uses: Cecilapp/GitHub-Pages-deploy@master
       env:
-        EMAIL: hunsalz@users.noreply.github.com
+        EMAIL: ${{ secrets.EMAIL }}
         GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
         BUILD_DIR: dist/
