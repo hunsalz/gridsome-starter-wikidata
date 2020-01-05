@@ -6,7 +6,7 @@ const multibar = new cliProgress.MultiBar(
   {
     format:
       "Loading [{bar}] {filename} | {duration}sec | {value}/{total} KBytes",
-    clearOnComplete: false,
+    clearOnComplete: true,
     hideCursor: true
   },
   cliProgress.Presets.shades_grey
@@ -106,9 +106,11 @@ const stream2File = (response, dir, filename) => {
   const bar = multibar.create(Math.round(totalLength / 1024), 0, {
     filename: filename
   });
-  response.data.on("data", chunk =>
-    bar.update(Math.round(chunk.length / 1024))
-  );
+  response.data.on("data", chunk => {
+    if (bar) {
+      bar.update(Math.round(chunk.length / 1024));
+    }
+  });
   // start streaming
   response.data.pipe(writer);
   return new Promise((resolve, reject) => {
@@ -143,6 +145,7 @@ const download = async downloads => {
         )
     )
   );
+  // finally stop any progress bar
   multibar.stop();
 };
 
