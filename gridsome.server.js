@@ -6,6 +6,7 @@ const multibar = new cliProgress.MultiBar(
   {
     format:
       "Loading [{bar}] {filename} | {duration}sec | {value}/{total} KBytes",
+    stopOnComplete: true,
     clearOnComplete: true,
     hideCursor: true
   },
@@ -125,7 +126,6 @@ const stream2File = (response, dir, filename) => {
 };
 
 const download = async downloads => {
-  console.log("Starting media download(s) ...");
   await Promise.all(
     downloads.map(download =>
       axios({
@@ -145,15 +145,17 @@ const download = async downloads => {
         )
     )
   );
-  // finally stop any progress bar
-  multibar.stop();
 };
 
 // Server API hooks
 
 module.exports = function(api) {
   api.loadSource(async actions => {
+    console.log("Fetching Wikidata ...");
     const downloads = await fetchWikidata(actions);
+    console.log("Starting media download(s) ...");
     await download(downloads);
+    // finally stop any progress bar
+    multibar.stop();
   });
 };
