@@ -3,7 +3,8 @@ name: Gridsome CI-CD
 on: [push]
 
 env:
-  FOO: foo
+  EMAIL: ${{ secrets.EMAIL }}
+  GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
 
 jobs:
   build:
@@ -24,14 +25,13 @@ jobs:
     #   env:
     #     CI: true
     - name: Deploy to GitHub Pages
-      if: env.FOO2 != ''
+      if: env.EMAIL != '' && env.GH_TOKEN != '' # run job not until both env vars are available
       run: |
         echo $BUILD_DIR
-        echo $EMAIL
+        echo env.EMAIL
         
-      #if: env.EMAIL != '' # run job not until both env vars are available
       #uses: Cecilapp/GitHub-Pages-deploy@master
       env:
-        EMAIL: ${{ secrets.EMAIL }}
-        GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+        EMAIL: ${{ env.EMAIL }}
+        GH_TOKEN: ${{ env.GH_PAGES_TOKEN }}
         BUILD_DIR: dist/
