@@ -21,7 +21,8 @@ jobs:
     #   env:
     #     CI: true
     - name: Deploy to GitHub Pages
-      run: | 
+      if: $EMAIL != ''
+      run: |
         echo $BUILD_DIR
         echo $EMAIL
         
