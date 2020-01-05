@@ -21,7 +21,7 @@ jobs:
       env:
         CI: true
     - name: Deploy to GitHub Pages
-      if: ${{ DEPLOY }}
+      if: ${{ secrets.EMAIL }} && ${{ secrets.GH_PAGES_TOKEN }} # run job not until both secrets are available
       uses: Cecilapp/GitHub-Pages-deploy@master
       env:
         EMAIL: ${{ secrets.EMAIL }}
