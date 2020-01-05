@@ -3,8 +3,9 @@ name: Gridsome CI-CD
 on: [push]
 
 env:
-  EMAIL: ${{ secrets.EMAIL }}
-  GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+  HAS_EMAIL: ${{ secrets.EMAIL }}
+  HAS_GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+  # workaround until Actions supports kind of exists()
 
 jobs:
   build:
@@ -25,13 +26,13 @@ jobs:
     #   env:
     #     CI: true
     - name: Deploy to GitHub Pages
-      if: env.EMAIL != '' && env.GH_TOKEN != '' # run job not until both env vars are available
+      if: env.HAS_EMAIL != '' && env.HAS_GH_TOKEN != '' # run job not until both env vars are available
       run: |
         echo $BUILD_DIR
         echo ${{ env.EMAIL }}
         
       #uses: Cecilapp/GitHub-Pages-deploy@master
       env:
-        EMAIL: ${{ env.EMAIL }}
-        GH_TOKEN: ${{ env.GH_PAGES_TOKEN }}
+        EMAIL: ${{ secrets.EMAIL }}
+        GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
         BUILD_DIR: dist/
