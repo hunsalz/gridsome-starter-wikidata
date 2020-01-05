@@ -24,7 +24,7 @@ jobs:
       run: echo env.EMAIL
       run: echo env
       #if: env.EMAIL != '' # run job not until both env vars are available
-      uses: Cecilapp/GitHub-Pages-deploy@master
+      #uses: Cecilapp/GitHub-Pages-deploy@master
       env:
         EMAIL: ${{ secrets.EMAIL }}
         GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
