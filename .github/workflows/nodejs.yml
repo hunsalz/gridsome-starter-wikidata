@@ -21,8 +21,7 @@ jobs:
       env:
         CI: true
     - name: Deploy to GitHub Pages
-      run: |
-        echo github.env.EMAIL
+      echo: "::debug $github.env.BUILD_DIR $BUILD_DIR"
       #if: env.EMAIL != '' # run job not until both env vars are available
       #uses: Cecilapp/GitHub-Pages-deploy@master
       env:
