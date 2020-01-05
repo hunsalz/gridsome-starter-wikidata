@@ -28,7 +28,7 @@ jobs:
       if: env.EMAIL != '' && env.GH_TOKEN != '' # run job not until both env vars are available
       run: |
         echo $BUILD_DIR
-        echo env.EMAIL
+        echo ${{ env.EMAIL }}
         
       #uses: Cecilapp/GitHub-Pages-deploy@master
       env:
