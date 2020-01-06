@@ -1,5 +1,6 @@
 # Gridsome Starter Wikidata
 
+[![Actions Status](https://github.com/hunsalz/gridsome-starter-wikidata/workflows/Gridsome%20CI-CD/badge.svg)](https://github.com/hunsalz/gridsome-starter-wikidata/actions)
 [![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](http://doge.mit-license.org)
 
 This is a boilerplate starter, aiming to showcase how Gridsome and an external data source (e.g. Wikidata) can nicely work together.
