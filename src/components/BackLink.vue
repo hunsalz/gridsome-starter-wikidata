@@ -15,7 +15,7 @@ query {
 <style lang="scss">
 .back-link {
   text-decoration: none;
-  color: var(--header-color) !important;
+  color: var(--header-color);
   font-size: 1em;
 }
 </style>
