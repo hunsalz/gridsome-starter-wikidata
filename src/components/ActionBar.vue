@@ -66,18 +66,19 @@ export default {
     font-size: 0.8em;
     font-weight: 400;
     text-decoration: none;
-    background-color: var(--header-bg);
-    fill: var(--header-color);
-    border-style: none;
+    background-color: var(--bg-color);
+    color: #c0c4c6;
+    fill: #c0c4c6;
     border-radius: var(--radius);
+    border: solid 1px;
     box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.1);
     white-space: nowrap;
     cursor: pointer;
   }
 
-  button:hover {
-    fill: cyan;
-    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3);
+  :hover {
+    color: currentColor;
+    fill: currentColor;
   }
 }
 </style>
