@@ -93,7 +93,6 @@ export default {
     // add a new tag to existing tag filter
     onAddTag: function(tag) {
       this.tagFilter = _.union(this.tagFilter, [tag]);
-      console.log(this.$page);
     },
     // remove a tag from existing tag filter
     onRemoveTag: function(tag) {
