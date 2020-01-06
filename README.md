@@ -12,7 +12,7 @@ This is a boilerplate starter, aiming to showcase how Gridsome and an external d
 - Dark / light toggle
 - CSS variables, SCSS & BEM for styling
 - 100, 100, 100, 100, (100) score on Google Lighthouse
-- Github actions
+- GitHub actions
 
 ## Demo URL
 
@@ -30,24 +30,32 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 2. `cd my-gridsome-site` to open folder
 3. `gridsome develop` to start local dev server at `http://localhost:8080`
 
-## Setup Github deploy
+## Setup GitHub Pages deploy
 
-*Note*: By default Github deploy isn't active. 
+**Note**: By default GitHub Pages deploy isn't active. 
 
-Github deploy needs to secrets to be set properly: Your mail address *EMAIL* and your Github token *GH_TOKEN*.
+GitHub Pages deploy needs two secrets to be set properly: Your mail address: *EMAIL* and your GitHub token: *GH_TOKEN*.
 
-As mail address you can simply use [your commit email address on Github](https://help.github.com/en/github/setting-up-and-managing-your-github-user-account/setting-your-commit-email-address#setting-your-commit-email-address-on-github)
+As mail address you can simply use [your commit email address on GitHub](https://help.github.com/en/github/setting-up-and-managing-your-github-user-account/setting-your-commit-email-address#setting-your-commit-email-address-on-github)
 
-For generating Github personal access tokens have a look [here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token).
+Find documentation how to generate personal access tokens [here](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token).
 
 Finally you should have the following secrets available in your project:
 
 ![Project secrets](/.github/assets/screenshot-secrets.png)
 
-## Stage build with Docker
+## Developement support
 
-Mount dist folder into nginx and visit http://localhost:8080/gridsome-starter-wikidata/
+### Skip media downloads
+
+Fetching all data, especially all media content takes a while. Why not skip media downloads if you have saved all files locally already? Nothing could be easier. Just change *DOWNLOAD_MEDIA=true* in your local *.env* file to some other value.
+
+### Verify your local build
+
+If you want to verify your local build you can easily mount your dist folder into a nginx container.
+**Note**: Leave base dir blank if you want to run your site in root context.
 
 ```
-docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro -d nginx:latest
+docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/{YOUR BASE DIR}:ro -d nginx:latest
 ```
+Afterwards visit http://localhost:8080/{YOUR BASE DIR}
