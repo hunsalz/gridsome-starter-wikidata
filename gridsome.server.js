@@ -153,8 +153,10 @@ module.exports = function(api) {
   api.loadSource(async actions => {
     console.log("Fetching Wikidata ...");
     const downloads = await fetchWikidata(actions);
-    console.log("Starting media download(s) ...");
-    await download(downloads);
+    if (process.env.DOWNLOAD_MEDIA === "true") {
+      console.log("Starting media download(s) ...");
+      await download(downloads);
+    }
     // finally stop any progress bar
     multibar.stop();
   });
