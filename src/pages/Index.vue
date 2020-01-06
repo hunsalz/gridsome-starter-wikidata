@@ -77,7 +77,10 @@ export default {
     // create tag cloud
     this.$page.records.edges.forEach(edge => {
       // ... of unique values
-      edge.node.tags = _.union([edge.node.year], edge.node.depicts);
+      edge.node.tags = _.union(
+        [edge.node.year, edge.node.location],
+        edge.node.depicts
+      );
       // ... remove any empty value
       _.remove(edge.node.tags, function(tag) {
         return tag.length === 0 ? true : false;
