@@ -2,7 +2,7 @@
   <div id="app">
     <header class="header">
       <div class="header__left">
-        <BackButton v-if="showBackButton" />
+        <BackLink v-if="showBackLink" />
       </div>
       <div class="header__right">
         <ToggleTheme />
@@ -28,16 +28,16 @@
 </template>
 
 <script>
-import BackButton from "~/components/BackButton.vue";
+import BackLink from "~/components/BackLink.vue";
 import ToggleTheme from "~/components/ToggleTheme.vue";
 
 export default {
   components: {
-    BackButton,
+    BackLink,
     ToggleTheme
   },
   props: {
-    showBackButton: {
+    showBackLink: {
       type: Boolean,
       default: true
     }

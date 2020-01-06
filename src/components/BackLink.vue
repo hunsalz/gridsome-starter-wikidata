@@ -1,8 +1,6 @@
 <template>
-  <g-link class="back-button" to="/">
-    <span class="back-button__text"
-      >&larr; {{ $static.metadata.siteName }}</span
-    >
+  <g-link class="back-link" to="/">
+    <span class="back-link__text">&larr; {{ $static.metadata.siteName }}</span>
   </g-link>
 </template>
 
@@ -15,7 +13,7 @@ query {
 </static-query>
 
 <style lang="scss">
-.back-button {
+.back-link {
   text-decoration: none;
   color: var(--header-color) !important;
   font-size: 1em;

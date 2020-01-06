@@ -1,5 +1,5 @@
 <template>
-  <Layout :show-back-button="false">
+  <Layout :show-back-link="false">
     <TagCloud :event="'removeTag'" :tags="tagFilter" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
