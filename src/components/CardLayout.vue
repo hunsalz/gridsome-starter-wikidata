@@ -96,14 +96,4 @@ export default {
     z-index: 0;
   }
 }
-
-.card-layout:hover {
-  .card-layout__favorite {
-    // &__favorite {} doesn't work
-    position: absolute;
-    right: 0.5em;
-    top: 0.5em;
-    opacity: 1;
-  }
-}
 </style>
