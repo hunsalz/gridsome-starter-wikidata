@@ -69,8 +69,8 @@ export default {
 <style lang="scss">
 .toggle-theme {
   background-color: transparent;
-  border: 0;
   color: var(--header-color);
+  border: 0;
   cursor: pointer;
 
   &:hover {
