@@ -6,13 +6,14 @@
 This is a boilerplate starter, aiming to showcase how Gridsome and an external data source (e.g. Wikidata) can nicely work together.
 
 ## Features
-- Binding of an external data source with remote images; e.g. [Wikidata](https://www.wikidata.org/)
+- Using [Wikidata](https://www.wikidata.org/) as external data source
+- Download of external media data
+- Use of GitHub actions as CI/CD pipeline
 - Grid layout
-- Tag support
-- Dark / light toggle
+- Tag cloud support
+- Dark / light mode
 - CSS variables, SCSS & BEM for styling
 - 100, 100, 100, 100, (100) score on Google Lighthouse
-- GitHub actions
 
 ## Demo URL
 
@@ -34,7 +35,7 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 
 **Note**: By default GitHub Pages deploy isn't active. 
 
-GitHub Pages deploy needs two secrets to be set properly: Your mail address: *EMAIL* and your GitHub token: *GH_TOKEN*.
+GitHub Pages deploy needs two secrets to be set properly: Your mail address: *EMAIL* and your GitHub token: *GH_PAGES_TOKEN*.
 
 As mail address you can simply use [your commit email address on GitHub](https://help.github.com/en/github/setting-up-and-managing-your-github-user-account/setting-your-commit-email-address#setting-your-commit-email-address-on-github)
 
@@ -58,4 +59,4 @@ If you want to verify your local build you can easily mount your dist folder int
 ```
 docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/{YOUR BASE DIR}:ro -d nginx:latest
 ```
-Afterwards visit http://localhost:8080/{YOUR BASE DIR}
+Afterwards visit [http://localhost:8080/{YOUR BASE DIR}](http://localhost:8080/)
