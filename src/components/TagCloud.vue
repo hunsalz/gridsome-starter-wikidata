@@ -3,6 +3,8 @@
     <button
       v-for="(tag, index) in tags"
       :key="index"
+      role="button"
+      aria-label="Tag"
       class="tag-filter__button"
       @click="emitEvent(tag)"
     >
@@ -37,16 +39,21 @@ export default {
 
   &__button {
     margin: 0.2em;
-    padding: 0.4em;
+    padding: 0.5em;
     font-size: 0.8em;
+    font-weight: 400;
     text-decoration: none;
     background-color: var(--bg-color);
-    color: currentColor !important;
+    color: currentColor;
+    border-style: solid;
     border-radius: var(--radius);
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.1);
     white-space: nowrap;
+    cursor: pointer;
   }
+
   button:hover {
-    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3);
   }
 }
 </style>
