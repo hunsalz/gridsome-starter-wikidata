@@ -20,7 +20,6 @@
       <ActionBar
         class="card-layout__actions"
         :record="record"
-        :event="'addFavorite'"
       />
     </div>
     <g-link class="card-layout__link_to_record" :to="record.path" />
