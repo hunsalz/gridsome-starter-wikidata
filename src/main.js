@@ -7,8 +7,10 @@ import VueLodash from "vue-lodash";
 export default function(Vue) {
   // set default layout as a global component
   Vue.component("Layout", DefaultLayout);
-  // set global event bus
-  Vue.prototype.$eventBus = new Vue();
   // set global lodash
   Vue.use(VueLodash, { name: "lodash" });
+  // set global event bus
+  Vue.prototype.$eventBus = new Vue();
+  // set global favorites
+  Vue.prototype.$favorites = [];
 }

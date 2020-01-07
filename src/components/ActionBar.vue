@@ -1,7 +1,7 @@
 <template>
   <div class="action-bar">
     <div class="action-bar__left">
-      <button class="action-bar__button" @click="emitEvent(record.item)">
+      <button class="action-bar__button" :is-favorite="isFavorite" @click="emitEvent(record.item)">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -49,11 +49,12 @@ export default {
     record: {
       type: Object,
       required: true
-    },
-    event: {
-      type: String,
-      required: true
     }
+  },
+  data() {
+    return {
+      isFavorite: false
+    };
   },
   computed: {
     computedWikidataLink: function() {
@@ -62,8 +63,8 @@ export default {
   },
   methods: {
     emitEvent(item) {
-      console.log(item);
-      this.$eventBus.$emit(this.event, item);
+      this.isFavorite = !this.isFavorite;
+      this.$eventBus.$emit("toggleFavorite", item);
     }
   }
 };
@@ -75,7 +76,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  margin: 1em 0 1em 0;
+  margin: 4em 0 1em 0;
 
   &__left,
   &__right {
@@ -88,7 +89,6 @@ export default {
     margin: 0.2em;
     padding: 0.5em;
     font-size: 0.8em;
-    font-weight: 400;
     text-decoration: none;
     background-color: var(--bg-color);
     color: currentColor;
@@ -103,8 +103,17 @@ export default {
     cursor: pointer;
   }
 
+  &__button[is-favorite="true"] {
+    fill: red;
+  }
+
   :hover {
     opacity: 1;
+    transition: opacity 0.5s;
+  }
+
+  :focus {
+    outline: none;
   }
 }
 </style>
