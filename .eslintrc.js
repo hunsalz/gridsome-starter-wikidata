@@ -3,10 +3,12 @@ module.exports = {
   env: {
     node: true
   },
+  plugins: ["lodash"],
   extends: [
     "plugin:vue/recommended",
     "eslint:recommended",
     "prettier/vue",
+    "plugin:lodash/recommended",
     "plugin:prettier/recommended"
   ],
   rules: {
