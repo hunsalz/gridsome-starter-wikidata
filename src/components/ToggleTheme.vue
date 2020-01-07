@@ -72,11 +72,12 @@ export default {
   border: 0;
   cursor: pointer;
 
-  &:hover {
+  :hover {
     opacity: 0.8;
+    transition: opacity 0.5s;
   }
 
-  &:focus {
+  :focus {
     outline: none;
   }
 }
