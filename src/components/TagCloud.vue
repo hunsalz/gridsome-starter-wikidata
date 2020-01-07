@@ -41,7 +41,6 @@ export default {
     margin: 0.2em;
     padding: 0.5em;
     font-size: 0.8em;
-    font-weight: 600;
     text-decoration: none;
     background-color: var(--bg-color);
     color: currentColor;
@@ -58,6 +57,11 @@ export default {
 
   :hover {
     opacity: 1;
+    transition: opacity 0.5s;
+  }
+
+  :focus {
+    outline: none;
   }
 }
 </style>
