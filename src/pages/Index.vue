@@ -100,7 +100,7 @@ export default {
     },
     // remove a tag from existing tag filter
     onRemoveTag: function(tag) {
-      _.pull(this.tagCloud, tag);
+      this.tagCloud = _.without(this.tagCloud, tag);
     },
     // toggle favorite
     onToggleFavorite: function(item) {
@@ -110,7 +110,6 @@ export default {
       } else {
         this.$favorites.push(item);
       }
-      //console.log(item, this.$favorites); TODO --wip--
     }
   }
 };
