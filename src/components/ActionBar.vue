@@ -1,7 +1,11 @@
 <template>
   <div class="action-bar">
     <div class="action-bar__left">
-      <button class="action-bar__button" :is-favorite="isFavorite" @click="emitEvent(record.item)">
+      <button
+        class="action-bar__button"
+        :is-favorite="isFavorite"
+        @click="emitEvent(record.item)"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
