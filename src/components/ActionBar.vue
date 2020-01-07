@@ -67,18 +67,20 @@ export default {
     font-weight: 400;
     text-decoration: none;
     background-color: var(--bg-color);
-    color: #c0c4c6;
-    fill: #c0c4c6;
+    color: currentColor;
+    fill: currentColor;
     border-radius: var(--radius);
-    border: solid 1px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: currentColor;
     box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.1);
+    opacity: 0.6;
     white-space: nowrap;
     cursor: pointer;
   }
 
   :hover {
-    color: currentColor;
-    fill: currentColor;
+    opacity: 1;
   }
 }
 </style>
