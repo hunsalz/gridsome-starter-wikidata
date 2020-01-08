@@ -1,6 +1,6 @@
 <template>
   <Layout :show-back-link="false">
-    <TagCloud :event="'removeTag'" :tags="tagCloud" />
+    <TagCloud :event="this.$eventBus.event.removeTag" :tags="tagCloud" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
         <CardLayout :record="edge.node" />
@@ -71,9 +71,9 @@ export default {
   },
   created() {
     // subscribe to event bus
-    this.$eventBus.$on("addTag", this.onAddTag);
-    this.$eventBus.$on("removeTag", this.onRemoveTag);
-    this.$eventBus.$on("toggleFavorite", this.onToggleFavorite);
+    this.$eventBus.$on(this.$eventBus.event.addTag, this.onAddTag);
+    this.$eventBus.$on(this.$eventBus.event.removeTag, this.onRemoveTag);
+    this.$eventBus.$on(this.$eventBus.event.changeFavorite, this.onChangeFavorite);
     // create tag cloud
     this.$page.records.edges.forEach(edge => {
       // ... of unique values
@@ -88,10 +88,8 @@ export default {
     });
   },
   beforeDestroy() {
-    // unsubscribe from event bus
-    this.$eventBus.$off("addTag");
-    this.$eventBus.$off("removeTag");
-    this.$eventBus.$off("toggleFavorite");
+    // unsubscribe from all event listeners at once
+    this.$eventBus.$off();
   },
   methods: {
     // add a new tag to existing tag filter
@@ -102,14 +100,15 @@ export default {
     onRemoveTag: function(tag) {
       this.tagCloud = _.without(this.tagCloud, tag);
     },
-    // toggle favorite
-    onToggleFavorite: function(item) {
+    // change favorite
+    onChangeFavorite: function(item) {
       let index = _.indexOf(this.$favorites, item);
       if (index != -1) {
         this.$favorites.splice(index, 1);
       } else {
         this.$favorites.push(item);
       }
+      console.log(this.$favorites);
     }
   }
 };

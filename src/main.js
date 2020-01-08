@@ -11,6 +11,11 @@ export default function(Vue) {
   Vue.use(VueLodash, { name: "lodash" });
   // set global event bus
   Vue.prototype.$eventBus = new Vue();
+  Vue.prototype.$eventBus.event = {
+    addTag: "addTag",
+    removeTag: "removeTag",
+    changeFavorite: "changeFavorite"
+  }
   // set global favorites
   Vue.prototype.$favorites = [];
 }

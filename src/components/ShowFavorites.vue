@@ -1,8 +1,8 @@
 <template>
   <button
     role="button"
-    aria-label="Toggle favorites"
-    class="toggle-favorites"
+    aria-label="Show favorites"
+    class="show-favorites"
     :is-visible="isVisible"
     @click.prevent="showFavorites"
   >
@@ -28,14 +28,14 @@ export default {
   },
   created() {
     // subscribe to event bus
-    this.$eventBus.$on("toggleFavorite", this.onToggleFavorite);
+    this.$eventBus.$on(this.$eventBus.event.changeFavorite, this.onChangeFavorite);
   },
   beforeDestroy() {
-    // unsubscribe from event bus
-    this.$eventBus.$off("toggleFavorite");
+    // unsubscribe from all event listeners at once
+    this.$eventBus.$off();
   },
   methods: {
-    onToggleFavorite() {
+    onChangeFavorite() {
       this.isVisible = this.$favorites.length == 0 ? false : true;
     },
     showFavorites() {
@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
-.toggle-favorites {
+.show-favorites {
   background-color: transparent;
   fill: var(--header-color);
   border: 0;
@@ -55,7 +55,7 @@ export default {
   opacity: 0;
 }
 
-.toggle-favorites[is-visible="true"] {
+.show-favorites[is-visible="true"] {
   opacity: 1;
 
   :hover {

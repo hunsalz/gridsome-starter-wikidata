@@ -68,7 +68,7 @@ export default {
   methods: {
     emitEvent(item) {
       this.isFavorite = !this.isFavorite;
-      this.$eventBus.$emit("toggleFavorite", item);
+      this.$eventBus.$emit(this.$eventBus.event.changeFavorite, item);
     }
   }
 };

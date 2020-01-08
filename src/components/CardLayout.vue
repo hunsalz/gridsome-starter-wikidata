@@ -14,7 +14,7 @@
       <div>Material: {{ record.materials.join(", ") }}</div>
       <TagCloud
         class="card-layout__tags"
-        :event="'addTag'"
+        :event="this.$eventBus.event.addTag"
         :tags="record.tags"
       />
       <ActionBar

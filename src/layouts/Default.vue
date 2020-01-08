@@ -5,7 +5,7 @@
         <BackLink v-if="showBackLink" />
       </div>
       <div class="header__right">
-        <ToggleFavorites />
+        <ShowFavorites />
         <ToggleTheme />
       </div>
     </header>
@@ -30,13 +30,13 @@
 
 <script>
 import BackLink from "~/components/BackLink.vue";
-import ToggleFavorites from "~/components/ToggleFavorites.vue";
+import ShowFavorites from "~/components/ShowFavorites.vue";
 import ToggleTheme from "~/components/ToggleTheme.vue";
 
 export default {
   components: {
     BackLink,
-    ToggleFavorites,
+    ShowFavorites,
     ToggleTheme
   },
   props: {
