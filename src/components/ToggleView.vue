@@ -40,6 +40,10 @@ export default {
   methods: {
     toggleView() {
       this.dashboard = !this.dashboard;
+      this.$eventBus.$emit(
+        this.$eventBus.event.toggleView,
+        this.dashboard ? "favorites" : "dashboard"
+      );
     }
   }
 };

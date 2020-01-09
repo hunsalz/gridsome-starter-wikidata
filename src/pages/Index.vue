@@ -1,5 +1,5 @@
 <template>
-  <Layout :show-back-link="false" :toggle-view="toggleView()">
+  <Layout :show-back-link="false" :toggle-view="showToggleView()">
     <TagCloud :event="this.$eventBus.event.removeTag" :tags="filter" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
@@ -44,6 +44,7 @@ export default {
   },
   data: function() {
     return {
+      view: "dashboard",
       filter: [],
       favorites: []
     };
@@ -61,20 +62,35 @@ export default {
   },
   computed: {
     computedCards: function() {
-      // filter matching cards
-      return this.$page.records.edges.filter(
-        edge =>
-          // compose intersection between tags per node and given filter
-          _.intersection(edge.node.tags, this.filter).length ===
-          this.filter.length // force exact match of all filter elements
-      );
+      console.log("computedCards");
+
+      if (this.view === "favorites" && this.favorites.length > 0) {
+
+        // filter matching cards
+        return this.$page.records.edges.filter(
+          edge => _.indexOf(this.favorites, edge.node.item) > -1
+        );
+
+      } else {
+        // filter matching cards
+        return this.$page.records.edges.filter(
+          edge =>
+            // compose intersection between tags per node and given filter
+            _.intersection(edge.node.tags, this.filter).length ===
+            this.filter.length // force exact match of all filter elements
+        );
+      }
     }
   },
   created() {
     // subscribe to event bus
     this.$eventBus.$on(this.$eventBus.event.addTag, this.onAddTag);
     this.$eventBus.$on(this.$eventBus.event.removeTag, this.onRemoveTag);
-    this.$eventBus.$on(this.$eventBus.event.changeFavorite, this.onChangeFavorite);
+    this.$eventBus.$on(
+      this.$eventBus.event.changeFavorite,
+      this.onChangeFavorite
+    );
+    this.$eventBus.$on(this.$eventBus.event.toggleView, this.onToggleView);
     // create tag cloud
     this.$page.records.edges.forEach(edge => {
       // ... of unique values
@@ -101,16 +117,24 @@ export default {
     onRemoveTag: function(tag) {
       this.filter = _.without(this.filter, tag);
     },
-    // change favorite
+    // control list of favorites
     onChangeFavorite: function(item) {
       let index = _.indexOf(this.favorites, item);
       if (index != -1) {
         this.favorites.splice(index, 1);
+        if (this.favorites.length === 0) {
+          this.view = "dashboard";
+        }
       } else {
         this.favorites.push(item);
       }
     },
-    toggleView: function() {
+    //
+    onToggleView: function(view) {
+      this.view = view;
+      console.log(this.view, view);
+    },
+    showToggleView: function() {
       return this.favorites.length > 0 ? true : false;
     }
   }
