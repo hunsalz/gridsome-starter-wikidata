@@ -15,6 +15,6 @@ export default function(Vue) {
     addTag: "addTag",
     removeTag: "removeTag",
     changeFavorite: "changeFavorite",
-    
+    toggleView: "toggleView"
   }
 }
