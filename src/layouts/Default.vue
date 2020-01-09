@@ -5,7 +5,7 @@
         <BackLink v-if="showBackLink" />
       </div>
       <div class="header__right">
-        <ShowFavorites />
+        <ShowFavorites v-if="showFavorites" />
         <ToggleTheme />
       </div>
     </header>
@@ -42,7 +42,11 @@ export default {
   props: {
     showBackLink: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    showFavorites: {
+      type: Boolean,
+      default: false
     }
   }
 };
