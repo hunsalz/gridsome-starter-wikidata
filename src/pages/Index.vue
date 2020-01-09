@@ -1,6 +1,6 @@
 <template>
-  <Layout :show-back-link="false">
-    <TagCloud :event="this.$eventBus.event.removeTag" :tags="tagCloud" />
+  <Layout :show-back-link="false" :show-favorites="showFavorites()" :show-tag-cloud="true">
+    <TagCloud :event="this.$eventBus.event.removeTag" :tags="filter" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
         <CardLayout :record="edge.node" />
@@ -44,7 +44,8 @@ export default {
   },
   data: function() {
     return {
-      tagCloud: []
+      filter: [],
+      favorites: []
     };
   },
   metaInfo() {
@@ -63,9 +64,9 @@ export default {
       // filter matching cards
       return this.$page.records.edges.filter(
         edge =>
-          // compose intersection between tags per node and given tag cloud
-          _.intersection(edge.node.tags, this.tagCloud).length ===
-          this.tagCloud.length // force exact match of all filtered tag elements
+          // compose intersection between tags per node and given filter
+          _.intersection(edge.node.tags, this.filter).length ===
+          this.filter.length // force exact match of all filter elements
       );
     }
   },
@@ -94,21 +95,23 @@ export default {
   methods: {
     // add a new tag to existing tag filter
     onAddTag: function(tag) {
-      this.tagCloud = _.union(this.tagCloud, [tag]);
+      this.filter = _.union(this.filter, [tag]);
     },
     // remove a tag from existing tag filter
     onRemoveTag: function(tag) {
-      this.tagCloud = _.without(this.tagCloud, tag);
+      this.filter = _.without(this.filter, tag);
     },
     // change favorite
     onChangeFavorite: function(item) {
-      let index = _.indexOf(this.$favorites, item);
+      let index = _.indexOf(this.favorites, item);
       if (index != -1) {
-        this.$favorites.splice(index, 1);
+        this.favorites.splice(index, 1);
       } else {
-        this.$favorites.push(item);
+        this.favorites.push(item);
       }
-      console.log(this.$favorites);
+    },
+    showFavorites: function() {
+      return this.favorites.length > 0 ? true : false;
     }
   }
 };

@@ -1,5 +1,9 @@
 <template>
-  <Layout class="record">
+  <Layout
+    :show-back-link="true"
+    :show-favorites="false"
+    :show-tag-cloud="false"
+  >
     <div class="content-box">
       <h1 class="record__header">{{ $page.record.painting }}</h1>
       <div class="record__main">
