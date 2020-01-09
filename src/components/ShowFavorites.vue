@@ -3,7 +3,6 @@
     role="button"
     aria-label="Show favorites"
     class="show-favorites"
-    :is-visible="isVisible"
     @click.prevent="showFavorites"
   >
     <svg
@@ -20,30 +19,7 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      isVisible: false
-    };
-  },
-  created() {
-    // subscribe to event bus
-    this.$eventBus.$on(this.$eventBus.event.changeFavorite, this.onChangeFavorite);
-  },
-  beforeDestroy() {
-    // unsubscribe from all event listeners at once
-    this.$eventBus.$off();
-  },
-  methods: {
-    onChangeFavorite() {
-      this.isVisible = this.$favorites.length == 0 ? false : true;
-    },
-    showFavorites() {
-      console.log("TODO");
-      // TODO --wip--
-    }
-  }
-};
+export default {};
 </script>
 
 <style lang="scss">
@@ -52,11 +28,6 @@ export default {
   fill: var(--header-color);
   border: 0;
   cursor: pointer;
-  opacity: 0;
-}
-
-.show-favorites[is-visible="true"] {
-  opacity: 1;
 
   :hover {
     opacity: 0.8;
