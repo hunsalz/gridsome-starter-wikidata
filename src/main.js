@@ -14,8 +14,7 @@ export default function(Vue) {
   Vue.prototype.$eventBus.event = {
     addTag: "addTag",
     removeTag: "removeTag",
-    changeFavorite: "changeFavorite"
+    changeFavorite: "changeFavorite",
+    
   }
-  // set global favorites
-  Vue.prototype.$favorites = [];
 }
