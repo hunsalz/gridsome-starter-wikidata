@@ -1,5 +1,5 @@
 <template>
-  <Layout :show-back-link="false" :show-favorites="showFavorites()" :show-tag-cloud="true">
+  <Layout :show-back-link="false" :toggle-view="toggleView()">
     <TagCloud :event="this.$eventBus.event.removeTag" :tags="filter" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
@@ -110,7 +110,7 @@ export default {
         this.favorites.push(item);
       }
     },
-    showFavorites: function() {
+    toggleView: function() {
       return this.favorites.length > 0 ? true : false;
     }
   }
