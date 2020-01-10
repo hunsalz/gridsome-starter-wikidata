@@ -39,7 +39,7 @@
         role="button"
         aria-label="Download painting"
         class="action-bar__button"
-        @click.prevent="emitDownload(record.item)"
+        @click.prevent="download()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +58,9 @@
 </template>
 
 <script>
-import { TOGGLE_FAVORITE, DOWNLOAD } from "~/components/js/Event.js";
+import axios from "axios";
+
+import { TOGGLE_FAVORITE } from "~/components/js/Event.js";
 
 export default {
   props: {
@@ -82,8 +84,27 @@ export default {
       this.isFavorite = !this.isFavorite;
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
-    emitDownload(item) {
-      this.$eventBus.$emit(DOWNLOAD, item);
+    download: function(item) {
+      console.log("DOWNLOAD", this.record, this.record.cover_image.src);
+
+      
+      axios({
+        method: "get",
+        url: this.record.cover_image.src,
+        //url: "http://localhost:8080/README.md",
+        responseType: "blob"
+      })
+        .then(response => {
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement("a");
+
+          fileLink.href = fileURL;
+          fileLink.setAttribute("download", "file.png");
+          document.body.appendChild(fileLink);
+
+          fileLink.click();
+        })
+        .catch(error => console.log(`Download failed: ${error}`));
     }
   }
 };
