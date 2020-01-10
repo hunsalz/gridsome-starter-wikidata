@@ -6,7 +6,7 @@
       role="button"
       aria-label="Tag"
       class="tag-filter__button"
-      @click="emitEvent(tag)"
+      @click.prevent="emitEvent(tag)"
     >
       <span># {{ tag }}</span>
     </button>

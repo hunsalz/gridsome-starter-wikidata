@@ -39,7 +39,7 @@ import TagCloud from "~/components/TagCloud.vue";
 import {
   ADD_TAG,
   REMOVE_TAG,
-  CHANGE_FAVORITE,
+  TOGGLE_FAVORITE,
   TOGGLE_VIEW
 } from "~/components/js/Event.js";
 import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
@@ -67,6 +67,29 @@ export default {
       ]
     };
   },
+  created() {
+    // subscribe to event bus
+    this.$eventBus.$on(ADD_TAG, this.onAddTag);
+    this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
+    this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
+    this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
+    // create tag cloud
+    this.$page.records.edges.forEach(edge => {
+      // ... of unique values
+      edge.node.tags = _.union(
+        [edge.node.year, edge.node.location],
+        edge.node.depicts
+      );
+      // ... remove any empty value
+      _.remove(edge.node.tags, function(tag) {
+        return tag.length === 0 ? true : false;
+      });
+    });
+  },
+  beforeDestroy() {
+    // unsubscribe from all event listeners at once
+    this.$eventBus.$off();
+  },
   computed: {
     computedCards: function() {
       // view
@@ -85,29 +108,6 @@ export default {
         );
       }
     }
-  },
-  created() {
-    // subscribe to event bus
-    this.$eventBus.$on(ADD_TAG, this.onAddTag);
-    this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
-    this.$eventBus.$on(CHANGE_FAVORITE, this.onChangeFavorite);
-    this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
-    // create tag cloud
-    this.$page.records.edges.forEach(edge => {
-      // ... of unique values
-      edge.node.tags = _.union(
-        [edge.node.year, edge.node.location],
-        edge.node.depicts
-      );
-      // ... remove any empty value
-      _.remove(edge.node.tags, function(tag) {
-        return tag.length === 0 ? true : false;
-      });
-    });
-  },
-  beforeDestroy() {
-    // unsubscribe from all event listeners at once
-    this.$eventBus.$off();
   },
   methods: {
     // add a new tag to existing tag filter
