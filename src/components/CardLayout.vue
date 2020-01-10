@@ -14,13 +14,10 @@
       <div>Material: {{ record.materials.join(", ") }}</div>
       <TagCloud
         class="card-layout__tags"
-        :event="this.$eventBus.event.addTag"
+        :event="__getAddTag()"
         :tags="record.tags"
       />
-      <ActionBar
-        class="card-layout__actions"
-        :record="record"
-      />
+      <ActionBar class="card-layout__actions" :record="record" />
     </div>
     <g-link class="card-layout__link_to_record" :to="record.path" />
   </div>
@@ -29,6 +26,7 @@
 <script>
 import ActionBar from "~/components/ActionBar";
 import TagCloud from "~/components/TagCloud";
+import { ADD_TAG } from "~/components/js/Event.js";
 
 export default {
   components: {
@@ -44,6 +42,11 @@ export default {
   computed: {
     computedWikidataLink: function() {
       return "https://www.wikidata.org/wiki/" + this.record.item;
+    }
+  },
+  methods: {
+    __getAddTag: function() {
+      return ADD_TAG;
     }
   }
 };

@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import { CHANGE_FAVORITE } from "~/components/js/Event.js";
+
 export default {
   props: {
     record: {
@@ -68,7 +70,7 @@ export default {
   methods: {
     emitEvent(item) {
       this.isFavorite = !this.isFavorite;
-      this.$eventBus.$emit(this.$eventBus.event.changeFavorite, item);
+      this.$eventBus.$emit(CHANGE_FAVORITE, item);
     }
   }
 };

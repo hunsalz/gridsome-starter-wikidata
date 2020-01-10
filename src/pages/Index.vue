@@ -1,6 +1,6 @@
 <template>
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
-    <TagCloud :event="this.$eventBus.event.removeTag" :tags="filter" />
+    <TagCloud :event="__getRemoveTag()" :tags="filter" />
     <div class="grid">
       <div v-for="edge in computedCards" :key="edge.node.id">
         <CardLayout :record="edge.node" />
@@ -36,6 +36,13 @@ query {
 <script>
 import CardLayout from "~/components/CardLayout.vue";
 import TagCloud from "~/components/TagCloud.vue";
+import {
+  ADD_TAG,
+  REMOVE_TAG,
+  CHANGE_FAVORITE,
+  TOGGLE_VIEW
+} from "~/components/js/Event.js";
+import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
 
 export default {
   components: {
@@ -44,7 +51,7 @@ export default {
   },
   data: function() {
     return {
-      view: "dashboard",
+      view: DASHBOARD,
       filter: [],
       favorites: []
     };
@@ -62,15 +69,12 @@ export default {
   },
   computed: {
     computedCards: function() {
-      console.log("computedCards");
-
-      if (this.view === "favorites" && this.favorites.length > 0) {
-
+      // view
+      if (this.view === FAVORITES && this.favorites.length > 0) {
         // filter matching cards
         return this.$page.records.edges.filter(
           edge => _.indexOf(this.favorites, edge.node.item) > -1
         );
-
       } else {
         // filter matching cards
         return this.$page.records.edges.filter(
@@ -84,13 +88,10 @@ export default {
   },
   created() {
     // subscribe to event bus
-    this.$eventBus.$on(this.$eventBus.event.addTag, this.onAddTag);
-    this.$eventBus.$on(this.$eventBus.event.removeTag, this.onRemoveTag);
-    this.$eventBus.$on(
-      this.$eventBus.event.changeFavorite,
-      this.onChangeFavorite
-    );
-    this.$eventBus.$on(this.$eventBus.event.toggleView, this.onToggleView);
+    this.$eventBus.$on(ADD_TAG, this.onAddTag);
+    this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
+    this.$eventBus.$on(CHANGE_FAVORITE, this.onChangeFavorite);
+    this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
     // create tag cloud
     this.$page.records.edges.forEach(edge => {
       // ... of unique values
@@ -119,23 +120,29 @@ export default {
     },
     // control list of favorites
     onChangeFavorite: function(item) {
+      // remove item if in place
       let index = _.indexOf(this.favorites, item);
       if (index != -1) {
         this.favorites.splice(index, 1);
+        // force dashboard view when last item is removed
         if (this.favorites.length === 0) {
-          this.view = "dashboard";
+          this.view = DASHBOARD;
         }
+        // add if not in place
       } else {
         this.favorites.push(item);
       }
     },
-    //
+    // set view setting
     onToggleView: function(view) {
       this.view = view;
-      console.log(this.view, view);
     },
+    // decide if toggle is visible
     showToggleView: function() {
       return this.favorites.length > 0 ? true : false;
+    },
+    __getRemoveTag: function() {
+      return REMOVE_TAG;
     }
   }
 };

@@ -31,6 +31,9 @@
 </template>
 
 <script>
+import { TOGGLE_VIEW } from "~/components/js/Event.js";
+import { DASHBOARD, FAVORITES } from "./js/View.js";
+
 export default {
   data() {
     return {
@@ -40,10 +43,7 @@ export default {
   methods: {
     toggleView() {
       this.dashboard = !this.dashboard;
-      this.$eventBus.$emit(
-        this.$eventBus.event.toggleView,
-        this.dashboard ? "favorites" : "dashboard"
-      );
+      this.$eventBus.$emit(TOGGLE_VIEW, this.dashboard ? FAVORITES : DASHBOARD);
     }
   }
 };
