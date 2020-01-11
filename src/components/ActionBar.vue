@@ -94,7 +94,7 @@ export default {
         .split("?")[0];
       // remove any URI gibberish
       filename = decodeURI(filename).replace(/%2C/g, ",");
-      FileSaver.saveAs(uri, filename, { type: "image/jpeg" });
+      FileSaver.saveAs(uri, filename);
     }
   }
 };
