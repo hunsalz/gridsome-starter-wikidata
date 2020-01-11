@@ -130,7 +130,7 @@ const download = async downloads => {
     downloads.map(download =>
       axios({
         method: "get",
-        uri: download.src,
+        url: download.src,
         responseType: "stream"
       })
         .then(response =>
