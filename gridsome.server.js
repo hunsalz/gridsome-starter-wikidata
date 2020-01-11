@@ -68,11 +68,11 @@ const fetchWikidata = async actions => {
       // prepare downloads
       let filename = null;
       if (item.image) {
-        let url = item.image.value;
-        filename = url.substring(url.lastIndexOf("/") + 1);
+        let uri = item.image.value;
+        filename = uri.substring(uri.lastIndexOf("/") + 1);
         filename = decodeURI(filename).replace(/%2C/g, ",");
         // add src and destination dir + filename to download list
-        downloads.push({ src: url, dir: DIR, filename: filename });
+        downloads.push({ src: uri, dir: DIR, filename: filename });
       }
       // create node from item properties
       collection.addNode({
@@ -130,7 +130,7 @@ const download = async downloads => {
     downloads.map(download =>
       axios({
         method: "get",
-        url: download.src,
+        uri: download.src,
         responseType: "stream"
       })
         .then(response =>
