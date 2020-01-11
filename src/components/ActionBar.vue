@@ -37,7 +37,7 @@
     <div class="action-bar__right">
       <button
         role="button"
-        aria-label="Download painting"
+        aria-label="Download image"
         class="action-bar__button"
         @click.prevent="download()"
       >
@@ -84,14 +84,18 @@ export default {
       this.isFavorite = !this.isFavorite;
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
-    download: function(item) {
-      console.log("DOWNLOAD", this.record, this.record.cover_image.src);
+    download: function(item) {     
+      let uri = this.record.image.src;
+      // extract filename: take last element of relative URI and remove any URI params
+      let filename = uri.split('/').pop().split('?')[0];
+      // remove any URI gibberish
+      filename = decodeURI(filename).replace(/%2C/g, ",");
 
+      console.log("DOWNLOAD", this.record, this.record.image.src, filename);
       
       axios({
         method: "get",
-        url: this.record.cover_image.src,
-        //url: "http://localhost:8080/README.md",
+        url: this.record.image.src,
         responseType: "blob"
       })
         .then(response => {
@@ -99,7 +103,7 @@ export default {
           var fileLink = document.createElement("a");
 
           fileLink.href = fileURL;
-          fileLink.setAttribute("download", "file.png");
+          fileLink.setAttribute("download", filename);
           document.body.appendChild(fileLink);
 
           fileLink.click();
