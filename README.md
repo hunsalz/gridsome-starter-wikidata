@@ -5,19 +5,19 @@
 
 This is a boilerplate starter, aiming to showcase how Gridsome and an external data source (e.g. Wikidata) can nicely work together.
 
+## Demo URL
+
+https://hunsalz.github.io/gridsome-starter-wikidata
+
 ## Features
 - Using [Wikidata](https://www.wikidata.org/) as external data source
 - Download of external media data
 - Use of GitHub actions as CI/CD pipeline
 - Grid layout
-- Tag cloud support
+- Tag & favorite filter
 - Dark / light mode
 - CSS variables, SCSS & BEM for styling
 - 100, 100, 100, 100, (100) score on Google Lighthouse
-
-## Demo URL
-
-https://hunsalz.github.io/gridsome-starter-wikidata
 
 ## Install
 
