@@ -94,28 +94,7 @@ export default {
         .split("?")[0];
       // remove any URI gibberish
       filename = decodeURI(filename).replace(/%2C/g, ",");
-
-      console.log("DOWNLOAD", this.record, this.record.image.src, filename);
-
-      FileSaver.saveAs(uri, filename);
-
-      /*       axios({
-        method: "get",
-        url: this.record.image.src,
-        responseType: "blob"
-      })
-        .then(response => {
-          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
-          var fileLink = document.createElement("a");
-
-          fileLink.href = fileURL;
-          fileLink.setAttribute("download", filename);
-          document.body.appendChild(fileLink);
-
-          fileLink.click();
-        })
-        .catch(error => console.log(`Download failed: ${error}`));
-    } */
+      FileSaver.saveAs(uri, filename, { type: "image/jpeg" });
     }
   }
 };
