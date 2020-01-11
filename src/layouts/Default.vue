@@ -9,13 +9,11 @@
         <ToggleTheme />
       </div>
     </header>
-
     <transition name="fade" appear>
-      <div class="main">
+      <div class="content">
         <slot />
       </div>
     </transition>
-
     <footer class="footer">
       <span class="footer__copyright">
         Copyright © {{ new Date().getFullYear() }}.
@@ -72,7 +70,7 @@ export default {
   }
 }
 
-.main {
+.content {
   margin-top: calc(var(--header-height) + 1em);
   margin-left: 1em;
   margin-right: 1em;
