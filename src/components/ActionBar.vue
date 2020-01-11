@@ -59,6 +59,7 @@
 
 <script>
 import axios from "axios";
+import FileSaver from "file-saver";
 
 import { TOGGLE_FAVORITE } from "~/components/js/Event.js";
 
@@ -84,16 +85,21 @@ export default {
       this.isFavorite = !this.isFavorite;
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
-    download: function(item) {     
+    download: function(item) {
       let uri = this.record.image.src;
       // extract filename: take last element of relative URI and remove any URI params
-      let filename = uri.split('/').pop().split('?')[0];
+      let filename = uri
+        .split("/")
+        .pop()
+        .split("?")[0];
       // remove any URI gibberish
       filename = decodeURI(filename).replace(/%2C/g, ",");
 
       console.log("DOWNLOAD", this.record, this.record.image.src, filename);
-      
-      axios({
+
+      FileSaver.saveAs(uri, filename);
+
+      /*       axios({
         method: "get",
         url: this.record.image.src,
         responseType: "blob"
@@ -109,6 +115,7 @@ export default {
           fileLink.click();
         })
         .catch(error => console.log(`Download failed: ${error}`));
+    } */
     }
   }
 };
