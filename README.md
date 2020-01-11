@@ -43,20 +43,3 @@ Find documentation how to generate personal access tokens [here](https://help.gi
 
 Finally you should have the following secrets available in your project:
 
-![Project secrets](/.github/assets/screenshot-secrets.png)
-
-## Developement support
-
-### Skip media downloads
-
-Fetching all data, especially all media content takes a while. Why not skip media downloads if you have saved all files locally already? Nothing could be easier. Just change *DOWNLOAD_MEDIA=true* in your local *.env* file to some other value.
-
-### Verify your local build
-
-If you want to verify your local build you can easily mount your dist folder into a nginx container.
-**Note**: Leave base dir blank if you want to run your site in root context.
-
-```
-docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/{YOUR BASE DIR}:ro -d nginx:latest
-```
-Afterwards visit [http://localhost:8080/{YOUR BASE DIR}](http://localhost:8080/)
