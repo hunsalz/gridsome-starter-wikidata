@@ -12,7 +12,7 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 ## Features
 - Using [Wikidata](https://www.wikidata.org/) as external data source
 - Download of external media data
-- Use of GitHub actions as CI/CD pipeline
+- Use of GitHub actions CI/CD pipeline
 - Grid layout
 - Tag & favorite filter
 - Dark / light mode
