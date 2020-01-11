@@ -2,7 +2,7 @@
   <Layout :show-back-link="true" :toggle-view="false">
     <div class="content-box">
       <h1 class="record__header">{{ $page.record.painting }}</h1>
-      <div class="record__main">
+      <div class="record__content">
         <g-image
           v-if="$page.record.image"
           :src="$page.record.image"
@@ -59,7 +59,7 @@ query record ($id: ID!) {
     text-align: center;
   }
 
-  &__main {
+  &__content {
     margin: 0 1em 1em 1em;
     padding: 0 1em 1em 1em;
 
