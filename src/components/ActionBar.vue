@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import FileSaver from "file-saver";
 
 import { TOGGLE_FAVORITE } from "~/components/js/Event.js";
@@ -85,7 +84,7 @@ export default {
       this.isFavorite = !this.isFavorite;
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
-    download: function(item) {
+    download: function() {
       let uri = this.record.image.src;
       // extract filename: take last element of relative URI and remove any URI params
       let filename = uri
