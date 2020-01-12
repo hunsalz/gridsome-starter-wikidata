@@ -56,7 +56,6 @@ Fetching all data, especially all media content takes a while. Why not skip medi
 If you want to verify your local build you can easily mount your dist folder into a nginx container.
 **Note**: Leave base dir blank if you want to run your site in root context.
 
-> docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/{YOUR BASE DIR}:ro -d nginx:latest
+> docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro -d nginx:latest
 
-Afterwards visit [http://localhost:8080/{YOUR BASE DIR}](http://localhost:8080/)
-
+Afterwards visit [http://localhost:8080/gridsome-starter-wikidata](http://localhost:8080/gridsome-starter-wikidata)
