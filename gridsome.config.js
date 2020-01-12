@@ -20,8 +20,8 @@ module.exports = {
         baseDir: "./content",
         path: "*.*"
       }
-    }
-    /*     {
+    },
+    {
       use: "gridsome-plugin-pwa",
       options: {
         title: "Gridsome Starter Wikidata",
@@ -38,7 +38,7 @@ module.exports = {
         msTileImage: "",
         msTileColor: "#666600"
       }
-    } */
+    }
   ],
 
   transformers: {
