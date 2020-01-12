@@ -7,7 +7,7 @@
         alt="Cover image"
       />
     </div>
-    <div class="card-layout__main">
+    <div class="card-layout__content">
       <h2 class="card-layout__title">{{ record.painting }}</h2>
       <div>Year: {{ record.year }}</div>
       <div>Collection: {{ record.location }}</div>
@@ -69,7 +69,7 @@ export default {
     }
   }
 
-  &__main {
+  &__content {
     margin: 1em;
     padding: 1em;
   }
