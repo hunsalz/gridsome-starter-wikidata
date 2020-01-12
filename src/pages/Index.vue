@@ -1,9 +1,11 @@
 <template>
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
-    <TagCloud :event="__getRemoveTag()" :tags="filter" />
-    <div class="grid">
-      <div v-for="edge in computedCards" :key="edge.node.id">
-        <CardLayout :record="edge.node" />
+    <div>
+      <TagCloud :event="__getRemoveTag()" :tags="filter" />
+      <div class="grid">
+        <div v-for="edge in computedCards" :key="edge.node.id">
+          <CardLayout :record="edge.node" />
+        </div>
       </div>
     </div>
   </Layout>
