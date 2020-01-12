@@ -12,11 +12,11 @@
     "wikidata"
   ],
   "dependencies": {
-    "@gridsome/source-filesystem": "^0.6.2",
-    "@gridsome/transformer-remark": "^0.4.0",
     "file-saver": "^2.0.2",
     "gridsome": "^0.7.12",
-    "gridsome-plugin-pwa": "0.0.10",
+    "gridsome-plugin-pwa": "0.0.12",
+    "@gridsome/source-filesystem": "^0.6.2",
+    "@gridsome/transformer-remark": "^0.4.0",
     "vue-lodash": "^2.0.2"
   },
   "devDependencies": {
