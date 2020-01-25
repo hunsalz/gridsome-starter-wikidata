@@ -27,11 +27,11 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "404.html",
-    "revision": "db71525ccdd66966f65832ff72dea43e"
+    "revision": "fa6a685ebc59de4817ea83ab016afd5a"
   },
   {
     "url": "404/index.html",
-    "revision": "db71525ccdd66966f65832ff72dea43e"
+    "revision": "fa6a685ebc59de4817ea83ab016afd5a"
   },
   {
     "url": "assets/css/0.styles.ec2040d0.css",
@@ -39,166 +39,162 @@ self.__precacheManifest = [
   },
   {
     "url": "assets/data/404/index.json",
-    "revision": "bb15647a4d21d8a8ae3ccfc5f33fb632"
+    "revision": "b8d0e5257b30ff31f9c95f01bae3fd1f"
   },
   {
     "url": "assets/data/index.json",
-    "revision": "7bcccc288e0135150a10980145221c2f"
+    "revision": "3d023d1e6d869379272e160ddfde5481"
   },
   {
     "url": "assets/data/q1059211/index.json",
-    "revision": "baa0b6bfa8cb7fdaa4b6592a48e7d95e"
+    "revision": "7a04b17dfbc5ac623157d6ce22eaf632"
   },
   {
     "url": "assets/data/q1142058/index.json",
-    "revision": "9bdf8a50f3341e638641be8a323c2dd3"
+    "revision": "95ae779d789b6f1315b422558e0b66e8"
   },
   {
     "url": "assets/data/q11935346/index.json",
-    "revision": "f6767118e60b1dc3a45644df0cd4d340"
+    "revision": "6fcd32805c7dfe381aa56c831b27fa17"
   },
   {
     "url": "assets/data/q1217213/index.json",
-    "revision": "b6b49fd7b9581689e0fa06c26adab0cc"
+    "revision": "e50ad2532db012205de946b825c71fb8"
   },
   {
     "url": "assets/data/q12418/index.json",
-    "revision": "e6ee38d014d54d6387e7ea0ccb5a1b20"
+    "revision": "3ea389f8f5f31a779e9d8592f69b5cda"
   },
   {
     "url": "assets/data/q1267893/index.json",
-    "revision": "f8b488b19f2c44140906c22e1652a201"
+    "revision": "322d4303f0a683cacd52f1f5f09f7a07"
   },
   {
     "url": "assets/data/q12734910/index.json",
-    "revision": "b39d5717c216091f1ff0028a2ac28c19"
+    "revision": "63b5dc6003d4d83ea425a65f614edb06"
   },
   {
     "url": "assets/data/q128910/index.json",
-    "revision": "8e844364646ecc0953aa7e5d69cbc591"
+    "revision": "4de659d658eea73719861c8c71000ee4"
   },
   {
     "url": "assets/data/q1327676/index.json",
-    "revision": "e19b32d7363b210c84cbedbb2688f556"
+    "revision": "c80d9970d50cbd52985c0e67c02db21d"
   },
   {
     "url": "assets/data/q1638622/index.json",
-    "revision": "52e7430ab39eb4b75fca5688487a3445"
+    "revision": "afc94c48daccf605581b368ebd31dd08"
   },
   {
     "url": "assets/data/q1892745/index.json",
-    "revision": "8575b304b17a6dcfd3e299c57e034771"
+    "revision": "ee0df642b5c2fe9b011cf65da0705fb9"
   },
   {
     "url": "assets/data/q20174114/index.json",
-    "revision": "63b8f1aa8a4f7864a4a63c265ff8b259"
+    "revision": "92864cc32fd376dfc62e85efcea65d7a"
   },
   {
     "url": "assets/data/q2045726/index.json",
-    "revision": "5606c213aefa437d95e563160d9364af"
+    "revision": "cba211cad5098e1d113fcafcc2e6afc6"
   },
   {
     "url": "assets/data/q2072801/index.json",
-    "revision": "3198ec660620d77be6cc5e4a2170b470"
+    "revision": "1ee096c7cf0a2171a275bd6282520eff"
   },
   {
     "url": "assets/data/q2338404/index.json",
-    "revision": "276914eb874555c2ecc089301f471b11"
+    "revision": "6e3ec0f92257380c7511c8e5b4a59d8f"
   },
   {
     "url": "assets/data/q2397593/index.json",
-    "revision": "3f45cde7cb879f163eb033cc48c750ac"
-  },
-  {
-    "url": "assets/data/q2471531/index.json",
-    "revision": "cf990a746ea0465820199201fc492a37"
+    "revision": "d1ff79ec708a4e0525ae5ddefb137dea"
   },
   {
     "url": "assets/data/q27970282/index.json",
-    "revision": "de1d43da53655f8ae71feeb41e336467"
+    "revision": "e2cf25476e1b3053a9765284c87708c7"
   },
   {
     "url": "assets/data/q3618186/index.json",
-    "revision": "39e5268b5529cdaff217aad2757ea834"
+    "revision": "a3307582423d846a2e07e9a82d4cd4e8"
   },
   {
     "url": "assets/data/q3800774/index.json",
-    "revision": "1012f2a4ecc469dbbd9bb346abb1650d"
+    "revision": "cf2ebc2501a9d4d1949bf8b2cb1f863a"
   },
   {
     "url": "assets/data/q3937378/index.json",
-    "revision": "c254556e248b38d21464976fabea1140"
+    "revision": "4edc548d4fd1be999699bb67479dc20e"
   },
   {
     "url": "assets/data/q3985169/index.json",
-    "revision": "5270462907aafbcd15ba278a4e737c01"
+    "revision": "191f76a66e7fde8e8bd963b7a28fc393"
   },
   {
     "url": "assets/data/q4009972/index.json",
-    "revision": "84d4fb09346a5c6b3d4753e674eb926a"
+    "revision": "63f6024fe378e4c6cb81f3ec55236b8d"
   },
   {
     "url": "assets/data/q4390923/index.json",
-    "revision": "55697ed87e54bc7ee74a12340afa5209"
+    "revision": "3691877e82493f74030505c49c7f5292"
   },
   {
     "url": "assets/data/q474338/index.json",
-    "revision": "68390dbe4df79e06cd5e183dd00877a4"
+    "revision": "a020042c4b84cf48f4bafa7a6ed4ae0c"
   },
   {
     "url": "assets/data/q5237905/index.json",
-    "revision": "dfa659bf07612ac3cff597a35253c9e3"
+    "revision": "a42a3a0b6fa6a50fb4cd02644acdc59f"
   },
   {
     "url": "assets/data/q56280397/index.json",
-    "revision": "40968259dee580d2c420b4dda1bfc91c"
+    "revision": "fc9363d8420db827ef320fb6201e3ddc"
   },
   {
     "url": "assets/data/q563727/index.json",
-    "revision": "bdf6550bd885645c841cdc3525aff1cf"
+    "revision": "87f0c45bfed1f0823748c9f33841237b"
   },
   {
     "url": "assets/data/q656434/index.json",
-    "revision": "ca680f2b6beca0d71496e675677056ae"
+    "revision": "8a5d7db5a51132fca6adf61eea7feb89"
   },
   {
     "url": "assets/data/q6696013/index.json",
-    "revision": "2b04f4c1ad877b712731c72fa12cde0d"
+    "revision": "411f6293d3fd94afe52566771dff5080"
   },
   {
     "url": "assets/data/q698015/index.json",
-    "revision": "3a3f2e10e9ef6678d47157c705a138bc"
+    "revision": "99cf2db14f94c4f5281f59d2632f6f81"
   },
   {
     "url": "assets/data/q783215/index.json",
-    "revision": "8d65d3ec1dfed1be77442206c55d9ce9"
+    "revision": "3aa9a5d49b8a42fe17ef783b1c40e9cd"
   },
   {
     "url": "assets/data/q797902/index.json",
-    "revision": "44664f41151f57d746b32406ea913f74"
+    "revision": "b9bf346eecf3f6e613c354281855efd2"
   },
   {
     "url": "assets/data/q798034/index.json",
-    "revision": "b2141b02dafbdb3fefaa9a220c052593"
+    "revision": "42e5eea4395402714e240f35928684ee"
   },
   {
     "url": "assets/data/q972196/index.json",
-    "revision": "36cfb9b9a98ffc5ced60003ca9a7e47d"
+    "revision": "7b0daf94e722066f0183f761fa768871"
   },
   {
-    "url": "assets/js/app.5d947fee.js",
-    "revision": "ab8150949ef28adbd4531dc82d3004cb"
+    "url": "assets/js/app.1d34b06f.js",
+    "revision": "797de006812e48229bf821d811fb5a65"
   },
   {
     "url": "assets/js/page--node-modules--gridsome--app--pages--404-vue.56704fa6.js",
     "revision": "bca3f9b66b03ee035f95b15440b269bb"
   },
   {
-    "url": "assets/js/page--src--pages--index-vue.9e7c99df.js",
+    "url": "assets/js/page--src--pages--index-vue.cb5333d4.js",
     "revision": "6c68c015a4f7782b8fa0536e26815cee"
   },
   {
-    "url": "assets/js/page--src--templates--record-vue.46c518af.js",
+    "url": "assets/js/page--src--templates--record-vue.6caa7d45.js",
     "revision": "948d0aa99f1aaeaaace65765c0e05f9f"
   },
   {
@@ -468,26 +464,6 @@ self.__precacheManifest = [
   {
     "url": "assets/static/Leonardo Da Vinci - Vergine delle Rocce (Louvre).81b85c1.2cc4912e0e0fa9129d8ec8d7061871b9.jpg",
     "revision": "61e78561724cccd76fca70ca892ed6fa"
-  },
-  {
-    "url": "assets/static/Leonardo da Vinci - Virgin and Child with Ss Anne and John the Baptist.09b17d9.7ffd150de31847dc6cfddf9b0250c892.jpg",
-    "revision": "6ad8a6136badf825340aa4c754efc2fa"
-  },
-  {
-    "url": "assets/static/Leonardo da Vinci - Virgin and Child with Ss Anne and John the Baptist.0b85c65.7ffd150de31847dc6cfddf9b0250c892.jpg",
-    "revision": "17a3bd7477f5464fc82cdc2c954fd445"
-  },
-  {
-    "url": "assets/static/Leonardo da Vinci - Virgin and Child with Ss Anne and John the Baptist.1b91758.7ffd150de31847dc6cfddf9b0250c892.jpg",
-    "revision": "abedffd7596d0d68e481fc7147f9b545"
-  },
-  {
-    "url": "assets/static/Leonardo da Vinci - Virgin and Child with Ss Anne and John the Baptist.3df3210.7ffd150de31847dc6cfddf9b0250c892.jpg",
-    "revision": "fb51d5020e69433cd6bf6d55a285d4ab"
-  },
-  {
-    "url": "assets/static/Leonardo da Vinci - Virgin and Child with Ss Anne and John the Baptist.81b85c1.7ffd150de31847dc6cfddf9b0250c892.jpg",
-    "revision": "52bcbdc3a6046d888ba083a21a2a8cc9"
   },
   {
     "url": "assets/static/Leonardo da Vinci - Virgin and Child with St Anne C2RMF retouched.09b17d9.f2d261a25aca1b12365df9a7195b0cde.jpg",
@@ -811,7 +787,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "303af7599fa8f637feacc1fd460294f4"
+    "revision": "b8ddb21a5b8a2c1435705a650c3538dc"
   },
   {
     "url": "manifest.json",
@@ -819,143 +795,139 @@ self.__precacheManifest = [
   },
   {
     "url": "q1059211/index.html",
-    "revision": "5264d744c7de3558e5ee20d378467d3d"
+    "revision": "b923f3c62eb2bdef8adef5d981f6c1ce"
   },
   {
     "url": "q1142058/index.html",
-    "revision": "c0f16c3daa21f05c5e6adfe6aae30b69"
+    "revision": "861cb802b48b4a1f5db600f22f845fc0"
   },
   {
     "url": "q11935346/index.html",
-    "revision": "21c83eb6449c6888bece6ec544112a7d"
+    "revision": "a08b37d6ba2ba55b48dc065471ec6c1b"
   },
   {
     "url": "q1217213/index.html",
-    "revision": "a6bc2ab2a65daf44ab7cd69e0399fc86"
+    "revision": "44262caa65dce26df224d6bbcac10b98"
   },
   {
     "url": "q12418/index.html",
-    "revision": "107a84dc56ceec0ac8003779b2aeba51"
+    "revision": "898cfc7b66a30fdd22d03f784c0123ff"
   },
   {
     "url": "q1267893/index.html",
-    "revision": "3cd23a2a2ac733575b4b91aa3031293a"
+    "revision": "d8f706d8f97a10fb8558a9973620ec7a"
   },
   {
     "url": "q12734910/index.html",
-    "revision": "622ed08ed0e33375e9058f13c998a7a2"
+    "revision": "58cad5b0affa19450f08dfb3757153ca"
   },
   {
     "url": "q128910/index.html",
-    "revision": "8f7b14cbf37a7623036c9d1abafb39e8"
+    "revision": "69522b3842a43718deb53d7dda42d370"
   },
   {
     "url": "q1327676/index.html",
-    "revision": "dcbec7bd7660916cecec4daa0fbcfd7e"
+    "revision": "ad6935cb9565d917bf0048909af504ac"
   },
   {
     "url": "q1638622/index.html",
-    "revision": "8232cada3a61e9d820fba09615050227"
+    "revision": "d28953c1f7510ec3c20747ac19f77939"
   },
   {
     "url": "q1892745/index.html",
-    "revision": "8475ac37bbd3a56122b65792cb22d761"
+    "revision": "5e36415c0d0d226cf8cb9f67a4a23f10"
   },
   {
     "url": "q20174114/index.html",
-    "revision": "ee3d18b8f4aec44326d15aa98718102f"
+    "revision": "9ea5ee3602a44e1e14aee02a58bf564d"
   },
   {
     "url": "q2045726/index.html",
-    "revision": "b3eff3ce9e8819c71952b294d5b55b67"
+    "revision": "c32d6488521d867a42c0df15c387e79c"
   },
   {
     "url": "q2072801/index.html",
-    "revision": "e12399aae142bef784a547cda4dd5b14"
+    "revision": "17fe3113296acd7524bd97e51038b89d"
   },
   {
     "url": "q2338404/index.html",
-    "revision": "224f6c7cf973deb77f387427ac4fc9f8"
+    "revision": "be4cd03c00c6c9364572cc812ccb6955"
   },
   {
     "url": "q2397593/index.html",
-    "revision": "84a8f4d8918a1829895941aaea09d2b2"
-  },
-  {
-    "url": "q2471531/index.html",
-    "revision": "8aaedf77b9eb8004a342cf0eba02afcc"
+    "revision": "da968a373dd0061a40350c1e5c9bdb03"
   },
   {
     "url": "q27970282/index.html",
-    "revision": "ab0e9de6d6190030648942f65a86f7ad"
+    "revision": "b4700cfc3e235005d1b404a8b54fee4e"
   },
   {
     "url": "q3618186/index.html",
-    "revision": "b824ed2b70734173864ba2b868f9d1e8"
+    "revision": "45cb0b3baefccd80689e071d32d87e12"
   },
   {
     "url": "q3800774/index.html",
-    "revision": "ad39cbb1fbbf7be29773b3d7cc51e09b"
+    "revision": "662dfa5ca7ada6f79180128526d70ce9"
   },
   {
     "url": "q3937378/index.html",
-    "revision": "fff26ac4ef7185388bc37987457bc294"
+    "revision": "d18d29084fa520bd88c651d439421117"
   },
   {
     "url": "q3985169/index.html",
-    "revision": "cce8516489b7c78076af53c42494e6f6"
+    "revision": "72c6cb5cf85e4993caca05c4d963cbe6"
   },
   {
     "url": "q4009972/index.html",
-    "revision": "71f7f7dd754c4f767746c983aefd7f7d"
+    "revision": "42e4900945ed22a930f2f44ad5236084"
   },
   {
     "url": "q4390923/index.html",
-    "revision": "e0624b963c770ae1bdb3fe22db7c4836"
+    "revision": "f7116ad42bf3bae0e79a2d8947e2e9ed"
   },
   {
     "url": "q474338/index.html",
-    "revision": "f265b36d815f84d25ea2421eede7c6c0"
+    "revision": "89a7d9e6e51f991a3961034d2fc8dde3"
   },
   {
     "url": "q5237905/index.html",
-    "revision": "92938112e73fcb9749968397185aa7d7"
+    "revision": "e966e181908c3208301210ea3d62df1a"
   },
   {
     "url": "q56280397/index.html",
-    "revision": "d93394dab39cb9be15328b393765d4a1"
+    "revision": "9c0a4829c5531ae6d09002715fe7f095"
   },
   {
     "url": "q563727/index.html",
-    "revision": "6a2efc55b5a619d897b0ac07f5ebd7dc"
+    "revision": "94b553f4374b3e3cb8e4e36a419c004d"
   },
   {
     "url": "q656434/index.html",
-    "revision": "3ab3db45e5ccc7422819d628f4b479bf"
+    "revision": "e03908e72791d2d1c97c8df41f90fb30"
   },
   {
     "url": "q6696013/index.html",
-    "revision": "071054b098fd13d4c981558435f6987f"
+    "revision": "e16c892dda26d46146677c8ffa088059"
   },
   {
     "url": "q698015/index.html",
-    "revision": "b22d3098e06a1dfe2ffe2f1d83180255"
+    "revision": "e8852e4205842826d2e10fdbd8b5828b"
   },
   {
     "url": "q783215/index.html",
-    "revision": "52232852eac1c8acda2659f0e33355ce"
+    "revision": "c5537c10b92123452d886300b7fbbedc"
   },
   {
     "url": "q797902/index.html",
-    "revision": "f3a204a7c2c3633186087872778db8d4"
+    "revision": "c8f158b52c841ecc04debf02e0f5eac2"
   },
   {
     "url": "q798034/index.html",
-    "revision": "35116c050f6cb0489474ae7a132489f8"
+    "revision": "e9b104714d3b5212ab6999c7561248a9"
   },
   {
     "url": "q972196/index.html",
-    "revision": "bef076102a9c6f5f44d7fc2a9fc020a5"
+    "revision": "ef56d686079ff5b3bf6a7503ddb3e628"
   },
   {
     "url": "404",
@@ -1014,20 +986,20 @@ self.__precacheManifest = [
     "revision": "d63cdd3db35eae7890c24435d4a2bbd0"
   },
   {
-    "url": "q474338",
-    "revision": "c7ce3b4eac6acb1622c972b26b96596f"
-  },
-  {
-    "url": "q656434",
-    "revision": "194e099b257765ea13fa7c6dc59a504b"
+    "url": "q1892745",
+    "revision": "9f049e3e17f79d56cd0e7c60743ac854"
   },
   {
     "url": "q1327676",
     "revision": "7c226ea1aea779f246c740161461807e"
   },
   {
-    "url": "q1892745",
-    "revision": "9f049e3e17f79d56cd0e7c60743ac854"
+    "url": "q474338",
+    "revision": "c7ce3b4eac6acb1622c972b26b96596f"
+  },
+  {
+    "url": "q656434",
+    "revision": "194e099b257765ea13fa7c6dc59a504b"
   },
   {
     "url": "q3985169",
@@ -1050,10 +1022,6 @@ self.__precacheManifest = [
     "revision": "dc4aafcb34a78d049cc3852041d5dbc3"
   },
   {
-    "url": "q2471531",
-    "revision": "bafa3b453e1e43b605071185871f6631"
-  },
-  {
     "url": "q27970282",
     "revision": "1cf7f7bd18abb76bd53b3c8167012116"
   },
@@ -1062,16 +1030,16 @@ self.__precacheManifest = [
     "revision": "654946132f84cf2af28804fc8887e70d"
   },
   {
-    "url": "q563727",
-    "revision": "d9097dc764b342fbc3560e7f065c03c5"
+    "url": "q2397593",
+    "revision": "54082bddaf866a72c6cb8ff4147311ef"
   },
   {
     "url": "q12418",
     "revision": "9acdeb79612716f57e4590d2447c4911"
   },
   {
-    "url": "q2397593",
-    "revision": "54082bddaf866a72c6cb8ff4147311ef"
+    "url": "q563727",
+    "revision": "d9097dc764b342fbc3560e7f065c03c5"
   },
   {
     "url": "q2045726",
