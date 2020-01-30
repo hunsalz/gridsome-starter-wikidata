@@ -1,5 +1,5 @@
 {
-  "name": "smart-sensor-starter",
+  "name": "gridsome-wikipedia-starter",
   "private": true,
   "scripts": {
     "build": "gridsome build",
