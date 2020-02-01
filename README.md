@@ -46,7 +46,7 @@ Finally you should have the following secrets available in your project:
 
 ![Project secrets](.github/assets/screenshot-secrets.png)
 
-## Developement support
+## Development support
 
 ### Skip media downloads
 
