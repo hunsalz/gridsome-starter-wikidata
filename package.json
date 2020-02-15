@@ -18,7 +18,7 @@
     "@gridsome/transformer-remark": "^0.4.0",
     "file-saver": "^2.0.2",
     "gridsome": "^0.7.12",
-    "gridsome-plugin-pwa": "0.0.12",
+    "gridsome-plugin-pwa": "0.0.13",
     "vue-lodash": "^2.0.2"
   },
   "devDependencies": {

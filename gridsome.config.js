@@ -28,8 +28,8 @@ module.exports = {
         startUrl: "/",
         display: "standalone",
         statusBarStyle: "default",
-        manifestPath: "/manifest.json", // see https://github.com/rishabh3112/gridsome-plugin-pwa/pull/18
-        serviceWorkerPath: "/service-worker.js", // see https://github.com/rishabh3112/gridsome-plugin-pwa/pull/18
+        manifestPath: "/manifest.json",
+        serviceWorkerPath: "/service-worker.js",
         cachedFileTypes: "js,json,css,html,png,jpg,jpeg,svg",
         shortName: "Starter",
         themeColor: "#666600",
