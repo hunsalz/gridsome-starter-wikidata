@@ -43,7 +43,7 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/index.json",
-    "revision": "0180c050b010c06a62a04b0e39362ed6"
+    "revision": "bf816346d706057a9a4fe5f4f6495809"
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/q1059211/index.json",
@@ -87,7 +87,7 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/q1892745/index.json",
-    "revision": "2aa7e1c43855cdfd5f6fe0f12cb07620"
+    "revision": "f7436519250e5f6715ebc113f8f75a8d"
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/q20174114/index.json",
@@ -199,11 +199,11 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/index.html",
-    "revision": "e8756edda35e99ab2aa2f758c73b29d1"
+    "revision": "d9db5bc64ee9757e53c90e7c59921e52"
   },
   {
     "url": "/gridsome-starter-wikidata/manifest.json",
-    "revision": "abdb2504518281d70ba2c785280ddc4b"
+    "revision": "c4c4fdca57559c564290c246088b8d1f"
   },
   {
     "url": "/gridsome-starter-wikidata/q1059211/index.html",
@@ -247,7 +247,7 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/q1892745/index.html",
-    "revision": "1ba5c9ca4aacc84e57fb5d210a28cf3c"
+    "revision": "622801b2db71864dfe0f357639c5fed8"
   },
   {
     "url": "/gridsome-starter-wikidata/q20174114/index.html",
@@ -370,12 +370,12 @@ self.__precacheManifest = [
     "revision": "0ee232afa94211ea95766d6e12ce86de"
   },
   {
-    "url": "/gridsome-starter-wikidata/q1142058",
-    "revision": "4c50c91dc581d5df06e87f98ef0a6b27"
-  },
-  {
     "url": "/gridsome-starter-wikidata/q1638622",
     "revision": "9eac4e83cf0cbfb8505cafc3bab1483a"
+  },
+  {
+    "url": "/gridsome-starter-wikidata/q1142058",
+    "revision": "4c50c91dc581d5df06e87f98ef0a6b27"
   },
   {
     "url": "/gridsome-starter-wikidata/q972196",
@@ -394,10 +394,6 @@ self.__precacheManifest = [
     "revision": "1259a7960f42aee0769dd4e70af1638f"
   },
   {
-    "url": "/gridsome-starter-wikidata/q1327676",
-    "revision": "7c226ea1aea779f246c740161461807e"
-  },
-  {
     "url": "/gridsome-starter-wikidata/q474338",
     "revision": "c7ce3b4eac6acb1622c972b26b96596f"
   },
@@ -406,12 +402,16 @@ self.__precacheManifest = [
     "revision": "194e099b257765ea13fa7c6dc59a504b"
   },
   {
-    "url": "/gridsome-starter-wikidata/q1892745",
-    "revision": "9f049e3e17f79d56cd0e7c60743ac854"
-  },
-  {
     "url": "/gridsome-starter-wikidata/q128910",
     "revision": "d63cdd3db35eae7890c24435d4a2bbd0"
+  },
+  {
+    "url": "/gridsome-starter-wikidata/q1327676",
+    "revision": "7c226ea1aea779f246c740161461807e"
+  },
+  {
+    "url": "/gridsome-starter-wikidata/q1892745",
+    "revision": "9f049e3e17f79d56cd0e7c60743ac854"
   },
   {
     "url": "/gridsome-starter-wikidata/q3985169",
