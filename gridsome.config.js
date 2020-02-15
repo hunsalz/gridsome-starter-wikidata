@@ -25,7 +25,7 @@ module.exports = {
       use: "gridsome-plugin-pwa",
       options: {
         title: "Gridsome Starter Wikidata",
-        startUrl: "/",
+        startUrl: process.env.SITE_URL + process.env.PATH_PREFIX + "",
         display: "standalone",
         statusBarStyle: "default",
         manifestPath: "/manifest.json",
