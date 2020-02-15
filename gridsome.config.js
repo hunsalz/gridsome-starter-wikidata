@@ -31,7 +31,7 @@ module.exports = {
         manifestPath: "/manifest.json",
         disableServiceWorker: false,
         serviceWorkerPath: "/service-worker.js",
-        cachedFileTypes: "js,json,css,html,png,jpg,jpeg,svg",
+        cachedFileTypes: "js,json,css,html",
         shortName: "Starter",
         themeColor: "#666600",
         backgroundColor: "#ffffff",
