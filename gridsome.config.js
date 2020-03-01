@@ -9,6 +9,7 @@ module.exports = {
   siteDescription: "Gridsome Starter for Wikidata",
   siteUrl: process.env.SITE_URL,
   pathPrefix: process.env.PATH_PREFIX,
+  
   templates: {
     Record: "/:item"
   },
