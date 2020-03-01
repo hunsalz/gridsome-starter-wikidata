@@ -16,14 +16,16 @@
   "dependencies": {
     "@gridsome/source-filesystem": "^0.6.2",
     "@gridsome/transformer-remark": "^0.5.0",
+    "core-js": "^3.6.4",
     "file-saver": "^2.0.2",
     "gridsome": "^0.7.13",
     "gridsome-plugin-pwa": "0.0.13",
+    "lodash": "^4.17.15",
     "vue-lodash": "^2.1.1"
   },
   "devDependencies": {
     "axios": "^0.19.2",
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.1.0",
     "cli-progress": "^3.6.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
