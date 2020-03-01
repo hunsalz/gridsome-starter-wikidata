@@ -65,7 +65,7 @@ const fetchWikidata = async actions => {
   // query Wikidata and process each item
   await queryDispatcher.query(sparqlQuery).then(response => {
     response.results.bindings.forEach(item => {
-      // prepare downloads
+      // prepare download entries
       let filename = null;
       if (item.image) {
         let uri = item.image.value;
