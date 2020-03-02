@@ -37,6 +37,7 @@ query {
 </page-query>
 
 <script>
+import _ from "lodash";
 import CardLayout from "~/components/CardLayout.vue";
 import TagCloud from "~/components/TagCloud.vue";
 import {
