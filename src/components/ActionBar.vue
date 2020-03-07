@@ -20,7 +20,7 @@
           />
         </svg>
       </button>
-      <g-link class="action-bar__button" :to="computedWikidataLink">
+      <g-link class="action-bar__button" :to="computeWikidataLink">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -75,7 +75,7 @@ export default {
     };
   },
   computed: {
-    computedWikidataLink: function() {
+    computeWikidataLink: function() {
       return "https://www.wikidata.org/wiki/" + this.record.item;
     }
   },
