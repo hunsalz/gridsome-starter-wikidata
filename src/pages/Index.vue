@@ -23,11 +23,11 @@ query {
         id
         path
         item
-        painting
+        title: paintingLabel
         image
-        cover_image (width: 770, height: 380, blur: 10)
-        year (format: "YYYY")
-  			location
+        cover_image: image (width: 770, height: 380, blur: 10)
+        year: date (format: "YYYY")
+  			location: locationLabel
         materials
         depicts
       }
@@ -78,11 +78,11 @@ export default {
     this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
     // create tag cloud
-    this.$page.records.edges.forEach(edge => {
+    this.$page.records.edges.forEach(edge => { 
       // ... of unique values
       edge.node.tags = _.union(
         [edge.node.year, edge.node.location],
-        edge.node.depicts
+        edge.node.depicts.split(",")
       );
       // ... remove any empty value
       _.remove(edge.node.tags, function(tag) {

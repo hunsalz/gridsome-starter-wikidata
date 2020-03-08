@@ -9,7 +9,7 @@ module.exports = {
   siteDescription: "Gridsome Starter for Wikidata",
   siteUrl: process.env.SITE_URL,
   pathPrefix: process.env.PATH_PREFIX,
-  
+
   templates: {
     Record: "/:item"
   },
@@ -20,6 +20,33 @@ module.exports = {
       options: {
         baseDir: "./content",
         path: "*.*"
+      }
+    },
+    {
+      use: "gridsome-source-wikidata",
+      options: {
+        url: "https://query.wikidata.org/sparql",
+        sparql: `SELECT DISTINCT ?item ?paintingLabel (MIN(?images) AS ?image) (MIN(?dates) AS ?date) (MIN(?locationLabels) AS ?locationLabel) (GROUP_CONCAT(DISTINCT ?materialLabel; SEPARATOR = ", ") AS ?materials) (GROUP_CONCAT(DISTINCT ?depictLabel; SEPARATOR = ", ") AS ?depicts) WHERE {
+          ?painting (wdt:P31/(wdt:P279*)) wd:Q3305213;
+            wdt:P170 wd:Q762;
+            wdt:P18 ?images;
+            wdt:P571 ?dates.
+          OPTIONAL { ?painting wdt:P276 ?locations. }
+          OPTIONAL { ?painting wdt:P186 ?material. }
+          OPTIONAL { ?painting wdt:P180 ?depict. }
+          BIND(REPLACE(STR(?painting), "^.*/", "") AS ?item)
+          SERVICE wikibase:label {
+            bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+            ?painting rdfs:label ?paintingLabel.
+            ?locations rdfs:label ?locationLabels.
+            ?material rdfs:label ?materialLabel.
+            ?depict rdfs:label ?depictLabel.
+          }
+        }
+        GROUP BY ?item ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
+        ORDER BY (?date)`,
+        baseDir: "/content/images/",
+        verbose: "true"
       }
     },
     {

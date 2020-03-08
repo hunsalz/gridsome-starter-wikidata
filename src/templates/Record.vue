@@ -1,7 +1,7 @@
 <template>
   <Layout :show-back-link="true" :toggle-view="false">
     <div class="content-box">
-      <h1 class="record__header">{{ $page.record.painting }}</h1>
+      <h1 class="record__header">{{ $page.record.title }}</h1>
       <div class="record__content">
         <g-image
           v-if="$page.record.image"
@@ -10,7 +10,7 @@
         />
         <div>Year: {{ $page.record.year }}</div>
         <div>Collection: {{ $page.record.location }}</div>
-        <div>Material: {{ $page.record.materials.join(", ") }}</div>
+        <div>Material: {{ $page.record.materials }}</div>
       </div>
     </div>
   </Layout>
@@ -20,11 +20,11 @@
 export default {
   metaInfo() {
     return {
-      title: this.$page.record.painting,
+      title: this.$page.record.title,
       meta: [
         {
           name: "description",
-          content: this.$page.record.painting
+          content: this.$page.record.title
         }
       ]
     };
@@ -37,11 +37,10 @@ query record ($id: ID!) {
   record: record (id: $id) {
     id
     path
-    item
-    painting
+    title: paintingLabel
     image
-    year (format: "YYYY")
-  	location
+    year: date (format: "YYYY")
+  	location: locationLabel
     materials
     depicts
   }

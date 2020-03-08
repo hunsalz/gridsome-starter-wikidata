@@ -8,10 +8,10 @@
       />
     </div>
     <div class="card-layout__content">
-      <h2 class="card-layout__title">{{ record.painting }}</h2>
+      <h2 class="card-layout__title">{{ record.title }}</h2>
       <div>Year: {{ record.year }}</div>
       <div>Collection: {{ record.location }}</div>
-      <div>Material: {{ record.materials.join(", ") }}</div>
+      <div>Material: {{ record.materials }}</div>
       <TagCloud
         class="card-layout__tags"
         :event="__getAddTag()"
