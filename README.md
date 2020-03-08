@@ -11,14 +11,14 @@ This is a boilerplate starter, aiming to showcase how Gridsome and an external d
 https://hunsalz.github.io/gridsome-starter-wikidata
 
 ## Features
-- Using [Wikidata](https://www.wikidata.org/) as external data source
-- Download of external media data
+- Using [Wikidata](https://www.wikidata.org) as external data source
+- Downloads external media data
 - Use of GitHub actions CI/CD pipeline
 - Grid layout
-- Tag & favorite filter
+- Tagging & favorite filter
 - Dark / light mode
 - CSS variables, SCSS & BEM for styling
-- PWA
+- PWA enabled
 
 ## Install
 
@@ -50,13 +50,12 @@ Finally you should have the following secrets available in your project:
 
 ### Skip media downloads
 
-Fetching all data, especially all media content takes a while. Why not skip media downloads if you have saved all files locally already? Nothing could be easier. Just change *DOWNLOAD_MEDIA=true* in your local *.env* file to some other value.
+Fetching all data, especially all media content takes a while. You can skip media downloads easily. Just change *DOWNLOAD_MEDIA=true* in your local *.env* file to any other value.
 
 ### Verify your local build
 
 If you want to verify your local build you can easily mount your dist folder into a nginx container.
-**Note**: Leave base dir blank if you want to run your site in root context.
 
 > docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro -d nginx:latest
 
-Afterwards visit [http://localhost:8080/gridsome-starter-wikidata](http://localhost:8080/gridsome-starter-wikidata)
+Afterwards visit [http://127.0.0.1:8080/gridsome-starter-wikidata](http://localhost:8080/gridsome-starter-wikidata)
