@@ -44,9 +44,9 @@ module.exports = {
           }
         }
         GROUP BY ?item ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
-        ORDER BY (?date)`,
+        ORDER BY (?date) LIMIT 5`,
         baseDir: "/content/images/",
-        verbose: "false"
+        verbose: "true"
       }
     },
     {
