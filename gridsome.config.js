@@ -44,7 +44,7 @@ module.exports = {
           }
         }
         GROUP BY ?item ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
-        ORDER BY (?date) LIMIT 5`,
+        ORDER BY (?date)`,
         baseDir: "/content/images/",
         verbose: "true"
       }
