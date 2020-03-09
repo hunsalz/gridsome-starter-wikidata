@@ -2,24 +2,24 @@
   <div class="card-layout content-box">
     <div class="card-layout__header">
       <g-image
-        v-if="record.cover_image"
-        :src="record.cover_image"
+        v-if="painting.cover_image"
+        :src="painting.cover_image"
         alt="Cover image"
       />
     </div>
     <div class="card-layout__content">
-      <h2 class="card-layout__title">{{ record.title }}</h2>
-      <div>Year: {{ record.year }}</div>
-      <div>Collection: {{ record.location }}</div>
-      <div>Material: {{ record.materials }}</div>
+      <h2 class="card-layout__title">{{ painting.title }}</h2>
+      <div>Year: {{ painting.year }}</div>
+      <div>Collection: {{ painting.location }}</div>
+      <div>Material: {{ painting.materials }}</div>
       <TagCloud
         class="card-layout__tags"
         :event="__getAddTag()"
-        :tags="record.tags"
+        :tags="painting.tags"
       />
-      <ActionBar class="card-layout__actions" :record="record" />
+      <ActionBar class="card-layout__actions" :painting="painting" />
     </div>
-    <g-link class="card-layout__link_to_record" :to="record.path" />
+    <g-link class="card-layout__link_to_painting" :to="painting.path" />
   </div>
 </template>
 
@@ -34,14 +34,14 @@ export default {
     TagCloud
   },
   props: {
-    record: {
+    painting: {
       type: Object,
       required: true
     }
   },
   computed: {
     computedWikidataLink: function() {
-      return "https://www.wikidata.org/wiki/" + this.record.item;
+      return "https://www.wikidata.org/wiki/" + this.painting.item;
     }
   },
   methods: {
@@ -88,7 +88,7 @@ export default {
     z-index: 1;
   }
 
-  &__link_to_record {
+  &__link_to_painting {
     position: absolute;
     top: 0;
     left: 0;

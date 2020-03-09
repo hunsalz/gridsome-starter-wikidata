@@ -1,16 +1,16 @@
 <template>
   <Layout :show-back-link="true" :toggle-view="false">
     <div class="content-box">
-      <h1 class="record__header">{{ $page.record.title }}</h1>
-      <div class="record__content">
+      <h1 class="painting__header">{{ $page.painting.title }}</h1>
+      <div class="painting__content">
         <g-image
-          v-if="$page.record.image"
-          :src="$page.record.image"
+          v-if="$page.painting.image"
+          :src="$page.painting.image"
           alt="Painting"
         />
-        <div>Year: {{ $page.record.year }}</div>
-        <div>Collection: {{ $page.record.location }}</div>
-        <div>Material: {{ $page.record.materials }}</div>
+        <div>Year: {{ $page.painting.year }}</div>
+        <div>Collection: {{ $page.painting.location }}</div>
+        <div>Material: {{ $page.painting.materials }}</div>
       </div>
     </div>
   </Layout>
@@ -20,11 +20,11 @@
 export default {
   metaInfo() {
     return {
-      title: this.$page.record.title,
+      title: this.$page.painting.title,
       meta: [
         {
           name: "description",
-          content: this.$page.record.title
+          content: this.$page.painting.title
         }
       ]
     };
@@ -33,8 +33,8 @@ export default {
 </script>
 
 <page-query>
-query record ($id: ID!) {
-  record: record (id: $id) {
+query painting ($id: ID!) {
+  painting: painting (id: $id) {
     id
     path
     title: paintingLabel
@@ -48,7 +48,7 @@ query record ($id: ID!) {
 </page-query>
 
 <style lang="scss">
-.record {
+.painting {
   display: flex;
   flex-direction: column;
   align-items: center;

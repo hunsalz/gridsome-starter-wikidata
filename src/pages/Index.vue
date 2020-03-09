@@ -4,7 +4,7 @@
       <TagCloud :event="__getRemoveTag()" :tags="filter" />
       <div class="grid">
         <div v-for="edge in computedCards" :key="edge.node.id">
-          <CardLayout :record="edge.node" />
+          <CardLayout :painting="edge.node" />
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@ query {
     siteName
     siteDescription
   }
-  records: allRecord(sortBy: "date", order: ASC) {
+  paintings: allPainting(sortBy: "date", order: ASC) {
     edges {
       node {
         id
@@ -78,7 +78,7 @@ export default {
     this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
     // create tag cloud
-    this.$page.records.edges.forEach(edge => { 
+    this.$page.paintings.edges.forEach(edge => { 
       // ... of unique values
       edge.node.tags = _.union(
         [edge.node.year, edge.node.location],
@@ -99,12 +99,12 @@ export default {
       // view
       if (this.view === FAVORITES && this.favorites.length > 0) {
         // filter matching cards
-        return this.$page.records.edges.filter(
+        return this.$page.paintings.edges.filter(
           edge => _.indexOf(this.favorites, edge.node.item) > -1
         );
       } else {
         // filter matching cards
-        return this.$page.records.edges.filter(
+        return this.$page.paintings.edges.filter(
           edge =>
             // compose intersection between tags per node and given filter
             _.intersection(edge.node.tags, this.filter).length ===

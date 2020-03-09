@@ -11,7 +11,7 @@ module.exports = {
   pathPrefix: process.env.PATH_PREFIX,
 
   templates: {
-    Record: "/:item"
+    Painting: "/:item"
   },
 
   plugins: [
@@ -45,6 +45,7 @@ module.exports = {
         }
         GROUP BY ?item ?painting ?paintingLabel ?image ?date ?locationLabel ?materials ?depicts
         ORDER BY (?date)`,
+        typeName: "Painting",
         baseDir: "/content/images/",
         verbose: "true"
       }

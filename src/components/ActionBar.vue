@@ -6,7 +6,7 @@
         aria-label="Toggle favorite"
         class="action-bar__button"
         :is-favorite="isFavorite"
-        @click.prevent="toggleFavorite(record.item)"
+        @click.prevent="toggleFavorite(painting.item)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@ import { TOGGLE_FAVORITE } from "~/components/js/Event.js";
 
 export default {
   props: {
-    record: {
+    painting: {
       type: Object,
       required: true
     }
@@ -76,7 +76,7 @@ export default {
   },
   computed: {
     computeWikidataLink: function() {
-      return "https://www.wikidata.org/wiki/" + this.record.item;
+      return "https://www.wikidata.org/wiki/" + this.painting.item;
     }
   },
   methods: {
@@ -85,7 +85,7 @@ export default {
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
     download: function() {
-      let uri = this.record.image.src;
+      let uri = this.painting.image.src;
       // extract filename: take last element of relative URI and remove any URI params
       let filename = uri
         .split("/")
