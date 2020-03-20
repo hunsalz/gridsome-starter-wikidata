@@ -48,10 +48,6 @@ Finally you should have the following secrets available in your project:
 
 ## Development support
 
-### Skip media downloads
-
-Fetching all data, especially all media content takes a while. You can skip media downloads easily. Just change *DOWNLOAD_MEDIA=true* in your local *.env* file to any other value.
-
 ### Verify your local build
 
 If you want to verify your local build you can easily mount your dist folder into a nginx container.

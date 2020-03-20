@@ -47,7 +47,9 @@ module.exports = {
         ORDER BY (?date)`,
         typeName: "Painting",
         baseDir: "/content/images/",
-        verbose: "true"
+        cacheEnabled: true,
+        ttl: 8 * 60 * 60 * 1000,
+        verbose: true
       }
     },
     {

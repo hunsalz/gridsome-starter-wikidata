@@ -20,7 +20,7 @@
     "file-saver": "^2.0.2",
     "gridsome": "^0.7.13",
     "gridsome-plugin-pwa": "0.0.13",
-    "gridsome-source-wikidata": "0.0.7",
+    "gridsome-source-wikidata": "0.0.10",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
