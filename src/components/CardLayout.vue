@@ -1,5 +1,5 @@
 <template>
-  <div class="card-layout content-box">
+  <div class="card-layout">
     <div class="card-layout__header">
       <g-image
         v-if="painting.cover_image"
@@ -14,8 +14,8 @@
       <div>Material: {{ painting.materials }}</div>
       <TagCloud
         class="card-layout__tags"
-        :event="__getAddTag()"
-        :tags="painting.tags"
+        :event="addTag()"
+        :tags="getTags()"
       />
       <ActionBar class="card-layout__actions" :painting="painting" />
     </div>
@@ -39,14 +39,12 @@ export default {
       required: true
     }
   },
-  computed: {
-    computedWikidataLink: function() {
-      return "https://www.wikidata.org/wiki/" + this.painting.item;
-    }
-  },
   methods: {
-    __getAddTag: function() {
+    addTag: function() {
       return ADD_TAG;
+    },
+    getTags() {
+      return this.painting.tags ? this.painting.tags : [];
     }
   }
 };
@@ -55,6 +53,8 @@ export default {
 <style lang="scss">
 .card-layout {
   position: relative;
+  margin: 0 0 1em 0;
+  background-color: var(--bg-content-color);
 
   &__header {
     border-radius: var(--radius) var(--radius) 0 0;
@@ -65,12 +65,12 @@ export default {
     }
 
     .g-image {
+      display: inline;
       min-width: 100%;
     }
   }
 
   &__content {
-    margin: 1em;
     padding: 1em;
   }
 
@@ -94,7 +94,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0;
+    opacity: 0%;
     z-index: 0;
   }
 }
