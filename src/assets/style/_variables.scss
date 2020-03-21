@@ -6,7 +6,7 @@ html {
 // default theme light
 body {
   --body-color: #444;
-  --bg-color: #f3f7f9;
+  --bg-color: #e6f0f5;
   --bg-content-color: #fff;
   --header-bg: #0d2538;
   --header-color: #fff;
@@ -22,8 +22,8 @@ body {
 // dark theme
 body[data-theme="dark"] {
   --body-color: #ced8de;
-  --bg-color: #0d2538;
-  --bg-content-color: #0f2d44;
+  --bg-color: #0f2d44;
+  --bg-content-color: #1a4363;
   --header-bg: #fff;
   --header-color: #0d2538;
   --border-color: rgba(255, 255, 255, 0.1);
