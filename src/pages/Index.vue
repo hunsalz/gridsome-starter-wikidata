@@ -1,9 +1,9 @@
 <template>
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
     <div>
-      <TagCloud :event="__getRemoveTag()" :tags="filter" />
+      <TagCloud :event="getRemoveTag()" :tags="filter" />
       <div class="grid">
-        <div v-for="edge in computedCards" :key="edge.node.id">
+        <div v-for="edge in computeCards" :key="edge.node.id">
           <CardLayout :painting="edge.node" />
         </div>
       </div>
@@ -78,7 +78,7 @@ export default {
     this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
     // create tag cloud
-    this.$page.paintings.edges.forEach(edge => { 
+    this.$page.paintings.edges.forEach(edge => {
       // ... of unique values
       edge.node.tags = _.union(
         [edge.node.year, edge.node.location],
@@ -95,22 +95,22 @@ export default {
     this.$eventBus.$off();
   },
   computed: {
-    computedCards: function() {
-      // view
+    computeCards: function() {
+      // compute cards depending on current view
+      // ... in case of favorite view
       if (this.view === FAVORITES && this.favorites.length > 0) {
         // filter matching cards
         return this.$page.paintings.edges.filter(
           edge => _.indexOf(this.favorites, edge.node.item) > -1
         );
-      } else {
-        // filter matching cards
-        return this.$page.paintings.edges.filter(
-          edge =>
-            // compose intersection between tags per node and given filter
-            _.intersection(edge.node.tags, this.filter).length ===
-            this.filter.length // force exact match of all filter elements
-        );
       }
+      // otherwise ...
+      return this.$page.paintings.edges.filter(
+        edge =>
+          // compose intersection between tags per node and given filter
+          _.intersection(edge.node.tags, this.filter).length ===
+          this.filter.length // force exact match of all filter elements
+      );
     }
   },
   methods: {
@@ -145,7 +145,7 @@ export default {
     showToggleView: function() {
       return this.favorites.length > 0 ? true : false;
     },
-    __getRemoveTag: function() {
+    getRemoveTag: function() {
       return REMOVE_TAG;
     }
   }
@@ -162,6 +162,16 @@ export default {
   }
   @media only screen and (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid2 {
+  columns: 3;
+  column-gap: 1em;
+
+  div {
+    display: inline-block;
+    width: 100%;
   }
 }
 </style>
