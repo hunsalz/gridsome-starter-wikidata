@@ -71,7 +71,7 @@ export default {
   }
 
   &__content {
-    padding: 1em;
+    padding: 3em;
   }
 
   &__title {
