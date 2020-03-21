@@ -1,7 +1,7 @@
 <template>
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
     <div>
-      <TagCloud :event="getRemoveTag()" :tags="filter" />
+      <TagCloud :event="removeTag()" :tags="filter" />
       <div class="grid">
         <div v-for="edge in computeCards" :key="edge.node.id">
           <CardLayout :painting="edge.node" />
@@ -145,7 +145,7 @@ export default {
     showToggleView: function() {
       return this.favorites.length > 0 ? true : false;
     },
-    getRemoveTag: function() {
+    removeTag: function() {
       return REMOVE_TAG;
     }
   }
