@@ -157,10 +157,10 @@ export default {
   display: grid;
   grid-gap: 1em;
   grid-template-columns: repeat(1, 1fr);
-  @media only screen and (min-width: 768px) {
+  @media only screen and (min-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media only screen and (min-width: 1024px) {
+  @media only screen and (min-width: 1248px) {
     grid-template-columns: repeat(3, 1fr);
   }
 }
