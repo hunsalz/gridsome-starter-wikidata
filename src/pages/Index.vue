@@ -2,9 +2,9 @@
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
     <div>
       <TagCloud :event="removeTag()" :tags="filter" />
-      <div class="grid">
-        <div v-for="edge in computeCards" :key="edge.node.id">
-          <CardLayout :painting="edge.node" />
+      <div class="masonry">
+        <div class="cards" v-for="edge in computeCards" :key="edge.node.id">
+          <CardLayout class="card-layout" :painting="edge.node" />
         </div>
       </div>
     </div>
@@ -89,10 +89,27 @@ export default {
         return tag.length === 0 ? true : false;
       });
     });
+    // add event listeners
+    let _this = this;
+    ["load", "resize"].forEach(function(event) {
+      window.addEventListener(event, _this.resizeAllCards);
+    });
+  },
+  mounted() {
+    // call after the next DOM update cycle 
+    let _this = this;
+    this.$nextTick(function() {    
+      _this.resizeAllCards();
+    });
   },
   beforeDestroy() {
-    // unsubscribe from all event listeners at once
+    // unsubscribe from all event bus listeners at once
     this.$eventBus.$off();
+    // unsubscribe from all other event listeners
+    let _this = this;
+    ["load", "resize"].forEach(function(event) {
+      window.removeEventListener(event, _this.resizeAllCards);
+    });
   },
   computed: {
     computeCards: function() {
@@ -147,6 +164,39 @@ export default {
     },
     removeTag: function() {
       return REMOVE_TAG;
+    },
+
+    resizeCard(card) {
+      let grid = document.getElementsByClassName("masonry")[0],
+        rowGap = parseInt(
+          window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
+        ),
+        rowHeight = parseInt(
+          window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
+        );
+      /*
+       * Spanning for any brick = S
+       * Grid's row-gap = G
+       * Size of grid's implicitly create row-track = R
+       * Height of item content = H
+       * Net height of the item = H1 = H + G
+       * Net height of the implicit row-track = T = G + R
+       * S = H1 / T
+       */
+      let rowSpan = Math.ceil(
+        (card.querySelector(".card-layout").getBoundingClientRect().height +
+          rowGap) /
+          (rowHeight + rowGap)
+      );
+      // set the spanning as calculated above (S)
+      card.style.gridRowEnd = "span " + rowSpan;
+    },
+    resizeAllCards() {
+      let allCards = document.getElementsByClassName("cards");
+      // loop through the above list and execute the spanning function to each masonry item
+      for (let i = 0; i < allCards.length; i++) {
+        this.resizeCard(allCards[i]);
+      }
     }
   }
 };
@@ -165,13 +215,16 @@ export default {
   }
 }
 
-.grid2 {
-  columns: 3;
-  column-gap: 1em;
-
-  div {
-    display: inline-block;
-    width: 100%;
+.masonry {
+  display: grid;
+  grid-gap: 1em;
+  grid-auto-rows: 0;
+  grid-template-columns: repeat(1, 1fr);
+  @media only screen and (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media only screen and (min-width: 1248px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 </style>
