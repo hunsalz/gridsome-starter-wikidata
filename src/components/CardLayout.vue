@@ -54,6 +54,7 @@ export default {
 .card-layout {
   position: relative;
   margin: 0 0 1em 0;
+  border-radius: var(--radius) var(--radius) 0 0;
   background-color: var(--bg-content-color);
 
   &__header {
