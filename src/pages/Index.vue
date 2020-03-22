@@ -90,26 +90,32 @@ export default {
       });
     });
     // add event listeners
-    let _this = this;
-    ["load", "resize"].forEach(function(event) {
-      window.addEventListener(event, _this.resizeAllCards);
-    });
+    if (process.isClient) {
+      let _this = this;
+      ["load", "resize"].forEach(function(event) {
+        window.addEventListener(event, _this.resizeAllCards);
+      });
+    }
   },
   mounted() {
-    // call after the next DOM update cycle 
-    let _this = this;
-    this.$nextTick(function() {    
-      _this.resizeAllCards();
-    });
+    // call after the next DOM update cycle
+    if (process.isClient) {
+      let _this = this;
+      this.$nextTick(function() {
+        _this.resizeAllCards();
+      });
+    }
   },
   beforeDestroy() {
     // unsubscribe from all event bus listeners at once
     this.$eventBus.$off();
     // unsubscribe from all other event listeners
-    let _this = this;
-    ["load", "resize"].forEach(function(event) {
-      window.removeEventListener(event, _this.resizeAllCards);
-    });
+    if (process.isClient) {
+      let _this = this;
+      ["load", "resize"].forEach(function(event) {
+        window.removeEventListener(event, _this.resizeAllCards);
+      });
+    }
   },
   computed: {
     computeCards: function() {
@@ -165,7 +171,6 @@ export default {
     removeTag: function() {
       return REMOVE_TAG;
     },
-
     resizeCard(card) {
       let grid = document.getElementsByClassName("masonry")[0],
         rowGap = parseInt(
