@@ -13,14 +13,16 @@ This is a boilerplate starter, aiming to showcase how Gridsome and an external d
 https://hunsalz.github.io/gridsome-starter-wikidata
 
 ## Features
-- Using [Wikidata](https://www.wikidata.org) as external data source
-- Downloads external media data
-- Use of GitHub actions CI/CD pipeline
-- Grid layout
-- Tagging & favorite filter
-- Dark / light mode
-- CSS variables, SCSS & BEM for styling
-- PWA enabled
+
+- Uses [Wikidata](https://www.wikidata.org) as external data source
+- Enables downloads of external media data
+- Make use of GitHub actions / CI/CD pipeline
+- Shows a waterfall grid / aka masonary grid
+- Shows tagging capabilities
+- Shows favorite filter function
+- Enables dark & light mode
+- Uses CSS variables, SCSS & BEM for styling
+- Shows PWA capabilities
 
 ## Install
 
@@ -36,7 +38,7 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 
 ## Setup GitHub Pages deploy
 
-**Note**: By default GitHub Pages deploy isn't active. 
+**Note**: By default GitHub Pages deploy isn't enabled. 
 
 GitHub Pages deploy needs two secrets to work properly:
 
@@ -47,9 +49,7 @@ GH_PAGES_TOKEN | [Creating token](https://help.github.com/en/github/authenticati
 
 ## Development support
 
-### Verify your local build
-
-If you want to verify your local build you can easily mount your dist folder into a nginx container.
+If you want to verify your local build, you can easily mount your dist folder into a nginx container.
 
 > docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro -d nginx:latest
 
