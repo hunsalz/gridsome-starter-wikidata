@@ -37,7 +37,6 @@ query {
 </page-query>
 
 <script>
-import _ from "lodash";
 import CardLayout from "~/components/CardLayout.vue";
 import TagCloud from "~/components/TagCloud.vue";
 import {
@@ -71,39 +70,56 @@ export default {
       ]
     };
   },
-  created() {
+  created: function() {
     // subscribe to event bus
     this.$eventBus.$on(ADD_TAG, this.onAddTag);
     this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
     this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
-    // create tag cloud
-    this.$page.paintings.edges.forEach(edge => {
-      // ... of unique values
-      edge.node.tags = _.union(
-        [edge.node.year, edge.node.location],
-        edge.node.depicts.split(",")
-      );
-      // ... remove any empty value
-      _.remove(edge.node.tags, function(tag) {
-        return tag.length === 0 ? true : false;
-      });
-    });
-    // add event listeners
+    // subscribe to (re)-render events
     if (process.isClient) {
       let _this = this;
       ["load", "resize"].forEach(function(event) {
         window.addEventListener(event, _this.resizeAllCards);
       });
     }
+    // create tag cloud
+    this.$page.paintings.edges.forEach(edge => {
+      // basic tags
+      edge.node.tags = [edge.node.year, edge.node.location];
+      // concat with available depicts
+      edge.node.tags = edge.node.tags.concat(edge.node.depicts.split(","));
+      // clean up empty tags = ""
+      edge.node.tags = edge.node.tags.filter(item => item);
+      // create a duplicate-free array
+      edge.node.tags = [...new Set(edge.node.tags)];
+    });
   },
-  mounted() {
+  mounted: function() {
     // call after the next DOM update cycle
     if (process.isClient) {
       let _this = this;
       this.$nextTick(function() {
         _this.resizeAllCards();
       });
+    }
+  },
+  watch: {
+    view() {
+      if (process.isClient) {
+        let _this = this;
+        this.$nextTick(function() {
+          _this.resizeAllCards();
+        });
+      }
+    },
+    filter() {
+      if (process.isClient) {
+        let _this = this;
+        this.$nextTick(function() {
+          _this.resizeAllCards();
+        });
+      }
     }
   },
   beforeDestroy() {
@@ -124,34 +140,36 @@ export default {
       if (this.view === FAVORITES && this.favorites.length > 0) {
         // filter matching cards
         return this.$page.paintings.edges.filter(
-          edge => _.indexOf(this.favorites, edge.node.item) > -1
+          edge => this.favorites.indexOf(edge.node.item) > -1
         );
       }
       // otherwise ...
       return this.$page.paintings.edges.filter(
         edge =>
-          // compose intersection between tags per node and given filter
-          _.intersection(edge.node.tags, this.filter).length ===
-          this.filter.length // force exact match of all filter elements
+          // a card is visible if all filter tags matches; true for all cards if filter.length == 0
+          edge.node.tags.filter(tag => this.filter.includes(tag)).length ===
+          this.filter.length
       );
     }
   },
   methods: {
-    // add a new tag to existing tag filter
-    onAddTag: function(tag) {
-      this.filter = _.union(this.filter, [tag]);
+    // add a new tag and keep filter duplicate-free
+    onAddTag: function(tag) { 
+      this.filter.push(tag);
+      this.filter = [...new Set(this.filter)];
     },
     // remove a tag from existing tag filter
     onRemoveTag: function(tag) {
-      this.filter = _.without(this.filter, tag);
+      let index = this.filter.indexOf(tag);
+      this.filter.splice(index, 1);
     },
     // control list of favorites
     onChangeFavorite: function(item) {
-      // remove item if in place
-      let index = _.indexOf(this.favorites, item);
+      // toggle item as favorite accordingly
+      let index = this.favorites.indexOf(item);
       if (index != -1) {
         this.favorites.splice(index, 1);
-        // force dashboard view when last item is removed
+        // toggle view to 'dashbaord' as soon as last favorite item is removed
         if (this.favorites.length === 0) {
           this.view = DASHBOARD;
         }
@@ -171,6 +189,7 @@ export default {
     removeTag: function() {
       return REMOVE_TAG;
     },
+    // resize an individual card
     resizeCard(card) {
       let grid = document.getElementsByClassName("masonry")[0],
         rowGap = parseInt(
@@ -196,12 +215,11 @@ export default {
       // set the spanning as calculated above (S)
       card.style.gridRowEnd = "span " + rowSpan;
     },
+    // resize all cards
     resizeAllCards() {
       let allCards = document.getElementsByClassName("cards");
       // loop through the above list and execute the spanning function to each masonry item
-      for (let i = 0; i < allCards.length; i++) {
-        this.resizeCard(allCards[i]);
-      }
+      allCards.forEach(card => this.resizeCard(card));
     }
   }
 };
