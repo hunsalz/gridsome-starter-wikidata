@@ -143,7 +143,7 @@ export default {
           edge => this.favorites.indexOf(edge.node.item) > -1
         );
       }
-      // otherwise ...
+      // otherwise show standard dashboard ...
       return this.$page.paintings.edges.filter(
         edge =>
           // a card is visible if all filter tags matches; true for all cards if filter.length == 0
@@ -163,7 +163,7 @@ export default {
       let index = this.filter.indexOf(tag);
       this.filter.splice(index, 1);
     },
-    // control list of favorites
+    // control changes of favorites
     onChangeFavorite: function(item) {
       // toggle item as favorite accordingly
       let index = this.favorites.indexOf(item);
@@ -243,10 +243,10 @@ export default {
   grid-gap: 1em;
   grid-auto-rows: 0;
   grid-template-columns: repeat(1, 1fr);
-  @media only screen and (min-width: 1024px) {
+  @media only screen and (min-width: 800px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media only screen and (min-width: 1248px) {
+  @media only screen and (min-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
   }
 }
