@@ -12,11 +12,7 @@
       <div>Year: {{ painting.year }}</div>
       <div>Collection: {{ painting.location }}</div>
       <div>Material: {{ painting.materials }}</div>
-      <TagCloud
-        class="card-layout__tags"
-        :event="addTag()"
-        :tags="getTags()"
-      />
+      <TagCloud class="card-layout__tags" :event="addTag()" :tags="getTags()" />
       <ActionBar class="card-layout__actions" :painting="painting" />
     </div>
     <g-link class="card-layout__link_to_painting" :to="painting.path" />
@@ -40,7 +36,7 @@ export default {
     }
   },
   methods: {
-    addTag: function() {
+    addTag: function () {
       return ADD_TAG;
     },
     getTags() {
@@ -61,13 +57,15 @@ export default {
     border-radius: var(--radius) var(--radius) 0 0;
     overflow: hidden;
 
-    &:empty {
+    /*     &:empty {
       display: none;
-    }
+    } */
 
     .g-image {
-      display: inline;
-      min-width: 100%;
+      width: 100%;
+      height: auto;
+      height: 20vh;
+      object-fit: cover;
     }
   }
 
