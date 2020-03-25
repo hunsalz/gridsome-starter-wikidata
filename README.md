@@ -38,9 +38,7 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 
 ## Setup GitHub Pages deploy
 
-**Note**: By default GitHub Pages deploy isn't enabled. 
-
-GitHub Pages deploy needs two secrets to work properly:
+Project includes [GitHub Actions](https://github.com/features/actions) setup. Pipeline contains deployment to [GitHub Pages](https://pages.github.com/). By default GitHub Pages deploy isn't enabled. GitHub Pages deploy needs two secrets to work properly:
 
 **key** | **value**
 --- | ---
