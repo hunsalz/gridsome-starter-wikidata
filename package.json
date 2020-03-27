@@ -11,7 +11,9 @@
     "gridsome",
     "wikidata",
     "pwa",
-    "grid"
+    "grid",
+    "masonary",
+    "tagging"
   ],
   "dependencies": {
     "@gridsome/source-filesystem": "^0.6.2",
@@ -19,7 +21,7 @@
     "core-js": "^3.6.4",
     "file-saver": "^2.0.2",
     "gridsome": "^0.7.13",
-    "gridsome-plugin-pwa": "0.0.13",
+    "gridsome-plugin-pwa": "0.0.14",
     "gridsome-source-wikidata": "0.0.11"
   },
   "devDependencies": {
