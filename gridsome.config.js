@@ -6,7 +6,7 @@
 
 module.exports = {
   siteName: "Gridsome Starter Wikidata",
-  siteDescription: "Gridsome Starter for Wikidata",
+  siteDescription: "Gridsome Starter Wikidata",
   siteUrl: process.env.SITE_URL,
   pathPrefix: process.env.PATH_PREFIX,
 
@@ -72,7 +72,7 @@ module.exports = {
       }
     }
   ],
-
+  
   transformers: {
     // add markdown support to all file-system sources
     remark: {
