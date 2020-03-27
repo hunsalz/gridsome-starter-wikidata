@@ -57,9 +57,9 @@ export default {
     border-radius: var(--radius) var(--radius) 0 0;
     overflow: hidden;
 
-    /*     &:empty {
+    &:empty {
       display: none;
-    } */
+    }
 
     .g-image {
       width: 100%;
