@@ -42,7 +42,7 @@ Project includes [GitHub Actions](https://github.com/features/actions) by defaul
 
 ### skip ci
 
-[GitHub Actions](https://github.com/features/actions) run automatically after each git push. Add `skip ci` to commit header to skip a CI run.
+[GitHub Actions](https://github.com/features/actions) run automatically whenever you push to your Git repo. Add `skip ci` to commit header to skip a CI run.
 
 ### GitHub Pages
 
