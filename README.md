@@ -36,9 +36,17 @@ https://hunsalz.github.io/gridsome-starter-wikidata
 2. `cd my-gridsome-site` to open folder
 3. `gridsome develop` to start local dev server at `http://localhost:8080`
 
-## Setup GitHub Pages deploy
+## GitHub Actions
 
-Project includes [GitHub Actions](https://github.com/features/actions) setup. Pipeline contains deployment to [GitHub Pages](https://pages.github.com/). By default GitHub Pages deploy is skipped. GitHub Pages deploy needs two secrets to work properly:
+Project includes [GitHub Actions](https://github.com/features/actions) by default.
+
+### skip ci
+
+[GitHub Actions](https://github.com/features/actions) run automatically whenever you push to your Git repo. Add `skip ci` to commit header to skip a CI run.
+
+### GitHub Pages
+
+[GitHub Actions](https://github.com/features/actions) workflow contains [GitHub Pages](https://pages.github.com/) as deployment target. By default GitHub Pages deploy is skipped. GitHub Pages deploy needs two secrets to work properly:
 
 **key** | **value**
 --- | ---
