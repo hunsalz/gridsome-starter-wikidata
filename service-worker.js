@@ -43,7 +43,7 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/index.json",
-    "revision": "7ec1f3b6045cebde15ca827623aa5473"
+    "revision": "66a54fa825b673f8a2be902ad7999e3e"
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/q1059211/index.json",
@@ -51,7 +51,7 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/q1142058/index.json",
-    "revision": "ff7a6a2fc8b2ca2aa530c8fd2dfd77a6"
+    "revision": "3ceab870d1e36a659e26fcf099d47689"
   },
   {
     "url": "/gridsome-starter-wikidata/assets/data/q11935346/index.json",
@@ -199,7 +199,7 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/index.html",
-    "revision": "ec5c76ef6d2f511b3e419749b6ea254c"
+    "revision": "4f9b005d3decb3d97fde13d4af61aa4b"
   },
   {
     "url": "/gridsome-starter-wikidata/manifest.json",
@@ -211,7 +211,7 @@ self.__precacheManifest = [
   },
   {
     "url": "/gridsome-starter-wikidata/q1142058/index.html",
-    "revision": "0276e0469c801d14d577e8f67b766416"
+    "revision": "eec8a0b487bb13ce726784bd5885088f"
   },
   {
     "url": "/gridsome-starter-wikidata/q11935346/index.html",
@@ -394,12 +394,12 @@ self.__precacheManifest = [
     "revision": "1259a7960f42aee0769dd4e70af1638f"
   },
   {
-    "url": "/gridsome-starter-wikidata/q1327676",
-    "revision": "7c226ea1aea779f246c740161461807e"
-  },
-  {
     "url": "/gridsome-starter-wikidata/q128910",
     "revision": "d63cdd3db35eae7890c24435d4a2bbd0"
+  },
+  {
+    "url": "/gridsome-starter-wikidata/q1327676",
+    "revision": "7c226ea1aea779f246c740161461807e"
   },
   {
     "url": "/gridsome-starter-wikidata/q1892745",
@@ -442,16 +442,16 @@ self.__precacheManifest = [
     "revision": "654946132f84cf2af28804fc8887e70d"
   },
   {
+    "url": "/gridsome-starter-wikidata/q563727",
+    "revision": "d9097dc764b342fbc3560e7f065c03c5"
+  },
+  {
     "url": "/gridsome-starter-wikidata/q2397593",
     "revision": "54082bddaf866a72c6cb8ff4147311ef"
   },
   {
     "url": "/gridsome-starter-wikidata/q12418",
     "revision": "9acdeb79612716f57e4590d2447c4911"
-  },
-  {
-    "url": "/gridsome-starter-wikidata/q563727",
-    "revision": "d9097dc764b342fbc3560e7f065c03c5"
   },
   {
     "url": "/gridsome-starter-wikidata/q2045726",
