@@ -3,9 +3,12 @@ name: Gridsome CI-CD
 on: [push]
 
 env:
+  # workaround until Actions supports something like exists()
   HAS_EMAIL: ${{ secrets.EMAIL }}
   HAS_GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
-  # workaround until Actions supports something like exists()
+  # GH PAGES
+  SITE_URL: https://hunsalz.github.io
+  PATH_PREFIX: /gridsome-starter-wikidata
 
 jobs:
   build:
@@ -21,9 +24,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: npm install, build, and test
-      env:
-        SITE_URL: https://hunsalz.github.io
-        PATH_PREFIX: /gridsome-starter-wikidata
       run: |
         npm install
         npm run build --if-present --verbose
