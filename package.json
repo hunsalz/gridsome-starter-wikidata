@@ -21,7 +21,7 @@
     "core-js": "^3.6.5",
     "file-saver": "^2.0.2",
     "gridsome": "^0.7.13",
-    "gridsome-plugin-pwa": "0.0.14",
+    "gridsome-plugin-pwa": "0.0.13",
     "gridsome-source-wikidata": "0.0.11"
   },
   "devDependencies": {
