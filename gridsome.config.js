@@ -70,9 +70,12 @@ module.exports = {
         msTileImage: "",
         msTileColor: "#666600"
       }
+    },
+    {
+      use: '@gridsome/plugin-sitemap'
     }
   ],
-  
+
   transformers: {
     // add markdown support to all file-system sources
     remark: {
