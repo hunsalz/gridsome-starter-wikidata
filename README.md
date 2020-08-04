@@ -57,6 +57,11 @@ GH_PAGES_TOKEN | [Creating token](https://help.github.com/en/github/authenticati
 
 If you want to verify your local build, you can easily mount your dist folder into a nginx container.
 
+> docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/:ro -d nginx:latest
+
+Afterwards visit [http://127.0.0.1:8080/](http://localhost:8080)
+
+If you set PATH_PREFIX=/gridsome-starter-wikidata just run:
 > docker run --rm --name nginx-stage -p 8080:80 -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro -d nginx:latest
 
 Afterwards visit [http://127.0.0.1:8080/gridsome-starter-wikidata](http://localhost:8080/gridsome-starter-wikidata)
