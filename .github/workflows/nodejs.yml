@@ -29,7 +29,6 @@ jobs:
       env:
         CI: true
     - name: Deploy to GitHub Pages
-      if: env.HAS_GH_TOKEN != '' # run deployment not until GH_TOKEN is available 
       uses: Cecilapp/GitHub-Pages-deploy@master
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
