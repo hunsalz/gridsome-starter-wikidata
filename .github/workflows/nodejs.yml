@@ -33,6 +33,7 @@ jobs:
       if: env.HAS_EMAIL != '' && env.HAS_GH_TOKEN != '' # run deployment not until both env vars are available  
       uses: Cecilapp/GitHub-Pages-deploy@master
       env:
-        EMAIL: ${{ secrets.EMAIL }}
         GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
-        BUILD_DIR: dist/
+      with:
+        email: ${{ secrets.EMAIL }}
+        build_dir: dist/
