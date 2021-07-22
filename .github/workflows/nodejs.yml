@@ -4,8 +4,7 @@ on: [push]
 
 env:
   # workaround until Actions supports something like exists()
-  HAS_EMAIL: ${{ secrets.EMAIL }}
-  HAS_GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+  HAS_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   # GH PAGES
   SITE_URL: https://hunsalz.github.io
   PATH_PREFIX: /gridsome-starter-wikidata
@@ -30,10 +29,9 @@ jobs:
       env:
         CI: true
     - name: Deploy to GitHub Pages
-      if: env.HAS_EMAIL != '' && env.HAS_GH_TOKEN != '' # run deployment not until both env vars are available  
+      if: env.HAS_GH_TOKEN != '' # run deployment not until GH_TOKEN is available 
       uses: Cecilapp/GitHub-Pages-deploy@master
       env:
-        GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        email: ${{ secrets.EMAIL }}
         build_dir: dist/
