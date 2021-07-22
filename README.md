@@ -46,12 +46,7 @@ Project includes [GitHub Actions](https://github.com/features/actions) by defaul
 
 ### GitHub Pages
 
-[GitHub Actions](https://github.com/features/actions) workflow contains [GitHub Pages](https://pages.github.com/) as deployment target. By default GitHub Pages deploy is skipped. GitHub Pages deploy needs two secrets to work properly:
-
-**key** | **value**
---- | ---
-EMAIL | [Your commit email address on GitHub](https://help.github.com/en/github/setting-up-and-managing-your-github-user-account/setting-your-commit-email-address#setting-your-commit-email-address-on-github)
-GH_PAGES_TOKEN | [Creating token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token)
+[GitHub Actions](https://github.com/features/actions) workflow contains [GitHub Pages](https://pages.github.com/) as deployment target. By default GitHub Pages deploy is skipped until GH_TOKEN is set as [repository secret](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) var. Prerequisite is that you have created a corresponding [token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token).
 
 ## Development support
 
