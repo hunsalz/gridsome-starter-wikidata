@@ -55,21 +55,37 @@ module.exports = {
     {
       use: "gridsome-plugin-pwa",
       options: {
-        title: "Gridsome Starter Wikidata",
-        startUrl: process.env.SITE_URL + process.env.PATH_PREFIX + "/",
-        display: "standalone",
-        statusBarStyle: "default",
-        manifestPath: "/manifest.json",
+        // Service Worker Options
         disableServiceWorker: false,
-        serviceWorkerPath: "/service-worker.js",
-        cachedFileTypes: "js,json,css,html",
-        shortName: "Starter",
-        themeColor: "#666600",
-        backgroundColor: "#ffffff",
+        serviceWorkerPath: 'service-worker.js',
+        cachedFileTypes: 'js,json,css,html,png,jpg,jpeg,svg,gif',
+        disableTemplatedUrls: false,
+
+        // Manifest Options (https://developer.mozilla.org/en-US/docs/Web/Manifest)
+        manifestPath: 'manifest.json',
+        title: 'Gridsome Starter Wikidata',
+        startUrl: process.env.SITE_URL + process.env.PATH_PREFIX + "/",
+        display: 'standalone',
+        statusBarStyle: 'default',
+        themeColor: '#666600',
+        backgroundColor: '#ffffff',
         icon: "src/assets/images/website-icon.png",
-        msTileImage: "",
-        msTileColor: "#666600"
-      }
+        shortName: 'Starter',              
+        description: 'Gridsome Starter Wikidata',
+        categories: ['template', 'education'],
+        lang: 'en-US',
+        dir: 'auto',
+        maskableIcon: true,
+
+        // Microsoft Windows Meta Tags
+        msTileColor: '#666600',
+
+        // Apple MacOS Meta Tags
+        appleMaskIcon: 'favicon.svg',
+        appleMaskIconColor: '#666600',
+    }
+}
+]
     },
     {
       use: '@gridsome/plugin-sitemap'
