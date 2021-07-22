@@ -4,7 +4,7 @@ on: [push]
 
 env:
   # workaround until Actions supports something like exists()
-  HAS_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  HAS_GH_TOKEN: ${{ secrets.GH_TOKEN }}
   # GH PAGES
   SITE_URL: https://hunsalz.github.io
   PATH_PREFIX: /gridsome-starter-wikidata
@@ -29,6 +29,7 @@ jobs:
       env:
         CI: true
     - name: Deploy to GitHub Pages
+      if: env.HAS_GH_TOKEN != '' # run deployment not until GH_TOKEN is available
       uses: Cecilapp/GitHub-Pages-deploy@v3
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
