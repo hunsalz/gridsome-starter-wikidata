@@ -11,7 +11,7 @@ module.exports = {
   pathPrefix: process.env.PATH_PREFIX,
 
   templates: {
-    Painting: "/:item"
+    Painting: "/:item",
   },
 
   plugins: [
@@ -19,8 +19,8 @@ module.exports = {
       use: "@gridsome/source-filesystem",
       options: {
         baseDir: "./content",
-        path: "*.*"
-      }
+        path: "*.*",
+      },
     },
     {
       use: "gridsome-source-wikidata",
@@ -49,47 +49,45 @@ module.exports = {
         baseDir: "/content/images/",
         cacheEnabled: true,
         ttl: 24 * 60 * 60 * 1000, // 1day
-        verbose: true
-      }
+        verbose: true,
+      },
     },
     {
       use: "gridsome-plugin-pwa",
       options: {
         // Service Worker Options
         disableServiceWorker: false,
-        serviceWorkerPath: 'service-worker.js',
-        cachedFileTypes: 'js,json,css,html,png,jpg,jpeg,svg,gif',
+        serviceWorkerPath: "service-worker.js",
+        cachedFileTypes: "js,json,css,html,png,jpg,jpeg,svg,gif",
         disableTemplatedUrls: false,
 
         // Manifest Options (https://developer.mozilla.org/en-US/docs/Web/Manifest)
-        manifestPath: 'manifest.json',
-        title: 'Gridsome Starter Wikidata',
+        manifestPath: "manifest.json",
+        title: "Gridsome Starter Wikidata",
         startUrl: process.env.SITE_URL + process.env.PATH_PREFIX + "/",
-        display: 'standalone',
-        statusBarStyle: 'default',
-        themeColor: '#666600',
-        backgroundColor: '#ffffff',
+        display: "standalone",
+        statusBarStyle: "default",
+        themeColor: "#666600",
+        backgroundColor: "#ffffff",
         icon: "src/assets/images/website-icon.png",
-        shortName: 'Starter',              
-        description: 'Gridsome Starter Wikidata',
-        categories: ['template', 'education'],
-        lang: 'en-US',
-        dir: 'auto',
+        shortName: "Starter",
+        description: "Gridsome Starter Wikidata",
+        categories: ["template", "education"],
+        lang: "en-US",
+        dir: "auto",
         maskableIcon: true,
 
         // Microsoft Windows Meta Tags
-        msTileColor: '#666600',
+        msTileColor: "#666600",
 
         // Apple MacOS Meta Tags
-        appleMaskIcon: 'favicon.svg',
-        appleMaskIconColor: '#666600',
-    }
-}
-]
+        appleMaskIcon: "favicon.svg",
+        appleMaskIconColor: "#666600",
+      },
     },
     {
-      use: '@gridsome/plugin-sitemap'
-    }
+      use: "@gridsome/plugin-sitemap",
+    },
   ],
 
   transformers: {
@@ -97,7 +95,7 @@ module.exports = {
     remark: {
       externalLinksTarget: "_blank",
       externalLinksRel: ["nofollow", "noopener", "noreferrer"],
-      anchorClassName: "icon icon-link"
-    }
-  }
+      anchorClassName: "icon icon-link",
+    },
+  },
 };
