@@ -8,7 +8,7 @@
     "template",
     "education"
   ],
-  "start_url": "https://hunsalz.github.io/",
+  "start_url": "https://hunsalz.github.io/gridsome-starter-wikidata/",
   "display": "standalone",
   "theme_color": "#666600",
   "background_color": "#ffffff",
