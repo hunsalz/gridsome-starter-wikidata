@@ -10,6 +10,18 @@ module.exports = {
   siteUrl: process.env.SITE_URL,
   pathPrefix: process.env.PATH_PREFIX,
 
+  icon: {
+    favicon: {
+      src: "./src/favicon.png",
+      sizes: [16, 32, 96],
+    },
+    touchicon: {
+      src: "./src/favicon.png",
+      sizes: [76, 152, 120, 167],
+      precomposed: true,
+    },
+  },
+
   templates: {
     Painting: "/:item",
   },
@@ -69,7 +81,7 @@ module.exports = {
         statusBarStyle: "default",
         themeColor: "#666600",
         backgroundColor: "#ffffff",
-        icon: "src/assets/images/website-icon.png",
+        icon: "./src/assets/images/website-icon.png",
         shortName: "Starter",
         description: "Gridsome Starter Wikidata",
         categories: ["template", "education"],
