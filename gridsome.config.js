@@ -12,11 +12,11 @@ module.exports = {
 
   icon: {
     favicon: {
-      src: "./src/favicon.png",
+      src: "./src/assets/images/favicon.png",
       sizes: [16, 32, 96],
     },
     touchicon: {
-      src: "./src/favicon.png",
+      src: "./src/assets/images/favicon.png",
       sizes: [76, 152, 120, 167],
       precomposed: true,
     },
