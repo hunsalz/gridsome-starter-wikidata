@@ -33,7 +33,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^7.17.0",
     "gh-pages": "^3.2.3",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "prettier": "^2.3.2",
     "sass-loader": "^10.1.1"
   }
