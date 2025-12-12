@@ -18,6 +18,12 @@ body {
   --space: 3.5rem;
   --max-content-width: 768px;
   --radius: 12px;
+  --card-image-height: 20vh;
+  --card-content-padding: 3em;
+  --card-margin-bottom: 1em;
+  --empty-state-min-height: 400px;
+  --empty-state-padding: 3em;
+  --error-timeout: 3000ms;
 }
 
 // dark theme

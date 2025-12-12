@@ -16,3 +16,17 @@ if (typeof window !== "undefined") {
   window.__setPreferredTheme = function() {};
 }
 
+// Mock Gridsome components
+jest.mock('gridsome', () => ({
+  gImage: {
+    name: 'g-image',
+    functional: true,
+    render: (h, { props }) => h('img', { attrs: props })
+  },
+  gLink: {
+    name: 'g-link',
+    functional: true,
+    render: (h, { props, children }) => h('a', { attrs: { href: props.to } }, children)
+  }
+}));
+

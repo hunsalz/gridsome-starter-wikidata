@@ -76,19 +76,31 @@ export default {
     };
   },
   computed: {
-    computeWikidataLink: function() {
+    /**
+     * Computes the Wikidata URL for the current painting
+     * @returns {string} The full Wikidata URL
+     */
+    computeWikidataLink: function () {
       return "https://www.wikidata.org/wiki/" + this.painting.item;
     }
   },
   methods: {
+    /**
+     * Toggles the favorite status of a painting
+     * @param {string} item - The painting item ID
+     */
     toggleFavorite(item) {
       this.isFavorite = !this.isFavorite;
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
-    download: function() {
+    /**
+     * Downloads the painting image
+     * Handles error cases and displays user-friendly error messages
+     */
+    download: function () {
       // Reset error message
       this.errorMessage = null;
-      
+
       // In Gridsome, image is a string URL, not an object
       let imageUrl = this.painting.image || this.painting.cover_image;
       if (!imageUrl) {
@@ -96,32 +108,30 @@ export default {
         // Show error message to user (could be enhanced with a toast notification)
         setTimeout(() => {
           this.errorMessage = null;
-        }, 3000);
+        }, 3000); // var(--error-timeout) - 3000ms
         return;
       }
       // Handle both string URLs and image objects
-      let uri = typeof imageUrl === 'string' ? imageUrl : (imageUrl.src || imageUrl);
+      let uri =
+        typeof imageUrl === "string" ? imageUrl : imageUrl.src || imageUrl;
       if (!uri) {
         this.errorMessage = "Invalid image URL";
         setTimeout(() => {
           this.errorMessage = null;
-        }, 3000);
+        }, 3000); // var(--error-timeout) - 3000ms
         return;
       }
       try {
         // extract filename: take last element of relative URI and remove any URI params
-        let filename = uri
-          .split("/")
-          .pop()
-          .split("?")[0];
+        let filename = uri.split("/").pop().split("?")[0];
         // remove any URI gibberish
         filename = decodeURI(filename).replace(/%2C/g, ",");
         FileSaver.saveAs(uri, filename);
-      } catch (error) {
+      } catch {
         this.errorMessage = "Failed to download image";
         setTimeout(() => {
           this.errorMessage = null;
-        }, 3000);
+        }, 3000); // var(--error-timeout) - 3000ms
       }
     }
   }

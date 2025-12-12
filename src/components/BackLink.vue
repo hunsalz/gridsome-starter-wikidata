@@ -14,7 +14,7 @@ query {
 
 <style lang="scss">
 .back-link {
-  display:flex;
+  display: flex;
   align-items: center;
   text-decoration: none;
   white-space: nowrap;

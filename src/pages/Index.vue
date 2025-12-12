@@ -6,26 +6,32 @@
         <div class="empty-state__content">
           <h2 class="empty-state__title">
             <span v-if="view === FAVORITES">No favorites yet</span>
-            <span v-else-if="filter.length > 0">No paintings match your filters</span>
+            <span v-else-if="filter.length > 0"
+              >No paintings match your filters</span
+            >
             <span v-else>No paintings available</span>
           </h2>
           <p class="empty-state__message">
-            <span v-if="view === FAVORITES">Start adding paintings to your favorites to see them here.</span>
-            <span v-else-if="filter.length > 0">Try removing some tags to see more paintings.</span>
+            <span v-if="view === FAVORITES"
+              >Start adding paintings to your favorites to see them here.</span
+            >
+            <span v-else-if="filter.length > 0"
+              >Try removing some tags to see more paintings.</span
+            >
             <span v-else>There are currently no paintings to display.</span>
           </p>
           <button
             v-if="filter.length > 0"
+            aria-label="Clear all filters"
             class="empty-state__button"
             @click="clearFilters"
-            aria-label="Clear all filters"
           >
             Clear Filters
           </button>
         </div>
       </div>
       <div v-else class="masonry">
-        <div class="cards" v-for="edge in computeCards" :key="edge.node.id">
+        <div v-for="edge in computeCards" :key="edge.node.id" class="cards">
           <CardLayout class="card-layout" :painting="edge.node" />
         </div>
       </div>
@@ -68,14 +74,14 @@ import {
   TOGGLE_VIEW
 } from "~/components/js/Event.js";
 import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
-import { debounce } from "lodash";
+import { debounce, includes } from "lodash";
 
 export default {
   components: {
     CardLayout,
     TagCloud
   },
-  data: function() {
+  data: function () {
     return {
       view: DASHBOARD,
       filter: [],
@@ -83,12 +89,17 @@ export default {
     };
   },
   metaInfo() {
-    const siteName = this.$page.metadata?.siteName || "Gridsome Starter Wikidata";
-    const siteDescription = this.$page.metadata?.siteDescription || "A Gridsome starter showcasing Wikidata integration";
-    const siteUrl = process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
-    const pathPrefix = process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
+    const siteName =
+      this.$page.metadata?.siteName || "Gridsome Starter Wikidata";
+    const siteDescription =
+      this.$page.metadata?.siteDescription ||
+      "A Gridsome starter showcasing Wikidata integration";
+    const siteUrl =
+      process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
+    const pathPrefix =
+      process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
     const url = `${siteUrl}${pathPrefix}/`;
-    
+
     return {
       title: siteName,
       meta: [
@@ -129,7 +140,7 @@ export default {
       ]
     };
   },
-  created: function() {
+  created: function () {
     // subscribe to event bus
     this.$eventBus.$on(ADD_TAG, this.onAddTag);
     this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
@@ -138,15 +149,18 @@ export default {
     // create debounced resize function for performance
     if (process.isClient) {
       // bind the method to maintain 'this' context
-      this.debouncedResizeAllCards = debounce(this.resizeAllCards.bind(this), 250);
+      this.debouncedResizeAllCards = debounce(
+        this.resizeAllCards.bind(this),
+        250
+      );
       // subscribe to (re)-render events with debounced handler
       let _this = this;
-      ["load", "resize"].forEach(function(event) {
+      ["load", "resize"].forEach(function (event) {
         window.addEventListener(event, _this.debouncedResizeAllCards);
       });
     }
   },
-  mounted: function() {
+  mounted: function () {
     // create tag cloud (moved here because $page data is available in mounted)
     if (this.$page.paintings && this.$page.paintings.edges) {
       this.$page.paintings.edges.forEach(edge => {
@@ -165,7 +179,7 @@ export default {
     // call after the next DOM update cycle
     if (process.isClient) {
       let _this = this;
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         _this.resizeAllCards();
       });
     }
@@ -174,7 +188,7 @@ export default {
     view() {
       if (process.isClient) {
         let _this = this;
-        this.$nextTick(function() {
+        this.$nextTick(function () {
           _this.resizeAllCards();
         });
       }
@@ -182,7 +196,7 @@ export default {
     filter() {
       if (process.isClient) {
         let _this = this;
-        this.$nextTick(function() {
+        this.$nextTick(function () {
           _this.resizeAllCards();
         });
       }
@@ -194,7 +208,7 @@ export default {
     // unsubscribe from all other event listeners
     if (process.isClient && this.debouncedResizeAllCards) {
       let _this = this;
-      ["load", "resize"].forEach(function(event) {
+      ["load", "resize"].forEach(function (event) {
         window.removeEventListener(event, _this.debouncedResizeAllCards);
       });
       // cancel any pending debounced calls
@@ -202,7 +216,11 @@ export default {
     }
   },
   computed: {
-    computeCards: function() {
+    /**
+     * Computes the list of cards to display based on current view and filters
+     * @returns {Array} Array of painting edges to display
+     */
+    computeCards: function () {
       // safety check for paintings data
       if (!this.$page.paintings || !this.$page.paintings.edges) {
         return [];
@@ -211,41 +229,53 @@ export default {
       // ... in case of favorite view
       if (this.view === FAVORITES && this.favorites.length > 0) {
         // filter matching cards
-        return this.$page.paintings.edges.filter(
-          edge => this.favorites.indexOf(edge.node.item) > -1
+        return this.$page.paintings.edges.filter(edge =>
+          includes(this.favorites, edge.node.item)
         );
       }
       // otherwise show standard dashboard ...
-      return this.$page.paintings.edges.filter(
-        edge => {
-          // a card is visible if all filter tags matches; true for all cards if filter.length == 0
-          if (!edge.node.tags || !Array.isArray(edge.node.tags)) {
-            return this.filter.length === 0;
-          }
-          return edge.node.tags.filter(tag => this.filter.includes(tag)).length ===
-            this.filter.length;
+      return this.$page.paintings.edges.filter(edge => {
+        // a card is visible if all filter tags matches; true for all cards if filter.length == 0
+        if (!edge.node.tags || !Array.isArray(edge.node.tags)) {
+          return this.filter.length === 0;
         }
-      );
+        return (
+          edge.node.tags.filter(tag => this.filter.includes(tag)).length ===
+          this.filter.length
+        );
+      });
     }
   },
   methods: {
-    clearFilters: function() {
+    /**
+     * Clears all active filters
+     */
+    clearFilters: function () {
       this.filter = [];
     },
-    // add a new tag and keep filter duplicate-free
-    onAddTag: function(tag) { 
+    /**
+     * Adds a tag to the filter list, keeping it duplicate-free
+     * @param {string} tag - The tag to add to the filter
+     */
+    onAddTag: function (tag) {
       this.filter.push(tag);
       this.filter = [...new Set(this.filter)];
     },
-    // remove a tag from existing tag filter
-    onRemoveTag: function(tag) {
-      let index = this.filter.indexOf(tag);
+    /**
+     * Removes a tag from the filter list
+     * @param {string} tag - The tag to remove from the filter
+     */
+    onRemoveTag: function (tag) {
+      let index = this.filter.findIndex(t => t === tag);
       this.filter.splice(index, 1);
     },
-    // control changes of favorites
-    onChangeFavorite: function(item) {
+    /**
+     * Handles favorite toggle events
+     * @param {string} item - The painting item ID to toggle as favorite
+     */
+    onChangeFavorite: function (item) {
       // toggle item as favorite accordingly
-      let index = this.favorites.indexOf(item);
+      let index = this.favorites.findIndex(f => f === item);
       if (index !== -1) {
         this.favorites.splice(index, 1);
         // toggle view to 'dashboard' as soon as last favorite item is removed
@@ -258,32 +288,38 @@ export default {
       }
     },
     // set view setting
-    onToggleView: function(view) {
+    onToggleView: function (view) {
       this.view = view;
     },
     // decide if toggle is visible
-    showToggleView: function() {
+    showToggleView: function () {
       return this.favorites.length > 0 ? true : false;
     },
-    removeTag: function() {
+    removeTag: function () {
       return REMOVE_TAG;
     },
-    // resize an individual card
+    /**
+     * Resizes an individual card in the masonry grid
+     * Calculates the number of grid rows the card should span based on its height
+     * @param {HTMLElement} card - The card DOM element to resize
+     */
     resizeCard(card) {
       if (!card) return;
-      
+
       let grid = document.getElementsByClassName("masonry")[0];
       if (!grid) return;
-      
+
       let cardLayout = card.querySelector(".card-layout");
       if (!cardLayout) return;
-      
-      let rowGap = parseInt(
-        window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
-      ) || 0;
-      let rowHeight = parseInt(
-        window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
-      ) || 10;
+
+      let rowGap =
+        parseInt(
+          window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
+        ) || 0;
+      let rowHeight =
+        parseInt(
+          window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
+        ) || 10;
       /*
        * Spanning for any brick = S
        * Grid's row-gap = G
@@ -303,6 +339,10 @@ export default {
       }
     },
     // resize all cards
+    /**
+     * Resizes all cards in the masonry grid
+     * Called on window resize and after view/filter changes
+     */
     resizeAllCards() {
       if (!process.isClient) return;
       let allCards = document.getElementsByClassName("cards");
@@ -350,8 +390,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
-  padding: 3em 1em;
+  min-height: var(--empty-state-min-height);
+  padding: var(--empty-state-padding) 1em;
 
   &__content {
     text-align: center;

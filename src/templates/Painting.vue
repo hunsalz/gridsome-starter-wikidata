@@ -6,17 +6,27 @@
         <p>The painting you're looking for could not be found.</p>
       </div>
       <div v-else>
-        <h1 class="painting__header">{{ $page.painting.title || "Untitled" }}</h1>
+        <h1 class="painting__header">
+          {{ $page.painting.title || "Untitled" }}
+        </h1>
         <div class="painting__content">
           <g-image
             v-if="$page.painting.image"
             :src="$page.painting.image"
-            :alt="$page.painting.title ? `${$page.painting.title} by Leonardo da Vinci` : 'Painting by Leonardo da Vinci'"
+            :alt="
+              $page.painting.title
+                ? `${$page.painting.title} by Leonardo da Vinci`
+                : 'Painting by Leonardo da Vinci'
+            "
             loading="lazy"
           />
           <div v-if="$page.painting.year">Year: {{ $page.painting.year }}</div>
-          <div v-if="$page.painting.location">Collection: {{ $page.painting.location }}</div>
-          <div v-if="$page.painting.materials">Material: {{ $page.painting.materials }}</div>
+          <div v-if="$page.painting.location">
+            Collection: {{ $page.painting.location }}
+          </div>
+          <div v-if="$page.painting.materials">
+            Material: {{ $page.painting.materials }}
+          </div>
         </div>
       </div>
     </div>
@@ -31,14 +41,16 @@ export default {
         title: "Painting not found"
       };
     }
-    
+
     const title = this.$page.painting.title || "Untitled Painting";
     const description = `${title} by Leonardo da Vinci. ${this.$page.painting.year ? `Created in ${this.$page.painting.year}.` : ""} ${this.$page.painting.location ? `Collection: ${this.$page.painting.location}.` : ""}`;
     const image = this.$page.painting.image || "";
-    const siteUrl = process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
-    const pathPrefix = process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
+    const siteUrl =
+      process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
+    const pathPrefix =
+      process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
     const url = `${siteUrl}${pathPrefix}${this.$page.painting.path}`;
-    
+
     return {
       title: title,
       meta: [

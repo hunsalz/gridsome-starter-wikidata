@@ -4,7 +4,11 @@
       <g-image
         v-if="painting.cover_image"
         :src="painting.cover_image"
-        :alt="painting.title ? `${painting.title} - Cover image` : 'Artwork cover image'"
+        :alt="
+          painting.title
+            ? `${painting.title} - Cover image`
+            : 'Artwork cover image'
+        "
         loading="lazy"
       />
     </div>
@@ -50,7 +54,7 @@ export default {
 <style lang="scss">
 .card-layout {
   position: relative;
-  margin: 0 0 1em 0;
+  margin: 0 0 var(--card-margin-bottom) 0;
   border-radius: var(--radius) var(--radius) 0 0;
   background-color: var(--bg-content-color);
 
@@ -64,13 +68,13 @@ export default {
 
     .g-image {
       width: 100%;
-      height: 20vh;
+      height: var(--card-image-height);
       object-fit: cover;
     }
   }
 
   &__content {
-    padding: 3em;
+    padding: var(--card-content-padding);
   }
 
   &__title {

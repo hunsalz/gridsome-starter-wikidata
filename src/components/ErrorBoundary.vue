@@ -4,20 +4,23 @@
       <div class="error-boundary__content">
         <h1 class="error-boundary__title">Something went wrong</h1>
         <p class="error-boundary__message">
-          {{ errorMessage || "An unexpected error occurred. Please try refreshing the page." }}
+          {{
+            errorMessage ||
+            "An unexpected error occurred. Please try refreshing the page."
+          }}
         </p>
         <div class="error-boundary__actions">
           <button
+            aria-label="Reload page"
             class="error-boundary__button"
             @click="reload"
-            aria-label="Reload page"
           >
             Reload Page
           </button>
           <button
+            aria-label="Go to home page"
             class="error-boundary__button error-boundary__button--secondary"
             @click="goHome"
-            aria-label="Go to home page"
           >
             Go Home
           </button>
@@ -40,17 +43,18 @@ export default {
       hasError: false,
       error: null,
       errorMessage: null,
-      isDevelopment: process.isClient && window.location.hostname === 'localhost'
+      isDevelopment:
+        process.isClient && window.location.hostname === "localhost"
     };
   },
   errorCaptured(err, instance, info) {
     this.hasError = true;
     this.error = err;
     this.errorMessage = err.message || "An error occurred";
-    
+
     // Log error for debugging
     console.error("ErrorBoundary caught an error:", err, info);
-    
+
     // Prevent error from propagating
     return false;
   },
@@ -154,4 +158,3 @@ export default {
   }
 }
 </style>
-

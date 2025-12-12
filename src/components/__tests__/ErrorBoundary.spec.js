@@ -8,7 +8,7 @@ describe("ErrorBoundary", () => {
         default: "<div>Test Content</div>"
       }
     });
-    
+
     expect(wrapper.html()).toContain("Test Content");
     expect(wrapper.find(".error-boundary").exists()).toBe(false);
   });
@@ -26,7 +26,7 @@ describe("ErrorBoundary", () => {
         default: "<div>Test Content</div>"
       }
     });
-    
+
     expect(wrapper.find(".error-boundary").exists()).toBe(true);
     expect(wrapper.text()).toContain("Something went wrong");
     expect(wrapper.text()).toContain("Test error message");
@@ -42,11 +42,10 @@ describe("ErrorBoundary", () => {
         };
       }
     });
-    
+
     const buttons = wrapper.findAll(".error-boundary__button");
     expect(buttons.length).toBe(2);
     expect(buttons.at(0).text()).toBe("Reload Page");
     expect(buttons.at(1).text()).toBe("Go Home");
   });
 });
-
