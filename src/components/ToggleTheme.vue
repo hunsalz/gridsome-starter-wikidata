@@ -53,7 +53,9 @@ export default {
     };
   },
   mounted() {
-    if (window.__theme == "dark") this.darkTheme = true;
+    if (process.isClient && window.__theme === "dark") {
+      this.darkTheme = true;
+    }
   },
   methods: {
     toggleTheme() {

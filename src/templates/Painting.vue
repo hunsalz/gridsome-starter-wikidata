@@ -1,16 +1,22 @@
 <template>
   <Layout :show-back-link="true" :toggle-view="false">
     <div class="content-box">
-      <h1 class="painting__header">{{ $page.painting.title }}</h1>
-      <div class="painting__content">
-        <g-image
-          v-if="$page.painting.image"
-          :src="$page.painting.image"
-          alt="Painting"
-        />
-        <div>Year: {{ $page.painting.year }}</div>
-        <div>Collection: {{ $page.painting.location }}</div>
-        <div>Material: {{ $page.painting.materials }}</div>
+      <div v-if="!$page.painting" class="painting__error">
+        <h1>Painting not found</h1>
+        <p>The painting you're looking for could not be found.</p>
+      </div>
+      <div v-else>
+        <h1 class="painting__header">{{ $page.painting.title || "Untitled" }}</h1>
+        <div class="painting__content">
+          <g-image
+            v-if="$page.painting.image"
+            :src="$page.painting.image"
+            alt="Painting"
+          />
+          <div v-if="$page.painting.year">Year: {{ $page.painting.year }}</div>
+          <div v-if="$page.painting.location">Collection: {{ $page.painting.location }}</div>
+          <div v-if="$page.painting.materials">Material: {{ $page.painting.materials }}</div>
+        </div>
       </div>
     </div>
   </Layout>
@@ -19,12 +25,17 @@
 <script>
 export default {
   metaInfo() {
+    if (!this.$page.painting) {
+      return {
+        title: "Painting not found"
+      };
+    }
     return {
-      title: this.$page.painting.title,
+      title: this.$page.painting.title || "Untitled Painting",
       meta: [
         {
           name: "description",
-          content: this.$page.painting.title
+          content: this.$page.painting.title || "Painting details"
         }
       ]
     };
@@ -70,6 +81,11 @@ query painting ($id: ID!) {
       padding: 0;
       min-width: 100%;
     }
+  }
+
+  &__error {
+    text-align: center;
+    padding: 2em;
   }
 }
 </style>

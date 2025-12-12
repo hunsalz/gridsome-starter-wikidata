@@ -1,0 +1,21 @@
+{
+  "name": "Gridsome Starter Wikidata",
+  "short_name": "Starter",
+  "description": "Gridsome Starter Wikidata",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#666600",
+  "orientation": "any",
+  "lang": "en-US",
+  "dir": "auto",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["template", "education"]
+}
+

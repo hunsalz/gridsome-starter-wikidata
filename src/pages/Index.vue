@@ -1,6 +1,6 @@
 <template>
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
-    <div>
+    <div class="index-content">
       <TagCloud :event="removeTag()" :tags="filter" />
       <div class="masonry">
         <div class="cards" v-for="edge in computeCards" :key="edge.node.id">
@@ -46,6 +46,7 @@ import {
   TOGGLE_VIEW
 } from "~/components/js/Event.js";
 import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
+import { debounce } from "lodash";
 
 export default {
   components: {
@@ -76,26 +77,33 @@ export default {
     this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
     this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
-    // subscribe to (re)-render events
+    // create debounced resize function for performance
     if (process.isClient) {
+      // bind the method to maintain 'this' context
+      this.debouncedResizeAllCards = debounce(this.resizeAllCards.bind(this), 250);
+      // subscribe to (re)-render events with debounced handler
       let _this = this;
       ["load", "resize"].forEach(function(event) {
-        window.addEventListener(event, _this.resizeAllCards);
+        window.addEventListener(event, _this.debouncedResizeAllCards);
       });
     }
-    // create tag cloud
-    this.$page.paintings.edges.forEach(edge => {
-      // basic tags
-      edge.node.tags = [edge.node.year, edge.node.location];
-      // concat with available depicts
-      edge.node.tags = edge.node.tags.concat(edge.node.depicts.split(","));
-      // clean up empty tags = ""
-      edge.node.tags = edge.node.tags.filter(item => item);
-      // create a duplicate-free array
-      edge.node.tags = [...new Set(edge.node.tags)];
-    });
   },
   mounted: function() {
+    // create tag cloud (moved here because $page data is available in mounted)
+    if (this.$page.paintings && this.$page.paintings.edges) {
+      this.$page.paintings.edges.forEach(edge => {
+        // basic tags
+        edge.node.tags = [edge.node.year, edge.node.location];
+        // concat with available depicts (with null safety)
+        if (edge.node.depicts) {
+          edge.node.tags = edge.node.tags.concat(edge.node.depicts.split(","));
+        }
+        // clean up empty tags = ""
+        edge.node.tags = edge.node.tags.filter(item => item);
+        // create a duplicate-free array
+        edge.node.tags = [...new Set(edge.node.tags)];
+      });
+    }
     // call after the next DOM update cycle
     if (process.isClient) {
       let _this = this;
@@ -126,15 +134,21 @@ export default {
     // unsubscribe from all event bus listeners at once
     this.$eventBus.$off();
     // unsubscribe from all other event listeners
-    if (process.isClient) {
+    if (process.isClient && this.debouncedResizeAllCards) {
       let _this = this;
       ["load", "resize"].forEach(function(event) {
-        window.removeEventListener(event, _this.resizeAllCards);
+        window.removeEventListener(event, _this.debouncedResizeAllCards);
       });
+      // cancel any pending debounced calls
+      this.debouncedResizeAllCards.cancel();
     }
   },
   computed: {
     computeCards: function() {
+      // safety check for paintings data
+      if (!this.$page.paintings || !this.$page.paintings.edges) {
+        return [];
+      }
       // compute cards depending on current view
       // ... in case of favorite view
       if (this.view === FAVORITES && this.favorites.length > 0) {
@@ -145,10 +159,14 @@ export default {
       }
       // otherwise show standard dashboard ...
       return this.$page.paintings.edges.filter(
-        edge =>
+        edge => {
           // a card is visible if all filter tags matches; true for all cards if filter.length == 0
-          edge.node.tags.filter(tag => this.filter.includes(tag)).length ===
-          this.filter.length
+          if (!edge.node.tags || !Array.isArray(edge.node.tags)) {
+            return this.filter.length === 0;
+          }
+          return edge.node.tags.filter(tag => this.filter.includes(tag)).length ===
+            this.filter.length;
+        }
       );
     }
   },
@@ -167,9 +185,9 @@ export default {
     onChangeFavorite: function(item) {
       // toggle item as favorite accordingly
       let index = this.favorites.indexOf(item);
-      if (index != -1) {
+      if (index !== -1) {
         this.favorites.splice(index, 1);
-        // toggle view to 'dashbaord' as soon as last favorite item is removed
+        // toggle view to 'dashboard' as soon as last favorite item is removed
         if (this.favorites.length === 0) {
           this.view = DASHBOARD;
         }
@@ -191,13 +209,20 @@ export default {
     },
     // resize an individual card
     resizeCard(card) {
-      let grid = document.getElementsByClassName("masonry")[0],
-        rowGap = parseInt(
-          window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
-        ),
-        rowHeight = parseInt(
-          window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
-        );
+      if (!card) return;
+      
+      let grid = document.getElementsByClassName("masonry")[0];
+      if (!grid) return;
+      
+      let cardLayout = card.querySelector(".card-layout");
+      if (!cardLayout) return;
+      
+      let rowGap = parseInt(
+        window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
+      ) || 0;
+      let rowHeight = parseInt(
+        window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
+      ) || 10;
       /*
        * Spanning for any brick = S
        * Grid's row-gap = G
@@ -208,24 +233,32 @@ export default {
        * S = H1 / T
        */
       let rowSpan = Math.ceil(
-        (card.querySelector(".card-layout").getBoundingClientRect().height +
-          rowGap) /
+        (cardLayout.getBoundingClientRect().height + rowGap) /
           (rowHeight + rowGap)
       );
       // set the spanning as calculated above (S)
-      card.style.gridRowEnd = "span " + rowSpan;
+      if (rowSpan > 0) {
+        card.style.gridRowEnd = "span " + rowSpan;
+      }
     },
     // resize all cards
     resizeAllCards() {
+      if (!process.isClient) return;
       let allCards = document.getElementsByClassName("cards");
+      if (!allCards || allCards.length === 0) return;
       // loop through the above list and execute the spanning function to each masonry item
-      allCards.forEach(card => this.resizeCard(card));
+      Array.from(allCards).forEach(card => this.resizeCard(card));
     }
   }
 };
 </script>
 
 <style lang="scss">
+.index-content {
+  width: 100%;
+  max-width: 100%;
+}
+
 .grid {
   display: grid;
   grid-gap: 1em;
@@ -241,8 +274,9 @@ export default {
 .masonry {
   display: grid;
   grid-gap: 1em;
-  grid-auto-rows: 0;
+  grid-auto-rows: 10px;
   grid-template-columns: repeat(1, 1fr);
+  width: 100%;
   @media only screen and (min-width: 800px) {
     grid-template-columns: repeat(2, 1fr);
   }

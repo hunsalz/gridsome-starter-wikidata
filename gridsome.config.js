@@ -76,7 +76,7 @@ module.exports = {
         // Manifest Options (https://developer.mozilla.org/en-US/docs/Web/Manifest)
         manifestPath: "manifest.json",
         title: "Gridsome Starter Wikidata",
-        startUrl: process.env.SITE_URL + process.env.PATH_PREFIX + "/",
+        startUrl: (process.env.SITE_URL || "http://localhost:8080") + (process.env.PATH_PREFIX || "") + "/",
         display: "standalone",
         statusBarStyle: "default",
         themeColor: "#666600",
@@ -93,7 +93,7 @@ module.exports = {
         msTileColor: "#666600",
 
         // Apple MacOS Meta Tags
-        appleMaskIcon: "favicon.svg",
+        appleMaskIcon: "./src/assets/images/favicon.png",
         appleMaskIconColor: "#666600",
       },
     },

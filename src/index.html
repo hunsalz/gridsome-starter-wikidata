@@ -3,6 +3,8 @@
 
 <head>
   ${head}
+  <!-- Modern mobile web app meta tag (replaces deprecated apple-mobile-web-app-capable) -->
+  <meta name="mobile-web-app-capable" content="yes">
 </head>
 
 <body ${bodyAttrs}>
@@ -30,9 +32,17 @@
       }
 
       var darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      darkQuery.addListener(function (e) {
-        window.__setPreferredTheme(e.matches ? 'dark' : 'light')
-      });
+      // Use addEventListener instead of deprecated addListener
+      if (darkQuery.addEventListener) {
+        darkQuery.addEventListener('change', function (e) {
+          window.__setPreferredTheme(e.matches ? 'dark' : 'light')
+        });
+      } else {
+        // Fallback for older browsers
+        darkQuery.addListener(function (e) {
+          window.__setPreferredTheme(e.matches ? 'dark' : 'light')
+        });
+      }
 
       setTheme(preferredTheme || (darkQuery.matches ? 'dark' : 'light'));
     })();

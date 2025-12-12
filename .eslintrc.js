@@ -1,13 +1,15 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
+    browser: true,
+    es2021: true
   },
   plugins: ["lodash"],
   extends: [
     "plugin:vue/recommended",
     "eslint:recommended",
-    "prettier/vue",
+    "prettier", // Replaced deprecated prettier/vue
     "plugin:lodash/recommended",
     "plugin:prettier/recommended"
   ],
@@ -17,6 +19,8 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
   },
   parserOptions: {
-    parser: "babel-eslint"
+    parser: "babel-eslint",
+    ecmaVersion: 2021,
+    sourceType: "module"
   }
 };

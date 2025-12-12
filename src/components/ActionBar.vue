@@ -4,7 +4,8 @@
       role="button"
       aria-label="Toggle favorite"
       class="action-button"
-      :is-favorite="isFavorite"
+      :class="{ 'is-favorite': isFavorite }"
+      :data-favorite="isFavorite"
       @click.prevent="toggleFavorite(painting.item)"
     >
       <svg
@@ -81,7 +82,18 @@ export default {
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
     download: function() {
-      let uri = this.painting.image.src;
+      // In Gridsome, image is a string URL, not an object
+      let imageUrl = this.painting.image || this.painting.cover_image;
+      if (!imageUrl) {
+        console.warn("Cannot download: image not available");
+        return;
+      }
+      // Handle both string URLs and image objects
+      let uri = typeof imageUrl === 'string' ? imageUrl : (imageUrl.src || imageUrl);
+      if (!uri) {
+        console.warn("Cannot download: invalid image URL");
+        return;
+      }
       // extract filename: take last element of relative URI and remove any URI params
       let filename = uri
         .split("/")
@@ -98,7 +110,7 @@ export default {
 <style lang="scss">
 .action-bar {
 
-  .action-button[is-favorite="true"] {
+  .action-button.is-favorite {
     fill: red;
   }
 

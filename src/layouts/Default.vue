@@ -76,6 +76,8 @@ export default {
   margin-top: calc(var(--header-height) + 1em);
   margin-left: 1em;
   margin-right: 1em;
+  width: 100%;
+  max-width: 100%;
 }
 
 .footer {
