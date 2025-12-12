@@ -6,5 +6,5 @@ src/.temp
 node_modules
 dist
 
-# Exclude all markdown files
-*.md
+# Exclude audit markdown files (keep README.md)
+AUDIT*.md
