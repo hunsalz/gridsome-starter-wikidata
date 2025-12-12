@@ -2,7 +2,29 @@
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
     <div class="index-content">
       <TagCloud :event="removeTag()" :tags="filter" />
-      <div class="masonry">
+      <div v-if="computeCards.length === 0" class="empty-state">
+        <div class="empty-state__content">
+          <h2 class="empty-state__title">
+            <span v-if="view === FAVORITES">No favorites yet</span>
+            <span v-else-if="filter.length > 0">No paintings match your filters</span>
+            <span v-else>No paintings available</span>
+          </h2>
+          <p class="empty-state__message">
+            <span v-if="view === FAVORITES">Start adding paintings to your favorites to see them here.</span>
+            <span v-else-if="filter.length > 0">Try removing some tags to see more paintings.</span>
+            <span v-else>There are currently no paintings to display.</span>
+          </p>
+          <button
+            v-if="filter.length > 0"
+            class="empty-state__button"
+            @click="clearFilters"
+            aria-label="Clear all filters"
+          >
+            Clear Filters
+          </button>
+        </div>
+      </div>
+      <div v-else class="masonry">
         <div class="cards" v-for="edge in computeCards" :key="edge.node.id">
           <CardLayout class="card-layout" :painting="edge.node" />
         </div>
@@ -61,12 +83,48 @@ export default {
     };
   },
   metaInfo() {
+    const siteName = this.$page.metadata?.siteName || "Gridsome Starter Wikidata";
+    const siteDescription = this.$page.metadata?.siteDescription || "A Gridsome starter showcasing Wikidata integration";
+    const siteUrl = process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
+    const pathPrefix = process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
+    const url = `${siteUrl}${pathPrefix}/`;
+    
     return {
-      title: this.$page.metadata.siteName,
+      title: siteName,
       meta: [
         {
           name: "description",
-          content: this.$page.metadata.siteDescription
+          content: siteDescription
+        },
+        // Open Graph meta tags
+        {
+          property: "og:title",
+          content: siteName
+        },
+        {
+          property: "og:description",
+          content: siteDescription
+        },
+        {
+          property: "og:type",
+          content: "website"
+        },
+        {
+          property: "og:url",
+          content: url
+        },
+        // Twitter Card meta tags
+        {
+          name: "twitter:card",
+          content: "summary"
+        },
+        {
+          name: "twitter:title",
+          content: siteName
+        },
+        {
+          name: "twitter:description",
+          content: siteDescription
         }
       ]
     };
@@ -171,6 +229,9 @@ export default {
     }
   },
   methods: {
+    clearFilters: function() {
+      this.filter = [];
+    },
     // add a new tag and keep filter duplicate-free
     onAddTag: function(tag) { 
       this.filter.push(tag);
@@ -282,6 +343,52 @@ export default {
   }
   @media only screen and (min-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 3em 1em;
+
+  &__content {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    margin-bottom: 1em;
+    color: var(--title-color);
+  }
+
+  &__message {
+    font-size: 1rem;
+    color: var(--body-color);
+    margin-bottom: 2em;
+    line-height: 1.6;
+  }
+
+  &__button {
+    padding: 0.75em 1.5em;
+    background-color: var(--link-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:focus {
+      outline: 2px solid var(--link-color);
+      outline-offset: 2px;
+    }
   }
 }
 </style>

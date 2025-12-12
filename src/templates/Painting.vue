@@ -11,7 +11,8 @@
           <g-image
             v-if="$page.painting.image"
             :src="$page.painting.image"
-            alt="Painting"
+            :alt="$page.painting.title ? `${$page.painting.title} by Leonardo da Vinci` : 'Painting by Leonardo da Vinci'"
+            loading="lazy"
           />
           <div v-if="$page.painting.year">Year: {{ $page.painting.year }}</div>
           <div v-if="$page.painting.location">Collection: {{ $page.painting.location }}</div>
@@ -30,12 +31,58 @@ export default {
         title: "Painting not found"
       };
     }
+    
+    const title = this.$page.painting.title || "Untitled Painting";
+    const description = `${title} by Leonardo da Vinci. ${this.$page.painting.year ? `Created in ${this.$page.painting.year}.` : ""} ${this.$page.painting.location ? `Collection: ${this.$page.painting.location}.` : ""}`;
+    const image = this.$page.painting.image || "";
+    const siteUrl = process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
+    const pathPrefix = process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
+    const url = `${siteUrl}${pathPrefix}${this.$page.painting.path}`;
+    
     return {
-      title: this.$page.painting.title || "Untitled Painting",
+      title: title,
       meta: [
         {
           name: "description",
-          content: this.$page.painting.title || "Painting details"
+          content: description.trim()
+        },
+        // Open Graph meta tags
+        {
+          property: "og:title",
+          content: title
+        },
+        {
+          property: "og:description",
+          content: description.trim()
+        },
+        {
+          property: "og:image",
+          content: image
+        },
+        {
+          property: "og:type",
+          content: "article"
+        },
+        {
+          property: "og:url",
+          content: url
+        },
+        // Twitter Card meta tags
+        {
+          name: "twitter:card",
+          content: "summary_large_image"
+        },
+        {
+          name: "twitter:title",
+          content: title
+        },
+        {
+          name: "twitter:description",
+          content: description.trim()
+        },
+        {
+          name: "twitter:image",
+          content: image
         }
       ]
     };

@@ -4,7 +4,8 @@
       <g-image
         v-if="painting.cover_image"
         :src="painting.cover_image"
-        alt="Cover image"
+        :alt="painting.title ? `${painting.title} - Cover image` : 'Artwork cover image'"
+        loading="lazy"
       />
     </div>
     <div class="card-layout__content">
@@ -63,7 +64,6 @@ export default {
 
     .g-image {
       width: 100%;
-      height: auto;
       height: 20vh;
       object-fit: cover;
     }

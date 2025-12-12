@@ -1,5 +1,8 @@
 <template>
   <div class="action-bar">
+    <div v-if="errorMessage" class="action-bar__error" role="alert">
+      {{ errorMessage }}
+    </div>
     <button
       role="button"
       aria-label="Toggle favorite"
@@ -68,7 +71,8 @@ export default {
   },
   data() {
     return {
-      isFavorite: false
+      isFavorite: false,
+      errorMessage: null
     };
   },
   computed: {
@@ -82,26 +86,43 @@ export default {
       this.$eventBus.$emit(TOGGLE_FAVORITE, item);
     },
     download: function() {
+      // Reset error message
+      this.errorMessage = null;
+      
       // In Gridsome, image is a string URL, not an object
       let imageUrl = this.painting.image || this.painting.cover_image;
       if (!imageUrl) {
-        console.warn("Cannot download: image not available");
+        this.errorMessage = "Image not available for download";
+        // Show error message to user (could be enhanced with a toast notification)
+        setTimeout(() => {
+          this.errorMessage = null;
+        }, 3000);
         return;
       }
       // Handle both string URLs and image objects
       let uri = typeof imageUrl === 'string' ? imageUrl : (imageUrl.src || imageUrl);
       if (!uri) {
-        console.warn("Cannot download: invalid image URL");
+        this.errorMessage = "Invalid image URL";
+        setTimeout(() => {
+          this.errorMessage = null;
+        }, 3000);
         return;
       }
-      // extract filename: take last element of relative URI and remove any URI params
-      let filename = uri
-        .split("/")
-        .pop()
-        .split("?")[0];
-      // remove any URI gibberish
-      filename = decodeURI(filename).replace(/%2C/g, ",");
-      FileSaver.saveAs(uri, filename);
+      try {
+        // extract filename: take last element of relative URI and remove any URI params
+        let filename = uri
+          .split("/")
+          .pop()
+          .split("?")[0];
+        // remove any URI gibberish
+        filename = decodeURI(filename).replace(/%2C/g, ",");
+        FileSaver.saveAs(uri, filename);
+      } catch (error) {
+        this.errorMessage = "Failed to download image";
+        setTimeout(() => {
+          this.errorMessage = null;
+        }, 3000);
+      }
     }
   }
 };
@@ -109,6 +130,23 @@ export default {
 
 <style lang="scss">
 .action-bar {
+  position: relative;
+
+  &__error {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0.5em;
+    padding: 0.5em 1em;
+    background-color: var(--error-color);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
 
   .action-button.is-favorite {
     fill: red;
