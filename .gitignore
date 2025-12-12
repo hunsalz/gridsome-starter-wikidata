@@ -5,3 +5,6 @@ content
 src/.temp
 node_modules
 dist
+
+# Exclude all markdown files
+*.md
