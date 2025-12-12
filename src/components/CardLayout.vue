@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import ActionBar from "~/components/ActionBar";
-import TagCloud from "~/components/TagCloud";
+import ActionBar from "~/components/ActionBar.vue";
+import TagCloud from "~/components/TagCloud.vue";
 import { ADD_TAG } from "~/components/js/Event.js";
 
 export default {
@@ -41,9 +41,17 @@ export default {
     }
   },
   methods: {
-    addTag: function () {
+    /**
+     * Returns the ADD_TAG event constant for tag cloud
+     * @returns {string} The ADD_TAG event constant
+     */
+    addTag() {
       return ADD_TAG;
     },
+    /**
+     * Gets the tags array for the painting
+     * @returns {Array<string>} Array of tags, or empty array if no tags
+     */
     getTags() {
       return this.painting.tags ? this.painting.tags : [];
     }

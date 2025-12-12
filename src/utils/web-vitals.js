@@ -4,13 +4,15 @@
  * @see https://web.dev/vitals/
  */
 
+import { isDevelopment, isClient } from "./client.js";
+
 /**
  * Reports Web Vitals metrics to console (can be extended to send to analytics)
  * @param {Object} metric - The Web Vitals metric object
  */
 function reportWebVital(metric) {
-  // Log to console in development
-  if (process.isClient && window.location.hostname === "localhost") {
+  // Log to console in development only
+  if (isDevelopment()) {
     console.log("[Web Vitals]", metric.name, metric.value, metric.id);
   }
 
@@ -30,7 +32,7 @@ function reportWebVital(metric) {
  * Should be called in main.js or App.vue
  */
 export function initWebVitals() {
-  if (!process.isClient) return;
+  if (!isClient()) return;
 
   // Dynamically import web-vitals library
   import("web-vitals")
@@ -42,6 +44,8 @@ export function initWebVitals() {
       onTTFB(reportWebVital);
     })
     .catch(err => {
-      console.warn("Failed to load web-vitals:", err);
+      if (isDevelopment()) {
+        console.warn("Failed to load web-vitals:", err);
+      }
     });
 }

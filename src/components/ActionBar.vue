@@ -4,11 +4,11 @@
       {{ errorMessage }}
     </div>
     <button
-      role="button"
-      aria-label="Toggle favorite"
       class="action-button"
       :class="{ 'is-favorite': isFavorite }"
       :data-favorite="isFavorite"
+      role="button"
+      aria-label="Toggle favorite"
       @click.prevent="toggleFavorite(painting.item)"
     >
       <svg
@@ -23,7 +23,7 @@
         />
       </svg>
     </button>
-    <g-link class="action-button" :to="computeWikidataLink">
+    <g-link class="action-button" :to="getWikidataLink">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -37,9 +37,9 @@
       </svg>
     </g-link>
     <button
+      class="action-button"
       role="button"
       aria-label="Download image"
-      class="action-button"
       @click.prevent="download()"
     >
       <svg
@@ -62,6 +62,9 @@ import FileSaver from "file-saver";
 
 import { TOGGLE_FAVORITE } from "~/components/js/Event.js";
 
+// Error timeout matches CSS variable --error-timeout: 3000ms
+const ERROR_TIMEOUT = 3000;
+
 export default {
   props: {
     painting: {
@@ -77,10 +80,10 @@ export default {
   },
   computed: {
     /**
-     * Computes the Wikidata URL for the current painting
+     * Gets the Wikidata URL for the current painting
      * @returns {string} The full Wikidata URL
      */
-    computeWikidataLink: function () {
+    getWikidataLink() {
       return "https://www.wikidata.org/wiki/" + this.painting.item;
     }
   },
@@ -97,7 +100,7 @@ export default {
      * Downloads the painting image
      * Handles error cases and displays user-friendly error messages
      */
-    download: function () {
+    download() {
       // Reset error message
       this.errorMessage = null;
 
@@ -105,20 +108,19 @@ export default {
       let imageUrl = this.painting.image || this.painting.cover_image;
       if (!imageUrl) {
         this.errorMessage = "Image not available for download";
-        // Show error message to user (could be enhanced with a toast notification)
         setTimeout(() => {
           this.errorMessage = null;
-        }, 3000); // var(--error-timeout) - 3000ms
+        }, ERROR_TIMEOUT);
         return;
       }
       // Handle both string URLs and image objects
       let uri =
         typeof imageUrl === "string" ? imageUrl : imageUrl.src || imageUrl;
       if (!uri) {
-        this.errorMessage = "Invalid image URL";
+        this.errorMessage = "Invalid image URL. Unable to download.";
         setTimeout(() => {
           this.errorMessage = null;
-        }, 3000); // var(--error-timeout) - 3000ms
+        }, ERROR_TIMEOUT);
         return;
       }
       try {
@@ -128,10 +130,10 @@ export default {
         filename = decodeURI(filename).replace(/%2C/g, ",");
         FileSaver.saveAs(uri, filename);
       } catch {
-        this.errorMessage = "Failed to download image";
+        this.errorMessage = "Failed to download image. Please try again.";
         setTimeout(() => {
           this.errorMessage = null;
-        }, 3000); // var(--error-timeout) - 3000ms
+        }, ERROR_TIMEOUT);
       }
     }
   }

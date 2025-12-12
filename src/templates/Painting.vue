@@ -3,7 +3,10 @@
     <div class="content-box">
       <div v-if="!$page.painting" class="painting__error">
         <h1>Painting not found</h1>
-        <p>The painting you're looking for could not be found.</p>
+        <p>
+          The painting you're looking for could not be found. Please check the
+          URL or return to the home page.
+        </p>
       </div>
       <div v-else>
         <h1 class="painting__header">

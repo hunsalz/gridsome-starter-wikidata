@@ -1,8 +1,8 @@
 <template>
   <button
+    class="toggle-theme"
     role="button"
     aria-label="Toggle dark/light"
-    class="toggle-theme"
     @click.prevent="toggleTheme"
   >
     <svg
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { isClient } from "~/utils/client.js";
+
 export default {
   data() {
     return {
@@ -53,11 +55,15 @@ export default {
     };
   },
   mounted() {
-    if (process.isClient && window.__theme === "dark") {
+    if (isClient() && window.__theme === "dark") {
       this.darkTheme = true;
     }
   },
   methods: {
+    /**
+     * Toggles between dark and light theme
+     * Updates the theme preference in localStorage via window.__setPreferredTheme
+     */
     toggleTheme() {
       this.darkTheme = !this.darkTheme;
       // corresponding script is added in index.html

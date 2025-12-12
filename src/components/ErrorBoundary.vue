@@ -11,15 +11,17 @@
         </p>
         <div class="error-boundary__actions">
           <button
-            aria-label="Reload page"
             class="error-boundary__button"
+            role="button"
+            aria-label="Reload page"
             @click="reload"
           >
             Reload Page
           </button>
           <button
-            aria-label="Go to home page"
             class="error-boundary__button error-boundary__button--secondary"
+            role="button"
+            aria-label="Go to home page"
             @click="goHome"
           >
             Go Home
@@ -36,6 +38,8 @@
 </template>
 
 <script>
+import { isDevelopment } from "~/utils/client.js";
+
 export default {
   name: "ErrorBoundary",
   data() {
@@ -43,8 +47,7 @@ export default {
       hasError: false,
       error: null,
       errorMessage: null,
-      isDevelopment:
-        process.isClient && window.location.hostname === "localhost"
+      isDevelopment: isDevelopment()
     };
   },
   errorCaptured(err, instance, info) {
@@ -52,19 +55,30 @@ export default {
     this.error = err;
     this.errorMessage = err.message || "An error occurred";
 
-    // Log error for debugging
-    console.error("ErrorBoundary caught an error:", err, info);
+    // Log error for debugging (error boundaries should always log)
+    if (isDevelopment()) {
+      console.error("ErrorBoundary caught an error:", err, info);
+    }
 
     // Prevent error from propagating
     return false;
   },
   methods: {
+    /**
+     * Reloads the current page
+     */
     reload() {
       window.location.reload();
     },
+    /**
+     * Navigates to the home page
+     */
     goHome() {
       this.$router.push("/");
     },
+    /**
+     * Resets the error state, clearing all error information
+     */
     reset() {
       this.hasError = false;
       this.error = null;
@@ -79,8 +93,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px;
-  padding: 3em 1em;
+  min-height: var(--empty-state-min-height);
+  padding: var(--empty-state-padding) 1em;
 
   &__content {
     text-align: center;

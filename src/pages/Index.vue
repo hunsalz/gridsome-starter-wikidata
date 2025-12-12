@@ -75,13 +75,14 @@ import {
 } from "~/components/js/Event.js";
 import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
 import { debounce, includes } from "lodash";
+import { isClient } from "~/utils/client.js";
 
 export default {
   components: {
     CardLayout,
     TagCloud
   },
-  data: function () {
+  data() {
     return {
       view: DASHBOARD,
       filter: [],
@@ -147,7 +148,7 @@ export default {
     this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
     // create debounced resize function for performance
-    if (process.isClient) {
+    if (isClient()) {
       // bind the method to maintain 'this' context
       this.debouncedResizeAllCards = debounce(
         this.resizeAllCards.bind(this),
@@ -160,7 +161,7 @@ export default {
       });
     }
   },
-  mounted: function () {
+  mounted() {
     // create tag cloud (moved here because $page data is available in mounted)
     if (this.$page.paintings && this.$page.paintings.edges) {
       this.$page.paintings.edges.forEach(edge => {
@@ -177,7 +178,7 @@ export default {
       });
     }
     // call after the next DOM update cycle
-    if (process.isClient) {
+    if (isClient()) {
       let _this = this;
       this.$nextTick(function () {
         _this.resizeAllCards();
@@ -186,7 +187,7 @@ export default {
   },
   watch: {
     view() {
-      if (process.isClient) {
+      if (isClient()) {
         let _this = this;
         this.$nextTick(function () {
           _this.resizeAllCards();
@@ -194,7 +195,7 @@ export default {
       }
     },
     filter() {
-      if (process.isClient) {
+      if (isClient()) {
         let _this = this;
         this.$nextTick(function () {
           _this.resizeAllCards();
@@ -206,7 +207,7 @@ export default {
     // unsubscribe from all event bus listeners at once
     this.$eventBus.$off();
     // unsubscribe from all other event listeners
-    if (process.isClient && this.debouncedResizeAllCards) {
+    if (isClient() && this.debouncedResizeAllCards) {
       let _this = this;
       ["load", "resize"].forEach(function (event) {
         window.removeEventListener(event, _this.debouncedResizeAllCards);
@@ -250,14 +251,14 @@ export default {
     /**
      * Clears all active filters
      */
-    clearFilters: function () {
+    clearFilters() {
       this.filter = [];
     },
     /**
      * Adds a tag to the filter list, keeping it duplicate-free
      * @param {string} tag - The tag to add to the filter
      */
-    onAddTag: function (tag) {
+    onAddTag(tag) {
       this.filter.push(tag);
       this.filter = [...new Set(this.filter)];
     },
@@ -265,7 +266,7 @@ export default {
      * Removes a tag from the filter list
      * @param {string} tag - The tag to remove from the filter
      */
-    onRemoveTag: function (tag) {
+    onRemoveTag(tag) {
       let index = this.filter.findIndex(t => t === tag);
       this.filter.splice(index, 1);
     },
@@ -273,7 +274,7 @@ export default {
      * Handles favorite toggle events
      * @param {string} item - The painting item ID to toggle as favorite
      */
-    onChangeFavorite: function (item) {
+    onChangeFavorite(item) {
       // toggle item as favorite accordingly
       let index = this.favorites.findIndex(f => f === item);
       if (index !== -1) {
@@ -287,15 +288,25 @@ export default {
         this.favorites.push(item);
       }
     },
-    // set view setting
-    onToggleView: function (view) {
+    /**
+     * Sets the current view (dashboard or favorites)
+     * @param {string} view - The view to set (DASHBOARD or FAVORITES)
+     */
+    onToggleView(view) {
       this.view = view;
     },
-    // decide if toggle is visible
-    showToggleView: function () {
-      return this.favorites.length > 0 ? true : false;
+    /**
+     * Determines if the toggle view button should be visible
+     * @returns {boolean} True if favorites exist, false otherwise
+     */
+    showToggleView() {
+      return this.favorites.length > 0;
     },
-    removeTag: function () {
+    /**
+     * Returns the REMOVE_TAG event constant for tag cloud
+     * @returns {string} The REMOVE_TAG event constant
+     */
+    removeTag() {
       return REMOVE_TAG;
     },
     /**
@@ -344,7 +355,7 @@ export default {
      * Called on window resize and after view/filter changes
      */
     resizeAllCards() {
-      if (!process.isClient) return;
+      if (!isClient()) return;
       let allCards = document.getElementsByClassName("cards");
       if (!allCards || allCards.length === 0) return;
       // loop through the above list and execute the spanning function to each masonry item

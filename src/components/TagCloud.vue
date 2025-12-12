@@ -3,9 +3,9 @@
     <button
       v-for="(tag, index) in tags"
       :key="index"
+      class="action-button"
       role="button"
       aria-label="Tag"
-      class="action-button"
       @click.prevent="emitEvent(tag)"
     >
       <span># {{ tag }}</span>
@@ -26,6 +26,10 @@ export default {
     }
   },
   methods: {
+    /**
+     * Emits an event to the event bus with the given tag
+     * @param {string} tag - The tag to emit in the event
+     */
     emitEvent(tag) {
       this.$eventBus.$emit(this.event, tag);
     }

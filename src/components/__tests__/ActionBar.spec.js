@@ -21,14 +21,14 @@ describe("ActionBar", () => {
     expect(wrapper.find("g-link").exists()).toBe(true); // Wikidata link
   });
 
-  it("computes correct Wikidata link", () => {
+  it("gets correct Wikidata link", () => {
     const wrapper = mount(ActionBar, {
       propsData: {
         painting: mockPainting
       }
     });
 
-    expect(wrapper.vm.computeWikidataLink).toBe(
+    expect(wrapper.vm.getWikidataLink).toBe(
       "https://www.wikidata.org/wiki/Q12345"
     );
   });

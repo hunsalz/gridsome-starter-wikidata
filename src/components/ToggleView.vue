@@ -1,8 +1,8 @@
 <template>
   <button
+    class="toggle-view"
     role="button"
     aria-label="Toggle view"
-    class="toggle-view"
     @click.prevent="toggleView"
   >
     <svg
@@ -32,7 +32,7 @@
 
 <script>
 import { TOGGLE_VIEW } from "~/components/js/Event.js";
-import { DASHBOARD, FAVORITES } from "./js/View.js";
+import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
 
 export default {
   data() {
@@ -41,6 +41,10 @@ export default {
     };
   },
   methods: {
+    /**
+     * Toggles between dashboard and favorites view
+     * Emits TOGGLE_VIEW event to the event bus
+     */
     toggleView() {
       this.dashboard = !this.dashboard;
       this.$eventBus.$emit(TOGGLE_VIEW, this.dashboard ? FAVORITES : DASHBOARD);
