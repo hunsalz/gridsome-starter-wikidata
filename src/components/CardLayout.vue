@@ -11,7 +11,8 @@
         "
         width="770"
         height="380"
-        loading="lazy"
+        :fetchpriority="isFirstCard ? 'high' : 'auto'"
+        :loading="isFirstCard ? 'eager' : 'lazy'"
       />
     </div>
     <div class="card-layout__content">
@@ -42,6 +43,10 @@ export default {
     painting: {
       type: Object,
       required: true
+    },
+    isFirstCard: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

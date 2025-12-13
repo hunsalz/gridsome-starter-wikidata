@@ -31,8 +31,16 @@
         </div>
       </div>
       <div v-else class="masonry">
-        <div v-for="edge in computeCards" :key="edge.node.id" class="cards">
-          <CardLayout class="card-layout" :painting="edge.node" />
+        <div
+          v-for="(edge, index) in computeCards"
+          :key="edge.node.id"
+          class="cards"
+        >
+          <CardLayout
+            class="card-layout"
+            :painting="edge.node"
+            :is-first-card="index === 0"
+          />
         </div>
       </div>
     </div>
@@ -203,11 +211,11 @@ export default {
         edge.node.tags = [...new Set(edge.node.tags)];
       });
     }
-    // Initialize masonry layout
+    // Initialize masonry layout - defer until after initial paint
     if (isClient()) {
-      // Wait for initial render
-      this.$nextTick(() => {
-        this.$nextTick(() => {
+      // Wait for initial paint before calculating masonry to reduce CLS
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
           this.initMasonry();
         });
       });
@@ -218,9 +226,9 @@ export default {
     computeCards: {
       handler() {
         if (isClient()) {
-          // ResizeObserver will automatically handle layout changes
-          this.$nextTick(() => {
-            this.$nextTick(() => {
+          // Use requestAnimationFrame for better timing with DOM updates
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
               // Trigger a resize after DOM update
               this.resizeAllCards();
             });
@@ -363,50 +371,47 @@ export default {
     initMasonry() {
       if (!isClient()) return;
 
-      const grid = document.querySelector(".masonry");
+      const grid =
+        this.$el?.querySelector(".masonry") ||
+        document.querySelector(".masonry");
       if (!grid) return;
 
-      // Use ResizeObserver for automatic resizing
-      this.masonryObserver = new ResizeObserver(() => {
-        // Debounce resize calls to avoid excessive calculations
-        if (this.resizeTimeout) {
-          clearTimeout(this.resizeTimeout);
+      // Optimized ResizeObserver - only observe grid container (not individual cards)
+      // Individual card observations cause excessive recalculations
+      this.masonryObserver = new ResizeObserver(entries => {
+        // Only recalculate if grid size actually changed
+        const entry = entries[0];
+        if (entry && entry.contentRect) {
+          // Debounce resize calls to avoid excessive calculations
+          if (this.resizeTimeout) {
+            clearTimeout(this.resizeTimeout);
+          }
+          this.resizeTimeout = setTimeout(() => {
+            this.resizeAllCards();
+          }, 150); // Increased debounce for better performance
         }
-        this.resizeTimeout = setTimeout(() => {
-          this.resizeAllCards();
-        }, 100);
       });
 
-      // Observe the grid container
+      // Only observe the grid container (most efficient)
       this.masonryObserver.observe(grid);
 
-      // Also observe the index-content container for window resize
-      const indexContent = document.querySelector(".index-content");
-      if (indexContent) {
-        this.masonryObserver.observe(indexContent);
-      }
-
-      // Observe individual cards for size changes
-      const cards = document.querySelectorAll(".cards");
-      cards.forEach(card => {
-        this.masonryObserver.observe(card);
-      });
-
-      // Also listen to window resize events as a fallback
+      // Window resize listener as primary fallback (more efficient than observing index-content)
       this.handleWindowResize = () => {
         if (this.resizeTimeout) {
           clearTimeout(this.resizeTimeout);
         }
         this.resizeTimeout = setTimeout(() => {
           this.resizeAllCards();
-        }, 150);
+        }, 200); // Increased debounce for window resize
       };
-      window.addEventListener("resize", this.handleWindowResize);
+      window.addEventListener("resize", this.handleWindowResize, {
+        passive: true
+      });
 
       // Initial resize after images load
       setTimeout(() => {
         this.waitForImagesAndResize();
-      }, 100);
+      }, 200); // Increased delay to ensure initial paint is complete
     },
     /**
      * Waits for images to load, then resizes all cards
@@ -419,33 +424,46 @@ export default {
         this.$el?.getElementsByClassName("cards") ||
         document.getElementsByClassName("cards");
       if (!allCards || allCards.length === 0) {
-        this.resizeAllCards();
+        // Use requestAnimationFrame for better timing
+        requestAnimationFrame(() => {
+          this.resizeAllCards();
+        });
         return;
       }
 
-      // Find all images in cards
+      // Find all images in cards (only check first few cards for faster initial render)
       const images = [];
-      Array.from(allCards).forEach(card => {
-        const img = card.querySelector("img");
-        if (img && !img.complete) {
-          images.push(img);
-        }
-      });
+      const cardsToCheck = Math.min(allCards.length, 6); // Only check first 6 cards for faster initial render
+      Array.from(allCards)
+        .slice(0, cardsToCheck)
+        .forEach(card => {
+          const img = card.querySelector("img");
+          if (img && !img.complete) {
+            images.push(img);
+          }
+        });
 
-      // If all images are loaded, resize immediately
+      // If all checked images are loaded, resize immediately
       if (images.length === 0) {
-        this.resizeAllCards();
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            this.resizeAllCards();
+          });
+        });
         return;
       }
 
-      // Wait for all images to load, then resize
+      // Wait for critical images to load, then resize
       let loadedCount = 0;
       const checkComplete = () => {
         loadedCount++;
         if (loadedCount === images.length) {
-          setTimeout(() => {
-            this.resizeAllCards();
-          }, 100);
+          // Use requestAnimationFrame for better timing after images load
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              this.resizeAllCards();
+            });
+          });
         }
       };
 
@@ -455,14 +473,19 @@ export default {
         } else {
           img.addEventListener("load", checkComplete, { once: true });
           img.addEventListener("error", checkComplete, { once: true });
-          // Timeout fallback in case image never loads
-          setTimeout(checkComplete, 5000);
+          // Reduced timeout for faster fallback (3s instead of 5s)
+          setTimeout(checkComplete, 3000);
         }
       });
+
+      // Also resize after a delay for remaining cards (non-blocking)
+      setTimeout(() => {
+        this.resizeAllCards();
+      }, 1000);
     },
     /**
      * Resizes all cards in the masonry grid
-     * Simplified version without complex retry logic (ResizeObserver handles it)
+     * Optimized with batched DOM reads/writes to reduce layout thrashing
      */
     resizeAllCards() {
       if (!isClient()) return;
@@ -477,29 +500,36 @@ export default {
         document.querySelector(".masonry");
       if (!grid) return;
 
-      // Get grid properties
+      // Batch DOM reads: Get all grid properties and card heights in one pass
       const computedStyle = window.getComputedStyle(grid);
       const gap = parseInt(computedStyle.gap || computedStyle.gridGap) || 0;
       const rowHeight = parseInt(computedStyle.gridAutoRows) || 10;
 
-      // Reset all cards
+      // Phase 1: Read all heights (batch DOM reads)
+      const cardHeights = [];
+      cards.forEach(card => {
+        const cardLayout = card.querySelector(".card-layout");
+        if (cardLayout) {
+          const height = cardLayout.offsetHeight;
+          cardHeights.push(height > 0 ? height : 400); // Fallback to min-height if 0
+        } else {
+          cardHeights.push(400); // Fallback to min-height
+        }
+      });
+
+      // Phase 2: Reset all cards (batch DOM writes)
       cards.forEach(card => {
         card.style.gridRowEnd = "auto";
       });
 
-      // Force reflow
+      // Force reflow between reset and apply
       void grid.offsetHeight;
 
-      // Calculate and apply spans
-      cards.forEach(card => {
-        const cardLayout = card.querySelector(".card-layout");
-        if (!cardLayout) return;
-
-        const height = cardLayout.offsetHeight;
-        if (height > 0) {
-          const span = Math.ceil((height + gap) / (rowHeight + gap));
-          card.style.gridRowEnd = `span ${span}`;
-        }
+      // Phase 3: Apply all spans (batch DOM writes)
+      cards.forEach((card, index) => {
+        const height = cardHeights[index];
+        const span = Math.ceil((height + gap) / (rowHeight + gap));
+        card.style.gridRowEnd = `span ${span}`;
       });
     }
   }
@@ -560,9 +590,13 @@ export default {
   height: auto;
   margin: 0;
   padding: 0;
-  min-height: 0; // Prevent grid stretching
+  min-height: 400px; // Reserve space to prevent layout shifts (CLS fix)
   overflow: hidden; // Prevent content from overflowing
   box-sizing: border-box; // Include padding in width calculation
+  content-visibility: auto; // Improve rendering performance for offscreen cards
+  contain-intrinsic-size: 400px; // Approximate height for content-visibility
+  // Optimize for better CLS: prevent layout shifts during resize
+  will-change: grid-row-end; // Hint to browser for optimization
 }
 
 .empty-state {

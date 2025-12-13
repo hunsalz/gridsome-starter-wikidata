@@ -74,6 +74,7 @@ module.exports = {
         disableTemplatedUrls: false,
 
         // Manifest Options (https://developer.mozilla.org/en-US/docs/Web/Manifest)
+        // manifestPath should be relative - plugin handles pathPrefix automatically
         manifestPath: "manifest.json",
         title: "Gridsome Starter Wikidata",
         startUrl: (process.env.SITE_URL || "http://localhost:8080") + (process.env.PATH_PREFIX || "") + "/",
