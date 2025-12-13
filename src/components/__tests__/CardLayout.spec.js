@@ -24,9 +24,9 @@ localVue.component("g-link", {
 describe("CardLayout", () => {
   const mockPainting = {
     id: "1",
-    title: "Test Painting",
+    paintingLabel: "Test Painting",
     year: "1503",
-    location: "Louvre",
+    locationLabel: "Louvre",
     materials: "Oil on canvas",
     tags: ["1503", "Louvre", "portrait"],
     path: "/test-painting",

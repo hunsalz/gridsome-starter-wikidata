@@ -5,17 +5,17 @@
         v-if="painting.cover_image"
         :src="painting.cover_image"
         :alt="
-          painting.title
-            ? `${painting.title} - Cover image`
+          painting.paintingLabel
+            ? `${painting.paintingLabel} - Cover image`
             : 'Artwork cover image'
         "
         loading="lazy"
       />
     </div>
     <div class="card-layout__content">
-      <h2 class="card-layout__title">{{ painting.title }}</h2>
+      <h2 class="card-layout__title">{{ painting.paintingLabel }}</h2>
       <div>Year: {{ painting.year }}</div>
-      <div>Collection: {{ painting.location }}</div>
+      <div>Collection: {{ painting.locationLabel }}</div>
       <div>Material: {{ painting.materials }}</div>
       <TagCloud class="card-layout__tags" :event="addTag()" :tags="getTags()" />
       <ActionBar class="card-layout__actions" :painting="painting" />

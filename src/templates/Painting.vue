@@ -10,22 +10,22 @@
       </div>
       <div v-else>
         <h1 class="painting__header">
-          {{ $page.painting.title || "Untitled" }}
+          {{ $page.painting.paintingLabel || "Untitled" }}
         </h1>
         <div class="painting__content">
           <g-image
             v-if="$page.painting.image"
             :src="$page.painting.image"
             :alt="
-              $page.painting.title
-                ? `${$page.painting.title} by Leonardo da Vinci`
+              $page.painting.paintingLabel
+                ? `${$page.painting.paintingLabel} by Leonardo da Vinci`
                 : 'Painting by Leonardo da Vinci'
             "
             loading="lazy"
           />
           <div v-if="$page.painting.year">Year: {{ $page.painting.year }}</div>
-          <div v-if="$page.painting.location">
-            Collection: {{ $page.painting.location }}
+          <div v-if="$page.painting.locationLabel">
+            Collection: {{ $page.painting.locationLabel }}
           </div>
           <div v-if="$page.painting.materials">
             Material: {{ $page.painting.materials }}
@@ -45,8 +45,8 @@ export default {
       };
     }
 
-    const title = this.$page.painting.title || "Untitled Painting";
-    const description = `${title} by Leonardo da Vinci. ${this.$page.painting.year ? `Created in ${this.$page.painting.year}.` : ""} ${this.$page.painting.location ? `Collection: ${this.$page.painting.location}.` : ""}`;
+    const title = this.$page.painting.paintingLabel || "Untitled Painting";
+    const description = `${title} by Leonardo da Vinci. ${this.$page.painting.year ? `Created in ${this.$page.painting.year}.` : ""} ${this.$page.painting.locationLabel ? `Collection: ${this.$page.painting.locationLabel}.` : ""}`;
     const image = this.$page.painting.image || "";
     const siteUrl =
       process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
@@ -110,10 +110,10 @@ query painting ($id: ID!) {
   painting: painting (id: $id) {
     id
     path
-    title: paintingLabel
+    paintingLabel
     image
     year: date (format: "YYYY")
-    location: locationLabel
+    locationLabel
     materials
     depicts
   }

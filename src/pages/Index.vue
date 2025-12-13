@@ -50,11 +50,11 @@ query {
       node {
         id
         path
-        title: paintingLabel
+        paintingLabel
         image
         cover_image: image (width: 770, height: 380, blur: 10)
         year: date (format: "YYYY")
-  			location: locationLabel
+        locationLabel
         materials
         depicts
       }
@@ -165,7 +165,7 @@ export default {
     if (this.$page.paintings && this.$page.paintings.edges) {
       this.$page.paintings.edges.forEach(edge => {
         // basic tags
-        edge.node.tags = [edge.node.year, edge.node.location];
+        edge.node.tags = [edge.node.year, edge.node.locationLabel];
         // concat with available depicts (with null safety)
         if (edge.node.depicts) {
           edge.node.tags = edge.node.tags.concat(edge.node.depicts.split(","));

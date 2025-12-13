@@ -10,7 +10,7 @@ Vue.prototype.$eventBus = new Vue();
 describe("ActionBar", () => {
   const mockPainting = {
     path: "/Q12345",
-    title: "Test Painting",
+    paintingLabel: "Test Painting",
     image: "https://example.com/image.jpg",
     cover_image: "https://example.com/cover.jpg"
   };
