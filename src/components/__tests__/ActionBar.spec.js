@@ -24,8 +24,8 @@ describe("ActionBar", () => {
 
     const buttons = wrapper.findAll("button");
     expect(buttons.length).toBe(2); // Favorite and download buttons
-    // g-link is mocked as <a>, check for g-link component or link
-    expect(wrapper.find("g-link-stub").exists() || wrapper.find("a").exists()).toBe(true); // Wikidata link
+    // g-link component exists (may be stubbed)
+    expect(wrapper.html()).toContain("g-link"); // Wikidata link
   });
 
   it("gets correct Wikidata link", () => {
