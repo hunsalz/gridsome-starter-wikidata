@@ -40,6 +40,18 @@ export default {
 <style lang="scss">
 .tag-filter {
   margin: 1em 0 1em 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em; // Use gap instead of margin for better spacing
+  position: relative;
+  z-index: 1;
+
+  .action-button {
+    flex-shrink: 0; // Prevent buttons from shrinking
+    max-width: 100%; // Prevent overflow
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
 
   :hover {
     opacity: 1;

@@ -52,7 +52,7 @@ query {
         path
         paintingLabel
         image
-        cover_image: image (width: 770, height: 380, blur: 10)
+        cover_image: image (width: 770, height: 380, blur: 10, quality: 85)
         year: date (format: "YYYY")
         locationLabel
         materials
@@ -64,8 +64,6 @@ query {
 </page-query>
 
 <script>
-import CardLayout from "~/components/CardLayout.vue";
-import TagCloud from "~/components/TagCloud.vue";
 import {
   ADD_TAG,
   REMOVE_TAG,
@@ -73,8 +71,12 @@ import {
   TOGGLE_VIEW
 } from "~/components/js/Event.js";
 import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
-import { debounce, includes } from "lodash";
+import debounce from "lodash/debounce";
+import includes from "lodash/includes";
 import { isClient } from "~/utils/client.js";
+
+import CardLayout from "~/components/CardLayout.vue";
+import TagCloud from "~/components/TagCloud.vue";
 
 export default {
   components: {
@@ -100,8 +102,33 @@ export default {
       process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
     const url = `${siteUrl}${pathPrefix}/`;
 
+    // Preload LCP image (first painting's cover image) for better Speed Index
+    const linkTags = [];
+    if (
+      this.$page.paintings &&
+      this.$page.paintings.edges &&
+      this.$page.paintings.edges.length > 0
+    ) {
+      const firstPainting = this.$page.paintings.edges[0].node;
+      // Ensure cover_image is a string URL before preloading
+      if (firstPainting.cover_image && typeof firstPainting.cover_image === "string") {
+        linkTags.push({
+          rel: "preload",
+          as: "image",
+          href: firstPainting.cover_image
+        });
+      }
+    }
+    // Preconnect to Wikidata for faster external link loading
+    linkTags.push({
+      rel: "preconnect",
+      href: "https://www.wikidata.org",
+      crossorigin: "anonymous"
+    });
+
     return {
       title: siteName,
+      link: linkTags,
       meta: [
         {
           name: "description",
@@ -140,7 +167,7 @@ export default {
       ]
     };
   },
-  created: function () {
+  created() {
     // subscribe to event bus
     this.$eventBus.$on(ADD_TAG, this.onAddTag);
     this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
@@ -149,9 +176,10 @@ export default {
     // create debounced resize function for performance
     if (isClient()) {
       // bind the method to maintain 'this' context
+      // Reduced debounce delay for more responsive resizing
       this.debouncedResizeAllCards = debounce(
-        this.resizeAllCards.bind(this),
-        250
+        this.waitForImagesAndResize.bind(this),
+        150
       );
       // subscribe to (re)-render events with debounced handler
       let _this = this;
@@ -180,7 +208,8 @@ export default {
     if (isClient()) {
       let _this = this;
       this.$nextTick(function () {
-        _this.resizeAllCards();
+        // Wait for images to load before resizing
+        _this.waitForImagesAndResize();
       });
     }
   },
@@ -189,7 +218,8 @@ export default {
       if (isClient()) {
         let _this = this;
         this.$nextTick(function () {
-          _this.resizeAllCards();
+          // Wait for images to load before resizing
+          _this.waitForImagesAndResize();
         });
       }
     },
@@ -197,9 +227,23 @@ export default {
       if (isClient()) {
         let _this = this;
         this.$nextTick(function () {
-          _this.resizeAllCards();
+          // Wait for images to load before resizing
+          _this.waitForImagesAndResize();
         });
       }
+    },
+    // Watch for changes in the cards array to resize when cards are added/removed
+    computeCards: {
+      handler() {
+        if (isClient()) {
+          let _this = this;
+          this.$nextTick(function () {
+            // Wait for images to load before resizing
+            _this.waitForImagesAndResize();
+          });
+        }
+      },
+      deep: false
     }
   },
   beforeDestroy() {
@@ -220,7 +264,7 @@ export default {
      * Computes the list of cards to display based on current view and filters
      * @returns {Array} Array of painting edges to display
      */
-    computeCards: function () {
+    computeCards() {
       // safety check for paintings data
       if (!this.$page.paintings || !this.$page.paintings.edges) {
         return [];
@@ -333,17 +377,23 @@ export default {
     resizeCard(card) {
       if (!card) return;
 
-      let grid = document.getElementsByClassName("masonry")[0];
+      const grid = document.getElementsByClassName("masonry")[0];
       if (!grid) return;
 
-      let cardLayout = card.querySelector(".card-layout");
+      const cardLayout = card.querySelector(".card-layout");
       if (!cardLayout) return;
 
-      let rowGap =
+      // Reset gridRowEnd to recalculate - this is important for resize
+      card.style.gridRowEnd = "auto";
+
+      // Force a reflow to ensure layout is updated
+      void card.offsetHeight;
+
+      const rowGap =
         parseInt(
           window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
         ) || 0;
-      let rowHeight =
+      const rowHeight =
         parseInt(
           window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
         ) || 10;
@@ -356,26 +406,84 @@ export default {
        * Net height of the implicit row-track = T = G + R
        * S = H1 / T
        */
-      let rowSpan = Math.ceil(
-        (cardLayout.getBoundingClientRect().height + rowGap) /
-          (rowHeight + rowGap)
-      );
+      const cardHeight = cardLayout.getBoundingClientRect().height;
+      if (cardHeight <= 0) return; // Skip if height is invalid
+      
+      const rowSpan = Math.ceil((cardHeight + rowGap) / (rowHeight + rowGap));
       // set the spanning as calculated above (S)
       if (rowSpan > 0) {
         card.style.gridRowEnd = "span " + rowSpan;
       }
     },
-    // resize all cards
+    /**
+     * Waits for images to load, then resizes all cards
+     * This ensures accurate height calculations during resize
+     */
+    waitForImagesAndResize() {
+      if (!isClient()) return;
+      
+      const allCards = document.getElementsByClassName("cards");
+      if (!allCards || allCards.length === 0) {
+        this.resizeAllCards();
+        return;
+      }
+
+      // Find all images in cards
+      const images = [];
+      Array.from(allCards).forEach(card => {
+        const img = card.querySelector("img");
+        if (img && !img.complete) {
+          images.push(img);
+        }
+      });
+
+      // If all images are loaded, resize immediately
+      if (images.length === 0) {
+        this.resizeAllCards();
+        return;
+      }
+
+      // Wait for all images to load, then resize
+      let loadedCount = 0;
+      const checkComplete = () => {
+        loadedCount++;
+        if (loadedCount === images.length) {
+          // Small delay to ensure layout is updated
+          setTimeout(() => {
+            this.resizeAllCards();
+          }, 50);
+        }
+      };
+
+      images.forEach(img => {
+        if (img.complete) {
+          checkComplete();
+        } else {
+          img.addEventListener("load", checkComplete, { once: true });
+          img.addEventListener("error", checkComplete, { once: true });
+        }
+      });
+    },
     /**
      * Resizes all cards in the masonry grid
      * Called on window resize and after view/filter changes
      */
     resizeAllCards() {
       if (!isClient()) return;
-      let allCards = document.getElementsByClassName("cards");
+      const allCards = document.getElementsByClassName("cards");
       if (!allCards || allCards.length === 0) return;
-      // loop through the above list and execute the spanning function to each masonry item
-      Array.from(allCards).forEach(card => this.resizeCard(card));
+      
+      // Use double requestAnimationFrame to ensure layout is fully updated
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Reset all cards first to prevent overlaps
+          Array.from(allCards).forEach(card => {
+            card.style.gridRowEnd = "auto";
+          });
+          // Then resize each card
+          Array.from(allCards).forEach(card => this.resizeCard(card));
+        });
+      });
     }
   }
 };
@@ -385,6 +493,8 @@ export default {
 .index-content {
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box; // Ensure padding is included in width calculation
+  padding: 0 1em; // Add horizontal padding to ensure right margin exists
 }
 
 .grid {
@@ -405,12 +515,20 @@ export default {
   grid-auto-rows: 10px;
   grid-template-columns: repeat(1, 1fr);
   width: 100%;
+  align-items: start; // Prevent stretching that causes overlaps
+  
   @media only screen and (min-width: 800px) {
     grid-template-columns: repeat(2, 1fr);
   }
   @media only screen and (min-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+.cards {
+  // Ensure cards are grid items
+  display: block;
+  min-height: 0; // Prevent grid item from stretching
 }
 
 .empty-state {

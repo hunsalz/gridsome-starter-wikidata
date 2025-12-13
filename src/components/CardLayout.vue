@@ -9,6 +9,8 @@
             ? `${painting.paintingLabel} - Cover image`
             : 'Artwork cover image'
         "
+        width="770"
+        height="380"
         loading="lazy"
       />
     </div>
@@ -25,13 +27,13 @@
 </template>
 
 <script>
-import ActionBar from "~/components/ActionBar.vue";
 import TagCloud from "~/components/TagCloud.vue";
 import { ADD_TAG } from "~/components/js/Event.js";
 
 export default {
   components: {
-    ActionBar,
+    // Lazy load ActionBar for better code splitting
+    ActionBar: () => import("~/components/ActionBar.vue"),
     TagCloud
   },
   props: {
@@ -78,11 +80,15 @@ export default {
       width: 100%;
       height: var(--card-image-height);
       object-fit: cover;
+      aspect-ratio: 770 / 380;
     }
   }
 
   &__content {
     padding: var(--card-content-padding);
+    position: relative;
+    z-index: 1;
+    overflow: hidden; // Prevent tags from overflowing
   }
 
   &__title {
@@ -91,12 +97,15 @@ export default {
 
   &__actions {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   &__tags {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+    margin-bottom: 0.5em; // Add spacing to prevent overlap
+    word-wrap: break-word; // Prevent long tags from overflowing
+    overflow-wrap: break-word;
   }
 
   &__link_to_painting {

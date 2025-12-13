@@ -5,6 +5,11 @@
   ${head}
   <!-- Modern mobile web app meta tag (replaces deprecated apple-mobile-web-app-capable) -->
   <meta name="mobile-web-app-capable" content="yes">
+  <!-- Preconnect to Google Fonts for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- DNS prefetch for external resources -->
+  <link rel="dns-prefetch" href="https://www.wikidata.org">
 </head>
 
 <body ${bodyAttrs}>

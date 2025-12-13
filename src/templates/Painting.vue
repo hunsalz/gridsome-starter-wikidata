@@ -22,6 +22,7 @@
                 : 'Painting by Leonardo da Vinci'
             "
             loading="lazy"
+            class="painting__image"
           />
           <div v-if="$page.painting.year">Year: {{ $page.painting.year }}</div>
           <div v-if="$page.painting.locationLabel">
@@ -142,6 +143,14 @@ query painting ($id: ID!) {
     .g-image {
       padding: 0;
       min-width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    &__image {
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
     }
   }
 
