@@ -16,9 +16,11 @@
     </div>
     <div class="card-layout__content">
       <h2 class="card-layout__title">{{ painting.paintingLabel }}</h2>
-      <div>Year: {{ painting.year }}</div>
-      <div>Collection: {{ painting.locationLabel }}</div>
-      <div>Material: {{ painting.materials }}</div>
+      <div class="card-layout__meta">
+        <div>Year: {{ painting.year }}</div>
+        <div>Collection: {{ painting.locationLabel }}</div>
+        <div>Material: {{ painting.materials }}</div>
+      </div>
       <TagCloud class="card-layout__tags" :event="addTag()" :tags="getTags()" />
       <ActionBar class="card-layout__actions" :painting="painting" />
     </div>
@@ -63,14 +65,32 @@ export default {
 
 <style lang="scss">
 .card-layout {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  margin: 0; // Remove margin - grid-gap handles spacing between cards
-  border-radius: var(--radius) var(--radius) 0 0;
+  width: 100%;
+  max-width: 100%; // Prevent overflow
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--card-border-radius);
   background-color: var(--bg-content-color);
+  overflow: hidden; // Clip content to border-radius
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.3s ease;
+  box-sizing: border-box; // Include padding in width calculation
+
+  &:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
 
   &__header {
-    border-radius: var(--radius) var(--radius) 0 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
     overflow: hidden;
+    flex-shrink: 0; // Don't shrink image
+    background-color: var(--bg-color);
 
     &:empty {
       display: none;
@@ -78,34 +98,67 @@ export default {
 
     .g-image {
       width: 100%;
-      height: var(--card-image-height);
+      height: auto;
+      display: block;
+      aspect-ratio: var(--card-image-aspect-ratio);
       object-fit: cover;
-      aspect-ratio: 770 / 380;
     }
   }
 
   &__content {
-    padding: var(--card-content-padding);
+    display: flex;
+    flex-direction: column;
+    flex: 1; // Fill remaining space
+    padding: var(--card-padding);
+    gap: var(--text-spacing-md);
     position: relative;
     z-index: 1;
-    overflow: hidden; // Prevent tags from overflowing
+
+    // Mobile: reduced padding (650px and below)
+    @media (max-width: 650px) {
+      padding: var(--card-padding-mobile);
+      gap: var(--text-spacing-sm);
+    }
   }
 
   &__title {
-    margin-top: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--title-color);
   }
 
-  &__actions {
-    position: relative;
-    z-index: 2;
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--text-spacing-xs);
+    font-size: 0.9rem;
+    color: var(--body-color);
+    line-height: 1.5;
+
+    > div {
+      margin: 0;
+      padding: 0;
+    }
   }
 
   &__tags {
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0; // Don't shrink tags
     position: relative;
     z-index: 2;
-    margin-bottom: 0.5em; // Add spacing to prevent overlap
-    word-wrap: break-word; // Prevent long tags from overflowing
-    overflow-wrap: break-word;
+  }
+
+  &__actions {
+    margin: 0;
+    padding: 0;
+    margin-top: auto; // Push to bottom
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
 
   &__link_to_painting {
@@ -114,8 +167,8 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0%;
     z-index: 0;
+    opacity: 0;
   }
 }
 </style>

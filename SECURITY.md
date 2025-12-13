@@ -35,28 +35,9 @@ As of the latest audit, there are **51 vulnerabilities** detected:
 
 **Development Risk: MODERATE to HIGH**
 - Vulnerabilities in build tools could potentially be exploited during development
-- The `postinstall` script modifies `node_modules` (see below)
 - Developers should be cautious when running `yarn develop` on untrusted networks
 - Consider using a firewall or VPN when developing
 - Don't expose the development server to public networks
-- Review any code changes to the patch script before running `yarn install`
-
-### Postinstall Script Security
-
-This project includes a `postinstall` script (`scripts/patch-wikidata-plugin.js`) that modifies files in `node_modules/gridsome-source-wikidata/` to add retry logic for rate limiting.
-
-**Security Considerations:**
-- The script modifies third-party package code in `node_modules`
-- Changes are lost when `node_modules` is reinstalled
-- The script is idempotent (safe to run multiple times)
-- Review the script before running `yarn install` on untrusted systems
-- The patch only affects build-time behavior, not production runtime
-
-**Why This Is Acceptable:**
-- The patch is necessary for build stability (handles Wikidata rate limiting)
-- It only modifies build-time code, not production assets
-- The changes are minimal and well-documented
-- Alternative would require forking the entire plugin
 
 ### Secrets and Environment Variables
 
@@ -81,7 +62,6 @@ This project includes a `postinstall` script (`scripts/patch-wikidata-plugin.js`
 
 2. **For Development**: 
    - Use trusted networks only
-   - Review the patch script before running `yarn install`
    - Keep dependencies updated where possible (within Gridsome constraints)
    - Monitor for security advisories
    - Consider using a separate development environment
@@ -96,7 +76,6 @@ This project includes a `postinstall` script (`scripts/patch-wikidata-plugin.js`
 4. **Long-term**: 
    - Consider migrating to a modern framework (Vite, Next.js, Nuxt) when feasible
    - Modern frameworks have better security postures and active maintenance
-   - Evaluate alternatives that don't require patching third-party packages
 
 ### Monitoring
 
@@ -111,12 +90,10 @@ This project includes a `postinstall` script (`scripts/patch-wikidata-plugin.js`
 - New critical or high severity vulnerabilities
 - Changes in vulnerability count
 - Security advisories for key dependencies (webpack, sharp, etc.)
-- Updates to the patch script if dependencies change
 
 **When to Act:**
 - If a critical vulnerability affects production assets (unlikely)
 - If a vulnerability is found in a direct dependency we control
-- If the patch script needs security improvements
 - If GitHub Security alerts require attention
 
 ---

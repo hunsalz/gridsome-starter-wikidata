@@ -39,16 +39,26 @@ export default {
 
 <style lang="scss">
 .tag-filter {
-  margin: 1em 0 1em 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em; // Use gap instead of margin for better spacing
+  gap: var(--tag-gap);
+  margin: 0;
+  padding: 0;
+  width: 100%;
   position: relative;
   z-index: 1;
 
   .action-button {
+    padding: var(--tag-padding);
+    font-size: var(--tag-font-size);
+    line-height: var(--tag-line-height);
+    margin: 0;
+    border-radius: var(--tag-border-radius);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
     flex-shrink: 0; // Prevent buttons from shrinking
-    max-width: 100%; // Prevent overflow
     word-wrap: break-word;
     overflow-wrap: break-word;
   }

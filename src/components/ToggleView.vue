@@ -2,7 +2,9 @@
   <button
     class="toggle-view"
     role="button"
-    :aria-label="dashboard ? 'Switch to favorites view' : 'Switch to dashboard view'"
+    :aria-label="
+      dashboard ? 'Switch to favorites view' : 'Switch to dashboard view'
+    "
     @click.prevent="toggleView"
   >
     <svg

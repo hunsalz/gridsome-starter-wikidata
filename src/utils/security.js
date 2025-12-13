@@ -109,4 +109,3 @@ export function sanitizeMetaContent(text, maxLength = 200) {
 
   return sanitized;
 }
-

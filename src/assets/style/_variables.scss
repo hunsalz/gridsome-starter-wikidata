@@ -1,9 +1,22 @@
-// default variables
+// ============================================================================
+// Base Variables
+// ============================================================================
 html {
   --base-font-size: 20px;
 }
 
-// default theme light
+// ============================================================================
+// Breakpoint Variables (Mobile-First)
+// ============================================================================
+// These breakpoints are used consistently across all components
+$breakpoint-mobile: 650px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1200px;
+$breakpoint-large: 1600px;
+
+// ============================================================================
+// Theme Colors (Light)
+// ============================================================================
 body {
   --body-color: #444;
   --bg-color: #e6f0f5;
@@ -18,15 +31,60 @@ body {
   --space: 3.5rem;
   --max-content-width: 768px;
   --radius: 12px;
-  --card-image-height: 20vh;
-  --card-content-padding: 3em;
-  --card-margin-bottom: 1em;
+  --error-timeout: 3000ms;
+
+  // ========================================================================
+  // Grid System Variables
+  // ========================================================================
+  --grid-gap: 1.5rem; // Consistent gap between cards
+  --grid-max-width: 1400px; // Maximum grid container width
+  --grid-padding-mobile: 0.75rem; // Mobile padding (reduced from 1rem)
+  --grid-padding-tablet: 1rem; // Tablet padding (reduced from 1.5rem)
+  --grid-padding-desktop: 1.25rem; // Desktop padding (reduced from 2rem)
+
+  // ========================================================================
+  // Card System Variables
+  // ========================================================================
+  --card-border-radius: var(--radius);
+  --card-padding: 1.5rem; // Internal card padding
+  --card-padding-mobile: 1rem; // Mobile card padding
+  --card-image-aspect-ratio: 770 / 380; // Fixed aspect ratio
+  --card-min-width: 280px; // Minimum card width
+  --card-max-width: 100%; // Maximum card width
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  // ========================================================================
+  // Typography Spacing Variables
+  // ========================================================================
+  --text-spacing-xs: 0.25rem; // 4px
+  --text-spacing-sm: 0.5rem; // 8px
+  --text-spacing-md: 1rem; // 16px
+  --text-spacing-lg: 1.5rem; // 24px
+  --text-spacing-xl: 2rem; // 32px
+
+  // ========================================================================
+  // Tag System Variables
+  // ========================================================================
+  --tag-gap: 0.5rem; // Gap between tags
+  --tag-padding: 0.375rem 0.75rem; // Tag button padding
+  --tag-font-size: 0.75rem; // Tag font size (reduced from 0.875rem)
+  --tag-line-height: 1.4; // Tag line height
+  --tag-border-radius: calc(var(--radius) / 2); // Smaller radius for tags
+
+  // ========================================================================
+  // Legacy Variables (kept for backward compatibility)
+  // ========================================================================
+  --card-image-height: 20vh; // Deprecated - use aspect-ratio instead
+  --card-content-padding: 3em; // Deprecated - use --card-padding instead
+  --card-margin-bottom: 1em; // Deprecated - use --grid-gap instead
   --empty-state-min-height: 400px;
   --empty-state-padding: 3em;
-  --error-timeout: 3000ms;
 }
 
-// dark theme
+// ============================================================================
+// Theme Colors (Dark)
+// ============================================================================
 body[data-theme="dark"] {
   --body-color: #ced8de;
   --bg-color: #0f2d44;
@@ -36,9 +94,15 @@ body[data-theme="dark"] {
   --border-color: rgba(255, 255, 255, 0.1);
   --title-color: #fff;
   --link-color: #af9cef;
+
+  // Dark theme specific adjustments
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-// make things smaller for mobile
+// ============================================================================
+// Responsive Variables (Mobile)
+// ============================================================================
 @media screen and (max-width: 650px) {
   html {
     --base-font-size: 17px;
@@ -47,5 +111,20 @@ body[data-theme="dark"] {
     --space: 1.5rem;
     --header-height: 60px;
     --radius: 5px;
+
+    // Reduce grid gap on mobile
+    --grid-gap: 1rem;
+
+    // Reduce card padding on mobile
+    --card-padding: var(--card-padding-mobile);
+
+    // Reduce text spacing on mobile
+    --text-spacing-md: 0.75rem;
+    --text-spacing-lg: 1rem;
+    --text-spacing-xl: 1.5rem;
+
+    // Smaller tags on mobile
+    --tag-font-size: 0.6875rem; // Reduced proportionally (0.75rem * 0.916)
+    --tag-padding: 0.25rem 0.625rem;
   }
 }

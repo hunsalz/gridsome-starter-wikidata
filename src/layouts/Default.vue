@@ -71,13 +71,12 @@ export default {
 }
 
 .content {
-  display: flex;
-  justify-content: center;
-  margin-top: calc(var(--header-height) + 1em);
-  margin-left: 1em;
-  margin-right: 1em;
   width: 100%;
-  max-width: 100%;
+  max-width: 100vw;
+  margin: calc(var(--header-height) + 1em) auto 0;
+  padding: 0; // Remove all padding - let children handle it
+  box-sizing: border-box;
+  overflow-x: hidden; // Prevent horizontal overflow
 }
 
 .footer {

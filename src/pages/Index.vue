@@ -71,7 +71,6 @@ import {
   TOGGLE_VIEW
 } from "~/components/js/Event.js";
 import { DASHBOARD, FAVORITES } from "~/components/js/View.js";
-import debounce from "lodash/debounce";
 import includes from "lodash/includes";
 import { isClient } from "~/utils/client.js";
 
@@ -119,7 +118,10 @@ export default {
     ) {
       const firstPainting = this.$page.paintings.edges[0].node;
       // Validate and sanitize cover_image URL before preloading
-      if (firstPainting.cover_image && typeof firstPainting.cover_image === "string") {
+      if (
+        firstPainting.cover_image &&
+        typeof firstPainting.cover_image === "string"
+      ) {
         const sanitizedUrl = sanitizeUrl(firstPainting.cover_image);
         if (sanitizedUrl) {
           linkTags.push({
@@ -184,20 +186,6 @@ export default {
     this.$eventBus.$on(REMOVE_TAG, this.onRemoveTag);
     this.$eventBus.$on(TOGGLE_FAVORITE, this.onChangeFavorite);
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
-    // create debounced resize function for performance
-    if (isClient()) {
-      // bind the method to maintain 'this' context
-      // Reduced debounce delay for more responsive resizing
-      this.debouncedResizeAllCards = debounce(
-        this.waitForImagesAndResize.bind(this),
-        150
-      );
-      // subscribe to (re)-render events with debounced handler
-      let _this = this;
-      ["load", "resize"].forEach(function (event) {
-        window.addEventListener(event, _this.debouncedResizeAllCards);
-      });
-    }
   },
   mounted() {
     // create tag cloud (moved here because $page data is available in mounted)
@@ -215,53 +203,26 @@ export default {
         edge.node.tags = [...new Set(edge.node.tags)];
       });
     }
-    // call after the next DOM update cycle
+    // Initialize masonry layout
     if (isClient()) {
-      let _this = this;
-      // Use multiple nextTick calls to ensure DOM is fully rendered
+      // Wait for initial render
       this.$nextTick(() => {
         this.$nextTick(() => {
-          // Wait for images to load before resizing
-          _this.waitForImagesAndResize();
+          this.initMasonry();
         });
       });
     }
   },
   watch: {
-    view() {
-      if (isClient()) {
-        let _this = this;
-        // Use multiple nextTick calls to ensure DOM is fully updated
-        this.$nextTick(() => {
-          this.$nextTick(() => {
-            // Wait for images to load before resizing
-            _this.waitForImagesAndResize();
-          });
-        });
-      }
-    },
-    filter() {
-      if (isClient()) {
-        let _this = this;
-        // Use multiple nextTick calls to ensure DOM is fully updated
-        this.$nextTick(() => {
-          this.$nextTick(() => {
-            // Wait for images to load before resizing
-            _this.waitForImagesAndResize();
-          });
-        });
-      }
-    },
-    // Watch for changes in the cards array to resize when cards are added/removed
+    // Watch for changes in the cards array - ResizeObserver will handle resizing
     computeCards: {
       handler() {
         if (isClient()) {
-          let _this = this;
-          // Use multiple nextTick calls to ensure DOM is fully updated
+          // ResizeObserver will automatically handle layout changes
           this.$nextTick(() => {
             this.$nextTick(() => {
-              // Wait for images to load before resizing
-              _this.waitForImagesAndResize();
+              // Trigger a resize after DOM update
+              this.resizeAllCards();
             });
           });
         }
@@ -272,14 +233,17 @@ export default {
   beforeDestroy() {
     // unsubscribe from all event bus listeners at once
     this.$eventBus.$off();
-    // unsubscribe from all other event listeners
-    if (isClient() && this.debouncedResizeAllCards) {
-      let _this = this;
-      ["load", "resize"].forEach(function (event) {
-        window.removeEventListener(event, _this.debouncedResizeAllCards);
-      });
-      // cancel any pending debounced calls
-      this.debouncedResizeAllCards.cancel();
+    // Disconnect ResizeObserver
+    if (isClient() && this.masonryObserver) {
+      this.masonryObserver.disconnect();
+    }
+    // Remove window resize listener
+    if (isClient() && this.handleWindowResize) {
+      window.removeEventListener("resize", this.handleWindowResize);
+    }
+    // Clear any pending resize timeouts
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
     }
   },
   computed: {
@@ -393,74 +357,67 @@ export default {
       return REMOVE_TAG;
     },
     /**
-     * Resizes an individual card in the masonry grid
-     * Calculates the number of grid rows the card should span based on its height
-     * @param {HTMLElement} card - The card DOM element to resize
+     * Initializes the masonry layout with ResizeObserver
+     * Sets up automatic resizing when grid or cards change size
      */
-    resizeCard(card) {
-      if (!card) return;
+    initMasonry() {
+      if (!isClient()) return;
 
-      const grid = document.getElementsByClassName("masonry")[0];
+      const grid = document.querySelector(".masonry");
       if (!grid) return;
 
-      const cardLayout = card.querySelector(".card-layout");
-      if (!cardLayout) return;
-
-      // Reset gridRowEnd to recalculate - this is important for resize
-      card.style.gridRowEnd = "auto";
-      card.style.gridRowStart = "auto";
-
-      // Force a reflow to ensure layout is updated
-      void card.offsetHeight;
-      void cardLayout.offsetHeight;
-
-      // Get gap value (modern browsers use 'gap', fallback to 'grid-row-gap')
-      const computedGap = window.getComputedStyle(grid).getPropertyValue("gap") ||
-                          window.getComputedStyle(grid).getPropertyValue("grid-row-gap") ||
-                          window.getComputedStyle(grid).getPropertyValue("grid-gap");
-      const rowGap = parseInt(computedGap) || 0;
-      const rowHeight =
-        parseInt(
-          window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
-        ) || 10;
-      /*
-       * Spanning for any brick = S
-       * Grid's row-gap = G
-       * Size of grid's implicitly create row-track = R
-       * Height of item content = H
-       * Net height of the item = H1 = H + G
-       * Net height of the implicit row-track = T = G + R
-       * S = H1 / T
-       */
-      const cardHeight = cardLayout.getBoundingClientRect().height;
-      if (cardHeight <= 0) {
-        // If height is invalid, try again after a short delay
-        setTimeout(() => {
-          const retryHeight = cardLayout.getBoundingClientRect().height;
-          if (retryHeight > 0) {
-            const retryRowSpan = Math.ceil((retryHeight + rowGap) / (rowHeight + rowGap));
-            if (retryRowSpan > 0) {
-              card.style.gridRowEnd = "span " + retryRowSpan;
-            }
-          }
+      // Use ResizeObserver for automatic resizing
+      this.masonryObserver = new ResizeObserver(() => {
+        // Debounce resize calls to avoid excessive calculations
+        if (this.resizeTimeout) {
+          clearTimeout(this.resizeTimeout);
+        }
+        this.resizeTimeout = setTimeout(() => {
+          this.resizeAllCards();
         }, 100);
-        return;
+      });
+
+      // Observe the grid container
+      this.masonryObserver.observe(grid);
+
+      // Also observe the index-content container for window resize
+      const indexContent = document.querySelector(".index-content");
+      if (indexContent) {
+        this.masonryObserver.observe(indexContent);
       }
-      
-      const rowSpan = Math.ceil((cardHeight + rowGap) / (rowHeight + rowGap));
-      // set the spanning as calculated above (S)
-      if (rowSpan > 0) {
-        card.style.gridRowEnd = "span " + rowSpan;
-      }
+
+      // Observe individual cards for size changes
+      const cards = document.querySelectorAll(".cards");
+      cards.forEach(card => {
+        this.masonryObserver.observe(card);
+      });
+
+      // Also listen to window resize events as a fallback
+      this.handleWindowResize = () => {
+        if (this.resizeTimeout) {
+          clearTimeout(this.resizeTimeout);
+        }
+        this.resizeTimeout = setTimeout(() => {
+          this.resizeAllCards();
+        }, 150);
+      };
+      window.addEventListener("resize", this.handleWindowResize);
+
+      // Initial resize after images load
+      setTimeout(() => {
+        this.waitForImagesAndResize();
+      }, 100);
     },
     /**
      * Waits for images to load, then resizes all cards
-     * This ensures accurate height calculations during resize
+     * This ensures accurate height calculations during initial load
      */
     waitForImagesAndResize() {
       if (!isClient()) return;
-      
-      const allCards = document.getElementsByClassName("cards");
+
+      const allCards =
+        this.$el?.getElementsByClassName("cards") ||
+        document.getElementsByClassName("cards");
       if (!allCards || allCards.length === 0) {
         this.resizeAllCards();
         return;
@@ -486,10 +443,9 @@ export default {
       const checkComplete = () => {
         loadedCount++;
         if (loadedCount === images.length) {
-          // Longer delay to ensure layout is fully updated after images load
           setTimeout(() => {
             this.resizeAllCards();
-          }, 150);
+          }, 100);
         }
       };
 
@@ -506,59 +462,44 @@ export default {
     },
     /**
      * Resizes all cards in the masonry grid
-     * Called on window resize and after view/filter changes
+     * Simplified version without complex retry logic (ResizeObserver handles it)
      */
     resizeAllCards() {
       if (!isClient()) return;
-      const allCards = document.getElementsByClassName("cards");
-      if (!allCards || allCards.length === 0) return;
-      
-      // Use triple requestAnimationFrame to ensure layout is fully updated
-      // This gives the browser time to calculate all layout changes
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            // Reset all cards first to prevent overlaps
-            Array.from(allCards).forEach(card => {
-              card.style.gridRowEnd = "auto";
-              card.style.gridRowStart = "auto";
-            });
-            
-            // Force a reflow to ensure all resets are applied
-            void document.body.offsetHeight;
-            
-            // Calculate all heights first (read phase)
-            const cardHeights = Array.from(allCards).map(card => {
-              const cardLayout = card.querySelector(".card-layout");
-              return cardLayout ? cardLayout.getBoundingClientRect().height : 0;
-            });
-            
-            // Get grid properties once
-            const grid = document.getElementsByClassName("masonry")[0];
-            if (!grid) return;
-            
-            // Get gap value (modern browsers use 'gap', fallback to 'grid-row-gap')
-            const computedGap = window.getComputedStyle(grid).getPropertyValue("gap") ||
-                                window.getComputedStyle(grid).getPropertyValue("grid-row-gap") ||
-                                window.getComputedStyle(grid).getPropertyValue("grid-gap");
-            const rowGap = parseInt(computedGap) || 0;
-            const rowHeight =
-              parseInt(
-                window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
-              ) || 10;
-            
-            // Apply all spans at once (write phase) - prevents layout thrashing
-            Array.from(allCards).forEach((card, index) => {
-              const cardHeight = cardHeights[index];
-              if (cardHeight > 0) {
-                const rowSpan = Math.ceil((cardHeight + rowGap) / (rowHeight + rowGap));
-                if (rowSpan > 0) {
-                  card.style.gridRowEnd = "span " + rowSpan;
-                }
-              }
-            });
-          });
-        });
+
+      const cards =
+        this.$el?.querySelectorAll(".cards") ||
+        document.querySelectorAll(".cards");
+      if (cards.length === 0) return;
+
+      const grid =
+        this.$el?.querySelector(".masonry") ||
+        document.querySelector(".masonry");
+      if (!grid) return;
+
+      // Get grid properties
+      const computedStyle = window.getComputedStyle(grid);
+      const gap = parseInt(computedStyle.gap || computedStyle.gridGap) || 0;
+      const rowHeight = parseInt(computedStyle.gridAutoRows) || 10;
+
+      // Reset all cards
+      cards.forEach(card => {
+        card.style.gridRowEnd = "auto";
+      });
+
+      // Force reflow
+      void grid.offsetHeight;
+
+      // Calculate and apply spans
+      cards.forEach(card => {
+        const cardLayout = card.querySelector(".card-layout");
+        if (!cardLayout) return;
+
+        const height = cardLayout.offsetHeight;
+        if (height > 0) {
+          const span = Math.ceil((height + gap) / (rowHeight + gap));
+          card.style.gridRowEnd = `span ${span}`;
+        }
       });
     }
   }
@@ -568,45 +509,60 @@ export default {
 <style lang="scss">
 .index-content {
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box; // Ensure padding is included in width calculation
-  padding: 0 1em; // Add horizontal padding to ensure right margin exists
-}
+  max-width: var(--grid-max-width);
+  margin: 0 auto; // Perfect centering
+  padding: var(--grid-padding-mobile) var(--grid-padding-mobile) 0;
+  box-sizing: border-box;
+  overflow-x: hidden; // Prevent horizontal overflow
 
-.grid {
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: repeat(1, 1fr);
-  @media only screen and (min-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (min-width: 768px) {
+    padding: var(--grid-padding-tablet) var(--grid-padding-tablet) 0;
   }
-  @media only screen and (min-width: 1248px) {
-    grid-template-columns: repeat(3, 1fr);
+
+  @media (min-width: 1200px) {
+    padding: var(--grid-padding-desktop) var(--grid-padding-desktop) 0;
   }
 }
 
 .masonry {
   display: grid;
-  gap: 1em; // Use gap instead of grid-gap for modern browsers (consistent spacing)
-  grid-auto-rows: 10px;
-  grid-template-columns: repeat(1, 1fr);
+  gap: var(--grid-gap);
+  grid-auto-rows: 10px; // Base row height for masonry
+  grid-template-columns: 1fr; // Single column on mobile
   width: 100%;
-  align-items: start; // Prevent stretching that causes overlaps
-  
-  @media only screen and (min-width: 800px) {
+  max-width: 100%; // Prevent overflow
+  margin: 0; // No margins - gap handles spacing
+  padding: 0; // No padding - container handles it
+  align-items: start;
+  justify-items: stretch; // Cards fill grid cells
+  box-sizing: border-box; // Include padding in width calculation
+
+  // Tablet: 2 columns (768px+)
+  @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media only screen and (min-width: 1200px) {
+
+  // Desktop: 3 columns (1200px+)
+  @media (min-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  // Large desktop: 4 columns (1600px+)
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
 .cards {
-  // Ensure cards are grid items
   display: block;
-  min-height: 0; // Prevent grid item from stretching
-  margin: 0; // Remove any default margins - grid gap handles spacing
-  padding: 0; // Remove any default padding
+  width: 100%;
+  max-width: 100%; // Prevent overflow
+  height: auto;
+  margin: 0;
+  padding: 0;
+  min-height: 0; // Prevent grid stretching
+  overflow: hidden; // Prevent content from overflowing
+  box-sizing: border-box; // Include padding in width calculation
 }
 
 .empty-state {

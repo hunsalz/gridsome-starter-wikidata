@@ -14,9 +14,12 @@ export default function (Vue, { isClient }) {
   if (isClient) {
     // Use requestIdleCallback if available, otherwise setTimeout
     if (window.requestIdleCallback) {
-      requestIdleCallback(() => {
-        initWebVitals();
-      }, { timeout: 2000 });
+      requestIdleCallback(
+        () => {
+          initWebVitals();
+        },
+        { timeout: 2000 }
+      );
     } else {
       // Fallback: wait for page to be interactive
       setTimeout(() => {

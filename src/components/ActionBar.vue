@@ -159,11 +159,14 @@ export default {
         // Lazy load FileSaver only when user clicks download
         // This reduces initial bundle size since download is not critical for initial render
         const FileSaver = (await import("file-saver")).default;
-        
+
         // extract filename: take last element of relative URI and remove any URI params
         let filename = sanitizedUri.split("/").pop().split("?")[0];
         // remove any URI gibberish and sanitize filename
-        filename = decodeURIComponent(filename).replace(/[^a-zA-Z0-9._-]/g, "_");
+        filename = decodeURIComponent(filename).replace(
+          /[^a-zA-Z0-9._-]/g,
+          "_"
+        );
         // Ensure filename has extension or add default
         if (!filename.includes(".")) {
           filename += ".jpg";
