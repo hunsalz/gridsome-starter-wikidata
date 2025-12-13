@@ -60,7 +60,7 @@ module.exports = {
         typeName: "Painting",
         baseDir: "/content/images/",
         cacheEnabled: true,
-        ttl: 24 * 60 * 60 * 1000, // 1day
+        ttl: 7 * 24 * 60 * 60 * 1000, // 7 days (longer cache to reduce API calls)
         verbose: true,
       },
     },

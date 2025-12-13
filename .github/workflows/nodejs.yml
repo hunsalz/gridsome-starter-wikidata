@@ -44,10 +44,31 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       
+      - name: Cache Wikidata data
+        uses: actions/cache@v4
+        with:
+          path: content/images
+          key: ${{ runner.os }}-wikidata-${{ hashFiles('gridsome.config.js') }}
+          restore-keys: |
+            ${{ runner.os }}-wikidata-
+      
       - name: Build deployment
         run: |
           yarn install
-          yarn run build
+          # Retry build up to 3 times with exponential backoff for rate limiting
+          for i in 1 2 3; do
+            if yarn run build; then
+              exit 0
+            else
+              if [ $i -lt 3 ]; then
+                echo "Build failed, retrying in $((i * 30)) seconds..."
+                sleep $((i * 30))
+              else
+                echo "Build failed after 3 attempts"
+                exit 1
+              fi
+            fi
+          done
         env:
           CI: true
       - name: Deploy to GitHub Pages
