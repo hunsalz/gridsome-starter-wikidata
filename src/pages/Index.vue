@@ -77,6 +77,12 @@ import { isClient } from "~/utils/client.js";
 
 import CardLayout from "~/components/CardLayout.vue";
 import TagCloud from "~/components/TagCloud.vue";
+import {
+  validateSiteUrl,
+  validatePathPrefix,
+  sanitizeUrl,
+  sanitizeMetaContent
+} from "~/utils/security.js";
 
 export default {
   components: {
@@ -92,17 +98,19 @@ export default {
   },
   metaInfo() {
     const siteName =
-      this.$page.metadata?.siteName || "Gridsome Starter Wikidata";
+      sanitizeMetaContent(
+        this.$page.metadata?.siteName || "Gridsome Starter Wikidata"
+      ) || "Gridsome Starter Wikidata";
     const siteDescription =
-      this.$page.metadata?.siteDescription ||
-      "A Gridsome starter showcasing Wikidata integration";
-    const siteUrl =
-      process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
-    const pathPrefix =
-      process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
+      sanitizeMetaContent(
+        this.$page.metadata?.siteDescription ||
+          "A Gridsome starter showcasing Wikidata integration"
+      ) || "A Gridsome starter showcasing Wikidata integration";
+    const siteUrl = validateSiteUrl(process.env.GRIDSOME_SITE_URL);
+    const pathPrefix = validatePathPrefix(process.env.GRIDSOME_PATH_PREFIX);
     const url = `${siteUrl}${pathPrefix}/`;
 
-    // Preload LCP image (first painting's cover image) for better Speed Index
+    // Preload LCP image (first painting's cover image) for better Speed Index and LCP
     const linkTags = [];
     if (
       this.$page.paintings &&
@@ -110,13 +118,16 @@ export default {
       this.$page.paintings.edges.length > 0
     ) {
       const firstPainting = this.$page.paintings.edges[0].node;
-      // Ensure cover_image is a string URL before preloading
+      // Validate and sanitize cover_image URL before preloading
       if (firstPainting.cover_image && typeof firstPainting.cover_image === "string") {
-        linkTags.push({
-          rel: "preload",
-          as: "image",
-          href: firstPainting.cover_image
-        });
+        const sanitizedUrl = sanitizeUrl(firstPainting.cover_image);
+        if (sanitizedUrl) {
+          linkTags.push({
+            rel: "preload",
+            as: "image",
+            href: sanitizedUrl
+          });
+        }
       }
     }
     // Preconnect to Wikidata for faster external link loading
@@ -207,9 +218,12 @@ export default {
     // call after the next DOM update cycle
     if (isClient()) {
       let _this = this;
-      this.$nextTick(function () {
-        // Wait for images to load before resizing
-        _this.waitForImagesAndResize();
+      // Use multiple nextTick calls to ensure DOM is fully rendered
+      this.$nextTick(() => {
+        this.$nextTick(() => {
+          // Wait for images to load before resizing
+          _this.waitForImagesAndResize();
+        });
       });
     }
   },
@@ -217,18 +231,24 @@ export default {
     view() {
       if (isClient()) {
         let _this = this;
-        this.$nextTick(function () {
-          // Wait for images to load before resizing
-          _this.waitForImagesAndResize();
+        // Use multiple nextTick calls to ensure DOM is fully updated
+        this.$nextTick(() => {
+          this.$nextTick(() => {
+            // Wait for images to load before resizing
+            _this.waitForImagesAndResize();
+          });
         });
       }
     },
     filter() {
       if (isClient()) {
         let _this = this;
-        this.$nextTick(function () {
-          // Wait for images to load before resizing
-          _this.waitForImagesAndResize();
+        // Use multiple nextTick calls to ensure DOM is fully updated
+        this.$nextTick(() => {
+          this.$nextTick(() => {
+            // Wait for images to load before resizing
+            _this.waitForImagesAndResize();
+          });
         });
       }
     },
@@ -237,9 +257,12 @@ export default {
       handler() {
         if (isClient()) {
           let _this = this;
-          this.$nextTick(function () {
-            // Wait for images to load before resizing
-            _this.waitForImagesAndResize();
+          // Use multiple nextTick calls to ensure DOM is fully updated
+          this.$nextTick(() => {
+            this.$nextTick(() => {
+              // Wait for images to load before resizing
+              _this.waitForImagesAndResize();
+            });
           });
         }
       },
@@ -385,14 +408,17 @@ export default {
 
       // Reset gridRowEnd to recalculate - this is important for resize
       card.style.gridRowEnd = "auto";
+      card.style.gridRowStart = "auto";
 
       // Force a reflow to ensure layout is updated
       void card.offsetHeight;
+      void cardLayout.offsetHeight;
 
-      const rowGap =
-        parseInt(
-          window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
-        ) || 0;
+      // Get gap value (modern browsers use 'gap', fallback to 'grid-row-gap')
+      const computedGap = window.getComputedStyle(grid).getPropertyValue("gap") ||
+                          window.getComputedStyle(grid).getPropertyValue("grid-row-gap") ||
+                          window.getComputedStyle(grid).getPropertyValue("grid-gap");
+      const rowGap = parseInt(computedGap) || 0;
       const rowHeight =
         parseInt(
           window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
@@ -407,7 +433,19 @@ export default {
        * S = H1 / T
        */
       const cardHeight = cardLayout.getBoundingClientRect().height;
-      if (cardHeight <= 0) return; // Skip if height is invalid
+      if (cardHeight <= 0) {
+        // If height is invalid, try again after a short delay
+        setTimeout(() => {
+          const retryHeight = cardLayout.getBoundingClientRect().height;
+          if (retryHeight > 0) {
+            const retryRowSpan = Math.ceil((retryHeight + rowGap) / (rowHeight + rowGap));
+            if (retryRowSpan > 0) {
+              card.style.gridRowEnd = "span " + retryRowSpan;
+            }
+          }
+        }, 100);
+        return;
+      }
       
       const rowSpan = Math.ceil((cardHeight + rowGap) / (rowHeight + rowGap));
       // set the spanning as calculated above (S)
@@ -448,10 +486,10 @@ export default {
       const checkComplete = () => {
         loadedCount++;
         if (loadedCount === images.length) {
-          // Small delay to ensure layout is updated
+          // Longer delay to ensure layout is fully updated after images load
           setTimeout(() => {
             this.resizeAllCards();
-          }, 50);
+          }, 150);
         }
       };
 
@@ -461,6 +499,8 @@ export default {
         } else {
           img.addEventListener("load", checkComplete, { once: true });
           img.addEventListener("error", checkComplete, { once: true });
+          // Timeout fallback in case image never loads
+          setTimeout(checkComplete, 5000);
         }
       });
     },
@@ -473,15 +513,51 @@ export default {
       const allCards = document.getElementsByClassName("cards");
       if (!allCards || allCards.length === 0) return;
       
-      // Use double requestAnimationFrame to ensure layout is fully updated
+      // Use triple requestAnimationFrame to ensure layout is fully updated
+      // This gives the browser time to calculate all layout changes
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          // Reset all cards first to prevent overlaps
-          Array.from(allCards).forEach(card => {
-            card.style.gridRowEnd = "auto";
+          requestAnimationFrame(() => {
+            // Reset all cards first to prevent overlaps
+            Array.from(allCards).forEach(card => {
+              card.style.gridRowEnd = "auto";
+              card.style.gridRowStart = "auto";
+            });
+            
+            // Force a reflow to ensure all resets are applied
+            void document.body.offsetHeight;
+            
+            // Calculate all heights first (read phase)
+            const cardHeights = Array.from(allCards).map(card => {
+              const cardLayout = card.querySelector(".card-layout");
+              return cardLayout ? cardLayout.getBoundingClientRect().height : 0;
+            });
+            
+            // Get grid properties once
+            const grid = document.getElementsByClassName("masonry")[0];
+            if (!grid) return;
+            
+            // Get gap value (modern browsers use 'gap', fallback to 'grid-row-gap')
+            const computedGap = window.getComputedStyle(grid).getPropertyValue("gap") ||
+                                window.getComputedStyle(grid).getPropertyValue("grid-row-gap") ||
+                                window.getComputedStyle(grid).getPropertyValue("grid-gap");
+            const rowGap = parseInt(computedGap) || 0;
+            const rowHeight =
+              parseInt(
+                window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
+              ) || 10;
+            
+            // Apply all spans at once (write phase) - prevents layout thrashing
+            Array.from(allCards).forEach((card, index) => {
+              const cardHeight = cardHeights[index];
+              if (cardHeight > 0) {
+                const rowSpan = Math.ceil((cardHeight + rowGap) / (rowHeight + rowGap));
+                if (rowSpan > 0) {
+                  card.style.gridRowEnd = "span " + rowSpan;
+                }
+              }
+            });
           });
-          // Then resize each card
-          Array.from(allCards).forEach(card => this.resizeCard(card));
         });
       });
     }
@@ -511,7 +587,7 @@ export default {
 
 .masonry {
   display: grid;
-  grid-gap: 1em;
+  gap: 1em; // Use gap instead of grid-gap for modern browsers (consistent spacing)
   grid-auto-rows: 10px;
   grid-template-columns: repeat(1, 1fr);
   width: 100%;
@@ -529,6 +605,8 @@ export default {
   // Ensure cards are grid items
   display: block;
   min-height: 0; // Prevent grid item from stretching
+  margin: 0; // Remove any default margins - grid gap handles spacing
+  padding: 0; // Remove any default padding
 }
 
 .empty-state {

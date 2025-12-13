@@ -38,6 +38,13 @@
 </template>
 
 <script>
+import {
+  validateSiteUrl,
+  validatePathPrefix,
+  sanitizeUrl,
+  sanitizeMetaContent
+} from "~/utils/security.js";
+
 export default {
   metaInfo() {
     if (!this.$page.painting) {
@@ -46,17 +53,33 @@ export default {
       };
     }
 
-    const title = this.$page.painting.paintingLabel || "Untitled Painting";
-    const description = `${title} by Leonardo da Vinci. ${this.$page.painting.year ? `Created in ${this.$page.painting.year}.` : ""} ${this.$page.painting.locationLabel ? `Collection: ${this.$page.painting.locationLabel}.` : ""}`;
-    const image = this.$page.painting.image || "";
-    const siteUrl =
-      process.env.GRIDSOME_SITE_URL || "https://hunsalz.github.io";
-    const pathPrefix =
-      process.env.GRIDSOME_PATH_PREFIX || "/gridsome-starter-wikidata";
-    const url = `${siteUrl}${pathPrefix}${this.$page.painting.path}`;
+    const title =
+      sanitizeMetaContent(
+        this.$page.painting.paintingLabel || "Untitled Painting"
+      ) || "Untitled Painting";
+    const description = sanitizeMetaContent(
+      `${title} by Leonardo da Vinci. ${this.$page.painting.year ? `Created in ${this.$page.painting.year}.` : ""} ${this.$page.painting.locationLabel ? `Collection: ${this.$page.painting.locationLabel}.` : ""}`
+    );
+    const image = sanitizeUrl(this.$page.painting.image || "") || "";
+    const siteUrl = validateSiteUrl(process.env.GRIDSOME_SITE_URL);
+    const pathPrefix = validatePathPrefix(process.env.GRIDSOME_PATH_PREFIX);
+    // Validate painting path to prevent path traversal
+    const paintingPath = (this.$page.painting.path || "").replace(/\.\./g, "");
+    const url = `${siteUrl}${pathPrefix}${paintingPath}`;
+
+    // Preload LCP image (painting detail image) for better LCP score
+    const linkTags = [];
+    if (image) {
+      linkTags.push({
+        rel: "preload",
+        as: "image",
+        href: image
+      });
+    }
 
     return {
       title: title,
+      link: linkTags,
       meta: [
         {
           name: "description",

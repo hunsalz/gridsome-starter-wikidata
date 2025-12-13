@@ -2,6 +2,7 @@
   publish = "dist"
   command = "gridsome build"
 
+# Global headers for all routes
 [[headers]]
   for = "/*"
   [headers.values]
@@ -10,3 +11,102 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    # Content Security Policy - allows only trusted sources
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.wikidata.org https://query.wikidata.org; frame-ancestors 'none'; base-uri 'self';"
+    # Strict Transport Security - enforce HTTPS (1 year, include subdomains)
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Cache headers for static assets (images, fonts, etc.)
+# Long cache TTL with versioned filenames for cache busting
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    # 1 year cache for versioned assets (Gridsome uses content hashes in filenames)
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    # 1 year cache for images
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    # 1 year cache for JavaScript files (versioned by Gridsome)
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    # 1 year cache for CSS files (versioned by Gridsome)
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    # 1 year cache for fonts
+
+[[headers]]
+  for = "/*.woff"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    # 1 year cache for fonts
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+    # 30 days cache for PNG images
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+    # 30 days cache for JPEG images
+
+[[headers]]
+  for = "/*.jpeg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+    # 30 days cache for JPEG images
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+    # 30 days cache for WebP images
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+    # 30 days cache for SVG images
+
+# Cache headers for HTML files (shorter cache, must revalidate)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    # No cache for HTML files to ensure fresh content
+
+# Cache headers for root index.html
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    # No cache for index.html to ensure fresh content
+
+# Cache headers for service worker and manifest
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    # No cache for service worker to ensure updates are detected
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    # 1 hour cache for manifest.json

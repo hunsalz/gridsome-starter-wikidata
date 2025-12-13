@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+// Google Fonts CSS is now loaded asynchronously in index.html to prevent render-blocking
+// This @import is kept as fallback for build-time processing, but won't be used in production
+// @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
 html {
   font-size: var(--base-font-size);

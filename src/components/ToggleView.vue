@@ -2,7 +2,7 @@
   <button
     class="toggle-view"
     role="button"
-    aria-label="Toggle view"
+    :aria-label="dashboard ? 'Switch to favorites view' : 'Switch to dashboard view'"
     @click.prevent="toggleView"
   >
     <svg
@@ -11,6 +11,7 @@
       width="24"
       height="24"
       viewBox="0 0 24 24"
+      aria-hidden="true"
     >
       <!-- https://material.io/resources/icons/?icon=dashboard -->
       <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
@@ -21,6 +22,7 @@
       width="24"
       height="24"
       viewBox="0 0 24 24"
+      aria-hidden="true"
     >
       <!-- https://material.io/resources/icons/?icon=favorite -->
       <path
@@ -66,7 +68,8 @@ export default {
   }
 
   :focus {
-    outline: none;
+    outline: 2px solid var(--accent-color, #666600);
+    outline-offset: 2px;
   }
 }
 </style>

@@ -16,6 +16,7 @@
         width="24"
         height="24"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <!-- https://material.io/resources/icons/?icon=favorite -->
         <path
@@ -23,12 +24,17 @@
         />
       </svg>
     </button>
-    <g-link class="action-button" :to="getWikidataLink">
+    <g-link
+      class="action-button"
+      :to="getWikidataLink"
+      aria-label="View on Wikidata"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <!-- https://material.io/resources/icons/?icon=link -->
         <path
@@ -47,6 +53,7 @@
         width="24"
         height="24"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <!-- https://material.io/resources/icons/?icon=cloud_download -->
         <path
@@ -58,9 +65,11 @@
 </template>
 
 <script>
-import FileSaver from "file-saver";
+// Lazy load FileSaver - only needed when user clicks download
+// This reduces initial bundle size since download is not critical for initial render
 
 import { TOGGLE_FAVORITE } from "~/components/js/Event.js";
+import { sanitizeUrl } from "~/utils/security.js";
 
 // Error timeout matches CSS variable --error-timeout: 3000ms
 const ERROR_TIMEOUT = 3000;
@@ -92,7 +101,12 @@ export default {
      * @returns {string} The full Wikidata URL
      */
     getWikidataLink() {
-      return "https://www.wikidata.org/wiki/" + this.paintingItem;
+      if (!this.paintingItem) {
+        return "#";
+      }
+      // Sanitize item ID to prevent path traversal or injection
+      const sanitizedItem = this.paintingItem.replace(/[^A-Z0-9]/gi, "");
+      return "https://www.wikidata.org/wiki/" + sanitizedItem;
     }
   },
   methods: {
@@ -107,8 +121,9 @@ export default {
     /**
      * Downloads the painting image
      * Handles error cases and displays user-friendly error messages
+     * Lazy loads FileSaver library only when needed
      */
-    download() {
+    async download() {
       // Reset error message
       this.errorMessage = null;
 
@@ -131,12 +146,29 @@ export default {
         }, ERROR_TIMEOUT);
         return;
       }
+      // Validate and sanitize URL before downloading
+      const sanitizedUri = sanitizeUrl(uri);
+      if (!sanitizedUri) {
+        this.errorMessage = "Invalid image URL. Unable to download.";
+        setTimeout(() => {
+          this.errorMessage = null;
+        }, ERROR_TIMEOUT);
+        return;
+      }
       try {
+        // Lazy load FileSaver only when user clicks download
+        // This reduces initial bundle size since download is not critical for initial render
+        const FileSaver = (await import("file-saver")).default;
+        
         // extract filename: take last element of relative URI and remove any URI params
-        let filename = uri.split("/").pop().split("?")[0];
-        // remove any URI gibberish
-        filename = decodeURI(filename).replace(/%2C/g, ",");
-        FileSaver.saveAs(uri, filename);
+        let filename = sanitizedUri.split("/").pop().split("?")[0];
+        // remove any URI gibberish and sanitize filename
+        filename = decodeURIComponent(filename).replace(/[^a-zA-Z0-9._-]/g, "_");
+        // Ensure filename has extension or add default
+        if (!filename.includes(".")) {
+          filename += ".jpg";
+        }
+        FileSaver.saveAs(sanitizedUri, filename);
       } catch {
         this.errorMessage = "Failed to download image. Please try again.";
         setTimeout(() => {

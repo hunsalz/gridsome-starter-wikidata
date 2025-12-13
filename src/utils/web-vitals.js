@@ -30,11 +30,13 @@ function reportWebVital(metric) {
 /**
  * Initializes Web Vitals tracking
  * Should be called in main.js or App.vue
+ * Deferred until after page load to reduce initial JavaScript execution
  */
 export function initWebVitals() {
   if (!isClient()) return;
 
-  // Dynamically import web-vitals library
+  // Dynamically import web-vitals library only when needed
+  // This reduces initial bundle size since Web Vitals tracking is not critical for initial render
   import("web-vitals")
     .then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
       onCLS(reportWebVital);

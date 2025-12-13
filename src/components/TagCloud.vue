@@ -5,7 +5,7 @@
       :key="index"
       class="action-button"
       role="button"
-      aria-label="Tag"
+      :aria-label="`Filter by ${tag}`"
       @click.prevent="emitEvent(tag)"
     >
       <span># {{ tag }}</span>
@@ -59,7 +59,8 @@ export default {
   }
 
   :focus {
-    outline: none;
+    outline: 2px solid var(--accent-color, #666600);
+    outline-offset: 2px;
   }
 }
 </style>

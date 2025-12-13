@@ -64,7 +64,7 @@ export default {
 <style lang="scss">
 .card-layout {
   position: relative;
-  margin: 0 0 var(--card-margin-bottom) 0;
+  margin: 0; // Remove margin - grid-gap handles spacing between cards
   border-radius: var(--radius) var(--radius) 0 0;
   background-color: var(--bg-content-color);
 

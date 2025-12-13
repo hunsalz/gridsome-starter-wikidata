@@ -9,8 +9,19 @@ export default function (Vue, { isClient }) {
   // set global event bus
   Vue.prototype.$eventBus = new Vue();
 
-  // Initialize Web Vitals tracking
+  // Defer Web Vitals tracking until after page load
+  // This reduces initial JavaScript execution time and improves TTI
   if (isClient) {
-    initWebVitals();
+    // Use requestIdleCallback if available, otherwise setTimeout
+    if (window.requestIdleCallback) {
+      requestIdleCallback(() => {
+        initWebVitals();
+      }, { timeout: 2000 });
+    } else {
+      // Fallback: wait for page to be interactive
+      setTimeout(() => {
+        initWebVitals();
+      }, 0);
+    }
   }
 }
