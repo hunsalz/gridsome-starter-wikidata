@@ -50,7 +50,6 @@ query {
       node {
         id
         path
-        item
         title: paintingLabel
         image
         cover_image: image (width: 770, height: 380, blur: 10)
@@ -230,9 +229,13 @@ export default {
       // ... in case of favorite view
       if (this.view === FAVORITES && this.favorites.length > 0) {
         // filter matching cards
-        return this.$page.paintings.edges.filter(edge =>
-          includes(this.favorites, edge.node.item)
-        );
+        return this.$page.paintings.edges.filter(edge => {
+          // Extract item from path (path format: /:item)
+          const item = edge.node.path
+            ? edge.node.path.replace(/^\//, "")
+            : null;
+          return includes(this.favorites, item);
+        });
       }
       // otherwise show standard dashboard ...
       return this.$page.paintings.edges.filter(edge => {
@@ -248,6 +251,19 @@ export default {
     }
   },
   methods: {
+    /**
+     * Extracts the item ID from a painting's path
+     * @param {Object} painting - The painting node
+     * @returns {Object} Painting object with item property added
+     */
+    getPaintingWithItem(painting) {
+      // Extract item from path (path format: /:item)
+      const item = painting.path ? painting.path.replace(/^\//, "") : null;
+      return {
+        ...painting,
+        item: item
+      };
+    },
     /**
      * Clears all active filters
      */

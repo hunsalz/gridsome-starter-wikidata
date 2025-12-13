@@ -9,7 +9,7 @@
       :data-favorite="isFavorite"
       role="button"
       aria-label="Toggle favorite"
-      @click.prevent="toggleFavorite(painting.item)"
+      @click.prevent="toggleFavorite(paintingItem)"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -80,11 +80,19 @@ export default {
   },
   computed: {
     /**
+     * Gets the Wikidata item ID from the painting's path
+     * @returns {string} The Wikidata item ID (e.g., "Q12345")
+     */
+    paintingItem() {
+      // Extract item from path (path format: /:item)
+      return this.painting.path ? this.painting.path.replace(/^\//, "") : null;
+    },
+    /**
      * Gets the Wikidata URL for the current painting
      * @returns {string} The full Wikidata URL
      */
     getWikidataLink() {
-      return "https://www.wikidata.org/wiki/" + this.painting.item;
+      return "https://www.wikidata.org/wiki/" + this.paintingItem;
     }
   },
   methods: {

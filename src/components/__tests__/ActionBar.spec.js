@@ -1,9 +1,15 @@
 import { mount } from "@vue/test-utils";
 import ActionBar from "../ActionBar.vue";
+import Vue from "vue";
+
+// Mock Gridsome's g-link component globally
+Vue.component("g-link", { template: "<a><slot /></a>" });
+// Mock the global event bus
+Vue.prototype.$eventBus = new Vue();
 
 describe("ActionBar", () => {
   const mockPainting = {
-    item: "Q12345",
+    path: "/Q12345",
     title: "Test Painting",
     image: "https://example.com/image.jpg",
     cover_image: "https://example.com/cover.jpg"
@@ -18,7 +24,8 @@ describe("ActionBar", () => {
 
     const buttons = wrapper.findAll("button");
     expect(buttons.length).toBe(2); // Favorite and download buttons
-    expect(wrapper.find("g-link").exists()).toBe(true); // Wikidata link
+    // g-link is mocked as <a>, so check for that
+    expect(wrapper.find("a").exists()).toBe(true); // Wikidata link
   });
 
   it("gets correct Wikidata link", () => {

@@ -113,7 +113,7 @@ query painting ($id: ID!) {
     title: paintingLabel
     image
     year: date (format: "YYYY")
-  	location: locationLabel
+    location: locationLabel
     materials
     depicts
   }
