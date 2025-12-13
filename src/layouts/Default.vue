@@ -20,7 +20,7 @@
       </span>
       <span class="footer__links">
         Powered by
-        <a href="//gridsome.org">Gridsome</a>
+        <a href="//gridsome.org" aria-label="Visit Gridsome website (opens in new tab)">Gridsome</a>
       </span>
     </footer>
   </div>

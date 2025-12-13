@@ -1,6 +1,7 @@
 .content-box {
   background-color: var(--bg-content-color);
   max-width: var(--max-content-width);
+  margin: 0 auto; // Center the content box horizontally
   border-radius: var(--radius);
   box-shadow:
     1px 1px 5px 0 rgba(0, 0, 0, 0.02),

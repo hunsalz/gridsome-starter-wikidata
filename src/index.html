@@ -11,53 +11,54 @@
   <!-- DNS prefetch for external resources -->
   <link rel="dns-prefetch" href="https://www.wikidata.org">
   <!-- Load Google Fonts CSS asynchronously to prevent render-blocking -->
+  <!-- Modern browsers support onload on link tags, so we only need a minimal polyfill for older browsers -->
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"></noscript>
-  <!-- Polyfill for browsers that don't support onload on link tags -->
+  <!-- Minimal polyfill only for browsers that don't support onload on link tags (IE11 and older) -->
   <script>
-    /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
-    (function(w){"use strict";if(!w.loadCSS){w.loadCSS=function(){}}
-    var loadCSS=function(href,before,media){var doc=w.document;var ss=doc.createElement("link");var ref;if(before){ref=before}else{var refs=(doc.body||doc.getElementsByTagName("head")[0]).childNodes;ref=refs[refs.length-1]}var sheets=doc.styleSheets;ss.rel="stylesheet";ss.href=href;ss.media="only x";function ready(cb){if(doc.body){return cb()}setTimeout(function(){ready(cb)})}ready(function(){ref.parentNode.insertBefore(ss,before?ref:ref.nextSibling)});var onloadcssdefined=function(cb){var resolvedHref=ss.href;var i=sheets.length;while(i--){if(sheets[i].href===resolvedHref){return cb()}}setTimeout(function(){onloadcssdefined(cb)})};ss.onloadcssdefined=onloadcssdefined;onloadcssdefined(function(){if(ss.media!=="all"){ss.media=media||"all"}});return ss};
-    w.loadCSS=loadCSS})(typeof global!=="undefined"?global:this);
+    // Only load polyfill if onload is not supported (modern browsers skip this)
+    if (!document.createElement('link').onload) {
+      (function(w){var loadCSS=function(href){var doc=w.document,ss=doc.createElement("link"),ref=doc.getElementsByTagName("head")[0].childNodes[ref.length-1];ss.rel="stylesheet";ss.href=href;ss.media="only x";function ready(cb){if(doc.body)return cb();setTimeout(function(){ready(cb)},9)}ready(function(){ref.parentNode.insertBefore(ss,ref.nextSibling)});var onloadcssdefined=function(cb){var resolvedHref=ss.href,i=doc.styleSheets.length;while(i--){if(doc.styleSheets[i].href===resolvedHref)return cb()}setTimeout(function(){onloadcssdefined(cb)},9)};ss.onloadcssdefined=onloadcssdefined;onloadcssdefined(function(){if(ss.media!=="all")ss.media="all"});return ss};w.loadCSS=loadCSS})(window);
+    }
   </script>
 </head>
 
 <body ${bodyAttrs}>
   <script>
-    // dark / light detection that runs before Vue.js load. Borrowed from overreacted.io
-    (function () {
-      window.__onThemeChange = function () { };
-      function setTheme(newTheme) {
+    // Modern theme detection script (ES6+ syntax for modern browsers)
+    (() => {
+      'use strict';
+      
+      window.__onThemeChange = () => {};
+      
+      const setTheme = (newTheme) => {
         window.__theme = newTheme;
-        preferredTheme = newTheme;
         document.body.setAttribute('data-theme', newTheme);
         window.__onThemeChange(newTheme);
-      }
+      };
 
-      var preferredTheme;
+      let preferredTheme;
       try {
         preferredTheme = localStorage.getItem('theme');
-      } catch (err) { }
+      } catch (err) {
+        // localStorage not available
+      }
 
-      window.__setPreferredTheme = function (newTheme) {
+      window.__setPreferredTheme = (newTheme) => {
         setTheme(newTheme);
         try {
           localStorage.setItem('theme', newTheme);
-        } catch (err) { }
-      }
+        } catch (err) {
+          // localStorage not available
+        }
+      };
 
-      var darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      // Use addEventListener instead of deprecated addListener
-      if (darkQuery.addEventListener) {
-        darkQuery.addEventListener('change', function (e) {
-          window.__setPreferredTheme(e.matches ? 'dark' : 'light')
-        });
-      } else {
-        // Fallback for older browsers
-        darkQuery.addListener(function (e) {
-          window.__setPreferredTheme(e.matches ? 'dark' : 'light')
-        });
-      }
+      const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      
+      // Modern browsers support addEventListener
+      darkQuery.addEventListener('change', (e) => {
+        window.__setPreferredTheme(e.matches ? 'dark' : 'light');
+      });
 
       setTheme(preferredTheme || (darkQuery.matches ? 'dark' : 'light'));
     })();

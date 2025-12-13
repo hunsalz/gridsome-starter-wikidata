@@ -25,7 +25,15 @@
       <TagCloud class="card-layout__tags" :event="addTag()" :tags="getTags()" />
       <ActionBar class="card-layout__actions" :painting="painting" />
     </div>
-    <g-link class="card-layout__link_to_painting" :to="painting.path" />
+    <g-link
+      class="card-layout__link_to_painting"
+      :to="painting.path"
+      :aria-label="
+        painting.paintingLabel
+          ? `View details for ${painting.paintingLabel}`
+          : 'View painting details'
+      "
+    />
   </div>
 </template>
 

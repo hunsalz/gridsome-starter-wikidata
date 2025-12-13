@@ -151,13 +151,16 @@ query painting ($id: ID!) {
   align-items: center;
 
   &__header {
-    padding: calc(var(--space) / 2) 0 calc(var(--space) / 2) 0;
+    padding: calc(var(--space) / 2) 1em calc(var(--space) / 2) 1em;
     text-align: center;
+    margin: 0 auto; // Center header horizontally
+    max-width: 100%; // Ensure it doesn't exceed container
   }
 
   &__content {
-    margin: 0 1em 1em 1em;
-    padding: 0 1em 1em 1em;
+    margin: 0 auto; // Center content horizontally
+    padding: 1em;
+    max-width: 100%; // Ensure it doesn't exceed container
 
     &:empty {
       display: none;

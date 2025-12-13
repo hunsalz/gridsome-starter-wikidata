@@ -204,12 +204,10 @@ export default {
   }
 
   .action-button.is-favorite {
-    fill: red;
+    fill: #dc3545; // Use error color for better contrast (was red)
   }
 
-  :hover {
-    opacity: 100%;
-    transition: opacity 0.5s;
-  }
+  // Hover state is now handled in _action-button.scss
+  // Removed conflicting opacity: 100% rule
 }
 </style>

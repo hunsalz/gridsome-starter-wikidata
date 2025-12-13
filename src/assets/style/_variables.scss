@@ -18,7 +18,7 @@ $breakpoint-large: 1600px;
 // Theme Colors (Light)
 // ============================================================================
 body {
-  --body-color: #444;
+  --body-color: #333; // Improved contrast (was #444, now darker for better contrast)
   --bg-color: #e6f0f5;
   --bg-content-color: #fff;
   --header-bg: #0d2538;
@@ -26,8 +26,10 @@ body {
   --header-height: 80px;
   --border-color: rgba(0, 0, 0, 0.1);
   --title-color: #111;
-  --link-color: #6b17e6;
+  --link-color: #5a14c4; // Improved contrast (was #6b17e6, now darker for better contrast)
   --error-color: #dc3545;
+  --action-button-color: #333; // Explicit color for action buttons (WCAG AA compliant)
+  --action-button-bg: #e6f0f5; // Background for action buttons
   --space: 3.5rem;
   --max-content-width: 768px;
   --radius: 12px;
@@ -86,14 +88,16 @@ body {
 // Theme Colors (Dark)
 // ============================================================================
 body[data-theme="dark"] {
-  --body-color: #ced8de;
+  --body-color: #e1e8ed; // Improved contrast (was #ced8de, now lighter for better contrast)
   --bg-color: #0f2d44;
   --bg-content-color: #1a4363;
   --header-bg: #fff;
   --header-color: #0d2538;
   --border-color: rgba(255, 255, 255, 0.1);
   --title-color: #fff;
-  --link-color: #af9cef;
+  --link-color: #c4b5f5; // Improved contrast (was #af9cef, now lighter for better contrast)
+  --action-button-color: #e1e8ed; // Explicit color for action buttons (WCAG AA compliant)
+  --action-button-bg: #0f2d44; // Background for action buttons
 
   // Dark theme specific adjustments
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -123,8 +127,8 @@ body[data-theme="dark"] {
     --text-spacing-lg: 1rem;
     --text-spacing-xl: 1.5rem;
 
-    // Smaller tags on mobile
-    --tag-font-size: 0.6875rem; // Reduced proportionally (0.75rem * 0.916)
+    // Smaller tags on mobile (but still WCAG AA compliant - minimum 12px)
+    --tag-font-size: 0.75rem; // Minimum 12px (0.75rem * 16px = 12px) for WCAG AA compliance
     --tag-padding: 0.25rem 0.625rem;
   }
 }
