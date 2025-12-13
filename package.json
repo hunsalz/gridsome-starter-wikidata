@@ -28,7 +28,6 @@
     "@gridsome/plugin-sitemap": "^0.4.0",
     "@gridsome/source-filesystem": "^0.6.2",
     "@gridsome/transformer-remark": "^0.6.4",
-    "core-js": "^3.16.4",
     "file-saver": "^2.0.5",
     "gridsome": "^0.7.23",
     "gridsome-plugin-pwa": "0.0.22",

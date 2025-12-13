@@ -3,12 +3,12 @@
  */
 
 /**
- * Validates if a string is a valid URL
+ * Validates if a string is a valid URL (internal helper, not exported)
  * @param {string} url - The URL to validate
  * @param {Array<string>} allowedProtocols - Allowed protocols (default: ['http:', 'https:'])
  * @returns {boolean} True if URL is valid and uses allowed protocol
  */
-export function isValidUrl(url, allowedProtocols = ["http:", "https:"]) {
+function isValidUrl(url, allowedProtocols = ["http:", "https:"]) {
   if (!url || typeof url !== "string") {
     return false;
   }
