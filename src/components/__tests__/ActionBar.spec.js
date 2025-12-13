@@ -19,13 +19,16 @@ describe("ActionBar", () => {
     const wrapper = mount(ActionBar, {
       propsData: {
         painting: mockPainting
+      },
+      stubs: {
+        "g-link": true
       }
     });
 
     const buttons = wrapper.findAll("button");
     expect(buttons.length).toBe(2); // Favorite and download buttons
-    // g-link component exists (may be stubbed)
-    expect(wrapper.html()).toContain("g-link"); // Wikidata link
+    // g-link component exists (stubbed)
+    expect(wrapper.find("g-link-stub").exists()).toBe(true); // Wikidata link
   });
 
   it("gets correct Wikidata link", () => {
