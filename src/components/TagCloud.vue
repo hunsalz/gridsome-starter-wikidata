@@ -43,6 +43,7 @@ export default {
   flex-wrap: wrap;
   gap: var(--tag-gap);
   margin: 0;
+  margin-bottom: var(--text-spacing-md); // Add spacing below tag cloud
   padding: 0;
   width: 100%;
   position: relative;

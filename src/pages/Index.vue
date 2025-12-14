@@ -1,7 +1,7 @@
 <template>
   <Layout :show-back-link="false" :toggle-view="showToggleView()">
     <div class="index-content">
-      <TagCloud :event="removeTag()" :tags="filter" />
+      <TagCloud v-if="filter.length > 0" :event="removeTag()" :tags="filter" />
       <div v-if="computeCards.length === 0" class="empty-state">
         <div class="empty-state__content">
           <h2 class="empty-state__title">

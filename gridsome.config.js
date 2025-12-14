@@ -61,6 +61,7 @@ module.exports = {
         baseDir: "/content/images/",
         cacheEnabled: true,
         ttl: 7 * 24 * 60 * 60 * 1000, // 7 days (longer cache to reduce API calls)
+        maxFileSize: 150 * 1024 * 1024, // 150 MB (increased from default 100 MB to handle large images)
         verbose: true,
       },
     },
