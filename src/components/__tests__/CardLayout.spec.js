@@ -141,7 +141,9 @@ describe("CardLayout", () => {
     // Image should be hidden and fallback should be shown
     expect(wrapper.find("img").exists()).toBe(false);
     expect(wrapper.find(".card-layout__image-fallback").exists()).toBe(true);
-    expect(wrapper.find(".card-layout__image-fallback").text()).toContain("Image unavailable");
+    expect(wrapper.find(".card-layout__image-fallback").text()).toContain(
+      "Image unavailable"
+    );
   });
 
   it("sets imageLoadError data property on image error", () => {

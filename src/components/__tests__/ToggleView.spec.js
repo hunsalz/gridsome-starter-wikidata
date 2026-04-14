@@ -41,10 +41,7 @@ describe("ToggleView", () => {
     button.trigger("click");
 
     // Should emit an event with the new view type
-    expect(emitSpy).toHaveBeenCalledWith(
-      "toggleView",
-      FAVORITES
-    );
+    expect(emitSpy).toHaveBeenCalledWith("toggleView", FAVORITES);
     emitSpy.mockRestore();
   });
 });

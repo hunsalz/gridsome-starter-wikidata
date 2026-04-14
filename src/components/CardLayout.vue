@@ -15,7 +15,10 @@
         :loading="isFirstCard ? 'eager' : 'lazy'"
         @error="onImageError"
       />
-      <div v-if="!painting.cover_image || imageLoadError" class="card-layout__image-fallback">
+      <div
+        v-if="!painting.cover_image || imageLoadError"
+        class="card-layout__image-fallback"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="48"
@@ -84,7 +87,9 @@ export default {
      */
     onImageError() {
       this.imageLoadError = true;
-      console.warn(`Failed to load image for painting: ${this.painting.paintingLabel}`);
+      console.warn(
+        `Failed to load image for painting: ${this.painting.paintingLabel}`
+      );
     },
     /**
      * Returns the ADD_TAG event constant for tag cloud
