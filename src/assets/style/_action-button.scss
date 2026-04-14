@@ -19,6 +19,10 @@
   transition:
     opacity 0.2s,
     background-color 0.2s;
+  // Ensure buttons are above the card overlay link and keyboard-accessible
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
 
   // Hover state with better contrast
   &:hover {

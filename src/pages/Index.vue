@@ -91,6 +91,13 @@ import {
   sanitizeMetaContent
 } from "~/utils/security.js";
 
+// Performance & timing constants
+const IMAGE_LOAD_TIMEOUT = 3000; // ms — timeout for image load check
+const FALLBACK_RESIZE_DELAY = 1000; // ms — fallback resize check delay
+const RESIZE_DEBOUNCE = 150; // ms — ResizeObserver debounce
+const WINDOW_RESIZE_DEBOUNCE = 200; // ms — window resize listener debounce
+const FAVORITES_STORAGE_KEY = "gridsome-wikidata-favorites"; // localStorage key
+
 export default {
   components: {
     CardLayout,
@@ -197,6 +204,19 @@ export default {
     this.$eventBus.$on(TOGGLE_VIEW, this.onToggleView);
   },
   mounted() {
+    // Restore favorites from localStorage
+    if (isClient()) {
+      const saved = localStorage.getItem(FAVORITES_STORAGE_KEY);
+      if (saved) {
+        try {
+          this.favorites = JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to restore favorites from localStorage:", e);
+          this.favorites = [];
+        }
+      }
+    }
+
     // create tag cloud (moved here because $page data is available in mounted)
     if (this.$page.paintings && this.$page.paintings.edges) {
       this.$page.paintings.edges.forEach(edge => {
@@ -346,6 +366,10 @@ export default {
       } else {
         this.favorites.push(item);
       }
+      // Persist favorites to localStorage
+      if (isClient()) {
+        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(this.favorites));
+      }
     },
     /**
      * Sets the current view (dashboard or favorites)
@@ -406,16 +430,14 @@ export default {
         }
         this.resizeTimeout = setTimeout(() => {
           this.resizeAllCards();
-        }, 200); // Increased debounce for window resize
+        }, WINDOW_RESIZE_DEBOUNCE);
       };
       window.addEventListener("resize", this.handleWindowResize, {
         passive: true
       });
 
-      // Initial resize after images load
-      setTimeout(() => {
-        this.waitForImagesAndResize();
-      }, 200); // Increased delay to ensure initial paint is complete
+      // Initial resize after images load (with fallback timeout for lazy-loaded images)
+      this.waitForImagesAndResize();
     },
     /**
      * Waits for images to load, then resizes all cards

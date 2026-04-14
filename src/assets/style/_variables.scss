@@ -75,11 +75,8 @@ body {
   --tag-border-radius: calc(var(--radius) / 2); // Smaller radius for tags
 
   // ========================================================================
-  // Legacy Variables (kept for backward compatibility)
+  // Empty State Variables
   // ========================================================================
-  --card-image-height: 20vh; // Deprecated - use aspect-ratio instead
-  --card-content-padding: 3em; // Deprecated - use --card-padding instead
-  --card-margin-bottom: 1em; // Deprecated - use --grid-gap instead
   --empty-state-min-height: 400px;
   --empty-state-padding: 3em;
 }

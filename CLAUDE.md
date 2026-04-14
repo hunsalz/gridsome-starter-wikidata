@@ -19,7 +19,7 @@ npm run explore          # Open GraphQL explorer at http://localhost:8080/___exp
 npm run deploy           # Deploy to GitHub Pages (dist/ → gh-pages branch)
 ```
 
-Changes to `gridsome.config.js` require restarting the dev server (Ctrl+C, then `yarn develop`).
+Changes to `gridsome.config.js` require restarting the dev server (Ctrl+C, then `npm run develop`).
 
 ## Architecture
 
@@ -87,3 +87,36 @@ Jest with `@vue/test-utils` v1 (Vue 2 compatible). Test files live in `src/compo
 - **LCP**: preload link injected in `metaInfo` of Index.vue
 - **Web Vitals**: collected via `requestIdleCallback` in `src/utils/web-vitals.js`
 - **content-visibility: auto** on cards to skip off-screen rendering
+
+## Modernization Notes
+
+### NPM & Dependencies
+
+- **Package manager**: Migrated from Yarn to npm. All lock files are `package-lock.json`.
+- **gridsome-source-wikidata**: Requires v0.1.4+. Earlier versions have ESM/CJS compatibility issues. Version 0.1.4 includes proper CommonJS bundle at `dist/index.js`.
+- **web-vitals**: Pinned to ^4.2.4 because webpack 4 cannot parse nullish coalescing (`??`) in v5.x.
+- **sass-loader**: Pinned to ^10.5.2 because webpack 4 uses the v3 loader API (`this.getOptions`), not v5+ loader API.
+- **Jest & Vue**: The Jest config includes a `moduleNameMapper` entry that maps Vue to the full build (`vue/dist/vue.common.dev.js`) to avoid runtime-only warnings in tests.
+
+### Sass Modernization
+
+- All `@import` statements have been migrated to `@use/@forward` syntax (Sass 1.99+).
+- Global variables are imported via `@use "variables" as *;` at the top of each SCSS file.
+- Removed legacy CSS variables from `_variables.scss`: `--card-image-height`, `--card-content-padding`, `--card-margin-bottom`.
+
+### Client-Side State Persistence
+
+- Favorites list is persisted to localStorage via `FAVORITES_STORAGE_KEY = "gridsome-wikidata-favorites"` in `src/pages/Index.vue`.
+- `localStorage` is restored during component mount with error handling for corrupted data.
+- Every favorite toggle syncs immediately to storage via `JSON.stringify()`.
+
+### Event Bus Cleanup
+
+- Event listeners are now deregistered by specific handler in `beforeDestroy()` (e.g., `this.$eventBus.$off(ADD_TAG, this.onAddTag)`).
+- This prevents memory leaks when components unmount and remount.
+
+### URL Validation
+
+- URL construction uses the URL API (e.g., `new URL(...).href`) instead of string concatenation to catch malformed URLs early.
+- Path traversal protection added to `Painting.vue` template path via `.replace(/\.\./g, "")`.
+- `src/utils/security.js` provides `validateSiteUrl()`, `validatePathPrefix()`, `sanitizeUrl()`, and `sanitizeMetaContent()` helpers.
