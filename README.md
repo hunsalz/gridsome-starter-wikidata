@@ -33,7 +33,7 @@ A modern, feature-rich Gridsome starter that showcases how Gridsome and external
 ### Prerequisites
 
 - Node.js 20.18.0 or higher
-- Yarn package manager
+- npm (Node Package Manager)
 
 ### Installation
 
@@ -54,19 +54,19 @@ A modern, feature-rich Gridsome starter that showcases how Gridsome and external
 
 4. **Install dependencies**:
    ```bash
-   yarn install
+   npm install
    ```
 
 5. **Start development server**:
    ```bash
-   yarn develop
+   npm run develop
    ```
 
    Visit `http://localhost:8080` to see your site.
 
 6. **Explore GraphQL schema**:
    ```bash
-   yarn explore
+   npm run explore
    ```
 
    Opens GraphQL playground at `http://localhost:8080/___explore`
@@ -296,6 +296,27 @@ year: date (format: "YYYY")
 - `"YYYY-MM-DD"` - Full date
 - Other moment.js format strings
 
+### Image Troubleshooting
+
+If images fail to load or are unavailable:
+
+1. **Broken Image Placeholder**: Cards display an "Image unavailable" placeholder when images fail to load, preventing layout shifts and broken visual states.
+
+2. **Common Issues**:
+   - **CORS errors**: If images are hosted on a server with strict CORS policies, they may fail to load. The placeholder will be displayed gracefully.
+   - **Wikidata URL Changes**: If Wikimedia Commons URLs are restructured, update the SPARQL query in `gridsome.config.js`.
+   - **Cache Issues**: The Wikidata cache has a 7-day TTL. To clear cache and re-fetch: delete `cache/` folder and rebuild.
+
+3. **Debugging**:
+   - Check browser console for 404 errors on image URLs
+   - Verify Wikimedia Commons URLs are still valid by visiting them directly
+   - Run `npm run build` to rebuild with fresh data
+
+4. **Image Load Optimization**:
+   - First card image uses `loading="eager"` for LCP optimization
+   - Other cards use `loading="lazy"` for better page load performance
+   - Images have `fetchpriority="high"` on first card to prioritize loading
+
 ### Exploring the Schema
 
 Use Gridsome's GraphQL explorer:
@@ -315,25 +336,24 @@ This opens a GraphQL playground at `http://localhost:8080/___explore` where you 
 
 ```bash
 # Development
-yarn develop          # Start development server
-yarn build           # Build for production
-yarn explore         # Open GraphQL explorer
+npm run develop       # Start development server
+npm run build         # Build for production
+npm run explore       # Open GraphQL explorer
 
 # Testing
-yarn test            # Run tests
-yarn test:watch      # Run tests in watch mode
-yarn test:coverage   # Run tests with coverage
+npm test              # Run tests
+npm run test:watch    # Run tests in watch mode
+npm run test:coverage # Run tests with coverage
 
 # Code Quality
-yarn lint            # Run ESLint
-yarn lint:fix         # Fix ESLint errors
-yarn format           # Format code with Prettier
-yarn format:check     # Check code formatting
-yarn verify           # Run automated test checklist
-yarn check:all        # Run all checks (format, lint, test, build)
+npm run lint          # Run ESLint
+npm run lint:fix      # Fix ESLint errors
+npm run format        # Format code with Prettier
+npm run format:check  # Check code formatting
+npm run check:all     # Run all checks (format, lint, test, build)
 
 # Deployment
-yarn deploy           # Deploy to GitHub Pages
+npm run deploy        # Deploy to GitHub Pages
 ```
 
 ### Local Build Verification
