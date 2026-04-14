@@ -9,6 +9,7 @@ module.exports = {
     "node_modules/(?!(.*\\.mjs$))"
   ],
   moduleNameMapper: {
+    "^vue$": "vue/dist/vue.common.dev.js",
     "^~/(.*)$": "<rootDir>/src/$1",
     "^@/(.*)$": "<rootDir>/src/$1"
   },

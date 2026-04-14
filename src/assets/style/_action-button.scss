@@ -16,7 +16,9 @@
   // Use explicit colors instead of opacity for better accessibility
   white-space: nowrap;
   cursor: pointer;
-  transition: opacity 0.2s, background-color 0.2s;
+  transition:
+    opacity 0.2s,
+    background-color 0.2s;
 
   // Hover state with better contrast
   &:hover {

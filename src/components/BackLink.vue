@@ -1,9 +1,5 @@
 <template>
-  <g-link
-    class="back-link"
-    to="/"
-    aria-label="Go back to home page"
-  >
+  <g-link class="back-link" to="/" aria-label="Go back to home page">
     <span class="back-link__text">&larr; {{ $static.metadata.siteName }}</span>
   </g-link>
 </template>
