@@ -368,7 +368,10 @@ export default {
       }
       // Persist favorites to localStorage
       if (isClient()) {
-        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(this.favorites));
+        localStorage.setItem(
+          FAVORITES_STORAGE_KEY,
+          JSON.stringify(this.favorites)
+        );
       }
     },
     /**
@@ -416,7 +419,7 @@ export default {
           }
           this.resizeTimeout = setTimeout(() => {
             this.resizeAllCards();
-          }, 150); // Increased debounce for better performance
+          }, RESIZE_DEBOUNCE);
         }
       });
 
@@ -499,15 +502,15 @@ export default {
         } else {
           img.addEventListener("load", checkComplete, { once: true });
           img.addEventListener("error", checkComplete, { once: true });
-          // Reduced timeout for faster fallback (3s instead of 5s)
-          setTimeout(checkComplete, 3000);
+          // Fallback timeout to ensure resize happens even if image takes time
+          setTimeout(checkComplete, IMAGE_LOAD_TIMEOUT);
         }
       });
 
       // Also resize after a delay for remaining cards (non-blocking)
       setTimeout(() => {
         this.resizeAllCards();
-      }, 1000);
+      }, FALLBACK_RESIZE_DELAY);
     },
     /**
      * Resizes all cards in the masonry grid
