@@ -118,4 +118,46 @@ describe("CardLayout", () => {
 
     expect(wrapper.vm.getTags()).toEqual(["1503", "Louvre", "portrait"]);
   });
+
+  it("shows image fallback when image fails to load", async () => {
+    const wrapper = mount(CardLayout, {
+      localVue,
+      propsData: {
+        painting: mockPainting
+      },
+      stubs: {
+        TagCloud: true,
+        ActionBar: true
+      }
+    });
+
+    // Initially image should be rendered
+    expect(wrapper.find("img").exists()).toBe(true);
+
+    // Trigger image error
+    wrapper.vm.onImageError();
+    await wrapper.vm.$nextTick();
+
+    // Image should be hidden and fallback should be shown
+    expect(wrapper.find("img").exists()).toBe(false);
+    expect(wrapper.find(".card-layout__image-fallback").exists()).toBe(true);
+    expect(wrapper.find(".card-layout__image-fallback").text()).toContain("Image unavailable");
+  });
+
+  it("sets imageLoadError data property on image error", () => {
+    const wrapper = mount(CardLayout, {
+      localVue,
+      propsData: {
+        painting: mockPainting
+      },
+      stubs: {
+        TagCloud: true,
+        ActionBar: true
+      }
+    });
+
+    expect(wrapper.vm.imageLoadError).toBe(false);
+    wrapper.vm.onImageError();
+    expect(wrapper.vm.imageLoadError).toBe(true);
+  });
 });
