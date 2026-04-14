@@ -6,70 +6,83 @@
 [![GitHub forks](https://img.shields.io/github/forks/hunsalz/gridsome-starter-wikidata.svg)](https://github.com/hunsalz/gridsome-starter-wikidata/network)
 [![GitHub stars](https://img.shields.io/github/stars/hunsalz/gridsome-starter-wikidata.svg)](https://github.com/hunsalz/gridsome-starter-wikidata/stargazers)
 
-A modern, feature-rich Gridsome starter that showcases how Gridsome and external data sources (like Wikidata) can work together to create beautiful, performant static sites.
+A modern, feature-rich Gridsome starter showcasing how to build beautiful, performant static sites by integrating external data sources like [Wikidata](https://www.wikidata.org). Perfect for creating content galleries, museums, archives, and data-driven websites.
 
-## 🎯 Demo
+## Table of Contents
 
-**Live Site**: [https://hunsalz.github.io/gridsome-starter-wikidata](https://hunsalz.github.io/gridsome-starter-wikidata)
+- [Quick Links](#-quick-links)
+- [Features](#-features)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Architecture](#-architecture)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Customization](#-customization)
+- [Troubleshooting](#-troubleshooting)
+
+## 🔗 Quick Links
+
+- **Live Demo**: [https://hunsalz.github.io/gridsome-starter-wikidata](https://hunsalz.github.io/gridsome-starter-wikidata)
+- **Wikidata**: https://www.wikidata.org
+- **Gridsome Docs**: https://gridsome.org
+- **Vue.js Docs**: https://vuejs.org
 
 ## ✨ Features
 
-- 🎨 **Wikidata Integration** - Uses [Wikidata](https://www.wikidata.org) as external data source via SPARQL queries
-- 📥 **Media Downloads** - Enables downloads of external media data
-- 🏗️ **Masonry Grid Layout** - Beautiful waterfall/masonry grid display
-- 🏷️ **Tagging System** - Advanced tagging and filtering capabilities
-- ⭐ **Favorites** - Save and filter favorite items
+- 🎨 **Wikidata Integration** - Connect any Wikidata dataset via SPARQL queries
+- 📥 **Media Downloads** - Download external media data automatically
+- 🏗️ **Masonry Grid Layout** - Beautiful, responsive waterfall/masonry grid
+- 🏷️ **Tagging System** - Advanced filtering and tag-based navigation
+- ⭐ **Favorites** - Client-side favorites with localStorage persistence
 - 🌓 **Dark/Light Mode** - Theme switching with system preference detection
-- 🎨 **Modern Styling** - CSS variables, SCSS, and BEM methodology
 - 📱 **PWA Support** - Progressive Web App capabilities with service worker
-- 🚀 **CI/CD Pipeline** - GitHub Actions for automated builds and deployment
-- 🧪 **Testing** - Jest + Vue Test Utils for component testing
-- ♿ **Accessibility** - ARIA labels and semantic HTML
-- 📊 **Web Vitals** - Core Web Vitals tracking
-- 🔒 **Security Headers** - Production-ready security headers
+- 🚀 **CI/CD Pipeline** - GitHub Actions for automated builds and GitHub Pages deployment
+- 🧪 **Testing** - Jest + Vue Test Utils with component tests
+- ♿ **Accessibility** - ARIA labels, semantic HTML, and accessibility best practices
+- 📊 **Web Vitals** - Core Web Vitals tracking and monitoring
+- 🔒 **Security** - CSP headers, URL validation, and sanitization
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 20.18.0 or higher
-- npm (Node Package Manager)
+- **Node.js** 20.18.0 or higher
+- **npm** (Node Package Manager)
 
 ### Installation
 
-1. **Install Gridsome CLI** (if not already installed):
+1. **Install Gridsome CLI** (optional):
    ```bash
    npm install --global @gridsome/cli
    ```
 
-2. **Create a new project**:
+2. **Clone this repository**:
    ```bash
-   gridsome create my-gridsome-site https://github.com/hunsalz/gridsome-starter-wikidata.git
+   git clone https://github.com/hunsalz/gridsome-starter-wikidata.git my-site
+   cd my-site
    ```
 
-3. **Navigate to project directory**:
+   Or use Gridsome to create from this starter:
    ```bash
-   cd my-gridsome-site
+   gridsome create my-site https://github.com/hunsalz/gridsome-starter-wikidata.git
    ```
 
-4. **Install dependencies**:
+3. **Install dependencies**:
    ```bash
    npm install
    ```
 
-5. **Start development server**:
+4. **Start the development server**:
    ```bash
    npm run develop
    ```
-
    Visit `http://localhost:8080` to see your site.
 
-6. **Explore GraphQL schema**:
+5. **Explore the GraphQL schema** (optional):
    ```bash
    npm run explore
    ```
-
-   Opens GraphQL playground at `http://localhost:8080/___explore`
+   Opens a GraphQL playground at `http://localhost:8080/___explore`
 
 ## 📁 Project Structure
 
@@ -77,404 +90,362 @@ A modern, feature-rich Gridsome starter that showcases how Gridsome and external
 gridsome-starter-wikidata/
 ├── src/
 │   ├── assets/
-│   │   ├── images/          # Image assets
-│   │   └── style/           # SCSS stylesheets
-│   │       ├── _variables.scss    # CSS variables
-│   │       ├── _base.scss         # Base styles
-│   │       └── index.scss         # Main stylesheet
-│   ├── components/          # Reusable Vue components
-│   │   ├── ActionBar.vue    # Favorite, link, download actions
-│   │   ├── CardLayout.vue   # Painting card component
-│   │   ├── TagCloud.vue     # Tag filtering component
-│   │   ├── ToggleTheme.vue  # Dark/light theme toggle
-│   │   ├── ToggleView.vue   # Dashboard/favorites view toggle
-│   │   ├── ErrorBoundary.vue # Error handling component
-│   │   └── __tests__/       # Component tests
-│   │   └── js/              # JavaScript utilities
-│   │       ├── Event.js     # Event bus constants
-│   │       └── View.js      # View type constants
+│   │   ├── images/                 # Image assets
+│   │   └── style/
+│   │       ├── _variables.scss     # CSS variables and theme
+│   │       ├── _base.scss          # Base styles
+│   │       └── index.scss          # Main stylesheet
+│   ├── components/
+│   │   ├── ActionBar.vue           # Favorite, link, download buttons
+│   │   ├── CardLayout.vue          # Painting card component
+│   │   ├── TagCloud.vue            # Tag filtering UI
+│   │   ├── ToggleTheme.vue         # Dark/light theme toggle
+│   │   ├── ToggleView.vue          # View mode toggle
+│   │   ├── ErrorBoundary.vue       # Error handling
+│   │   ├── __tests__/              # Component tests
+│   │   └── js/
+│   │       ├── Event.js            # Event bus constants
+│   │       └── View.js             # View type constants
 │   ├── layouts/
-│   │   └── Default.vue      # Main layout wrapper
+│   │   └── Default.vue             # Main layout (header, footer, slots)
 │   ├── pages/
-│   │   └── Index.vue        # Home page with masonry grid
+│   │   └── Index.vue               # Home page with masonry grid
 │   ├── templates/
-│   │   └── Painting.vue    # Individual painting page template
+│   │   └── Painting.vue            # Individual item detail page
 │   ├── utils/
-│   │   └── web-vitals.js    # Web Vitals tracking
-│   ├── index.html           # HTML template
-│   └── main.js              # Application entry point
-├── static/                  # Static files served as-is
+│   │   ├── security.js             # URL validation, sanitization
+│   │   └── web-vitals.js           # Core Web Vitals tracking
+│   ├── index.html                  # HTML template
+│   └── main.js                     # Vue app entry point
+├── static/                         # Static files (robots.txt, etc.)
 ├── scripts/
-│   └── test-checklist.js   # Automated testing checklist
-├── gridsome.config.js       # Gridsome configuration
-└── gridsome.server.js       # Server-side API hooks
+│   └── test-checklist.js           # Automated testing checklist
+├── gridsome.config.js              # Gridsome config, SPARQL query, plugins
+├── gridsome.server.js              # Server-side hooks (if needed)
+├── CLAUDE.md                       # Architecture guide (Claude Code)
+└── package.json                    # Dependencies and scripts
 ```
 
 ## 🏗️ Architecture
 
 ### Technology Stack
 
-- **Framework**: Gridsome 0.7.23
-- **UI Library**: Vue.js 2.x
-- **Styling**: SCSS with CSS Variables
-- **Data Source**: Wikidata (SPARQL queries)
-- **Build Tool**: Webpack (via Gridsome)
-- **Testing**: Jest + Vue Test Utils
-- **Linting**: ESLint 9 with flat config
-- **Formatting**: Prettier 3
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | Gridsome 0.7.23 (Vue.js 2.x) |
+| **Styling** | SCSS + CSS Custom Properties |
+| **Data Source** | Wikidata (SPARQL queries) |
+| **Build Tool** | Webpack (via Gridsome) |
+| **Testing** | Jest + Vue Test Utils |
+| **Linting** | ESLint 9 (flat config) |
+| **Formatting** | Prettier 3 |
 
 ### Data Flow
 
-1. **Data Source (Wikidata)**
-   - Source: Wikidata SPARQL endpoint
-   - Query: Defined in `gridsome.config.js`
-   - Cache: 24-hour TTL
-   - Type: Painting (Leonardo da Vinci paintings)
+```
+Wikidata SPARQL endpoint
+    ↓
+gridsome-source-wikidata plugin (7-day cache)
+    ↓
+GraphQL schema auto-generated (allPainting, painting)
+    ↓
+pages/Index.vue (masonry grid) & templates/Painting.vue (detail)
+    ↓
+Static HTML + assets in dist/
+```
 
-2. **GraphQL Layer**
-   - Gridsome automatically creates a GraphQL schema from the data source
-   - `allPainting` - Query all paintings
-   - `painting(id: ID!)` - Query single painting
+**Key Points:**
+- Data is fetched at **build time**, not runtime
+- SPARQL query defined in `gridsome.config.js`
+- Images automatically downloaded and optimized
+- GraphQL layer enables flexible queries
 
-3. **Components**
-   - Pages: Use `<page-query>` to fetch data
-   - Templates: Use `<page-query>` with parameters
-   - Components: Receive data via props
+### Component Communication
 
-### Component Architecture
+Uses Vue's **event bus pattern** (not Vuex) for inter-component state:
 
-#### Layout System
+| Event | Purpose |
+|-------|---------|
+| `ADD_TAG` / `REMOVE_TAG` | Filtering by tags |
+| `TOGGLE_FAVORITE` | Mark/unmark favorites |
+| `TOGGLE_VIEW` | Switch between Dashboard/Favorites views |
+
+Favorites are persisted to `localStorage` with error handling for corrupted data.
+
+### Layout Architecture
 
 ```
 Default.vue (Layout)
 ├── Header (fixed)
-│   ├── BackLink (conditional)
-│   ├── ToggleView (conditional)
+│   ├── BackLink (detail page only)
+│   ├── ToggleView (home page only)
 │   └── ToggleTheme
-├── Content (slot)
-│   └── Page/Template content
+├── <slot> (Page/Template content)
 └── Footer
 ```
 
-#### State Management
+### Styling System
 
-Uses Vue's event bus pattern for component communication:
-- `ADD_TAG` - Add tag to filter
-- `REMOVE_TAG` - Remove tag from filter
-- `TOGGLE_FAVORITE` - Toggle favorite status
-- `TOGGLE_VIEW` - Switch between dashboard/favorites
-
-### Styling Architecture
-
-- **CSS Variables**: Defined in `_variables.scss` for theme colors, spacing, and layout dimensions
-- **BEM Methodology**: All CSS classes follow BEM naming conventions
-- **Responsive Design**: Mobile-first approach with breakpoints in media queries
+- **CSS Variables**: Theme colors, spacing, sizes defined in `_variables.scss`
+- **BEM Methodology**: All classes follow Block-Element-Modifier convention
+- **Responsive**: Mobile-first design with media queries
+- **Dark Mode**: Toggled via CSS class on `<html>`
 
 ### Performance Optimizations
 
-1. **Image Optimization**
-   - Gridsome's `g-image` component
-   - Lazy loading with `loading="lazy"`
-   - Responsive image sizes
-
-2. **Code Splitting**
-   - Automatic code splitting by Gridsome
-   - Route-based splitting
-
-3. **Debouncing**
-   - Resize handlers debounced (250ms)
-   - Prevents excessive recalculations
-
-4. **Caching**
-   - Wikidata data cached (24h TTL)
-   - Service worker for PWA caching
-
-## 📊 GraphQL Schema
-
-The schema is automatically generated by Gridsome based on the data sources configured in `gridsome.config.js`.
-
-### Metadata Query
-
-```graphql
-query {
-  metadata {
-    siteName
-    siteDescription
-  }
-}
-```
-
-**Fields:**
-- `siteName` (String): The site name
-- `siteDescription` (String): The site description
-
-### Paintings Query
-
-#### Query All Paintings
-
-```graphql
-query {
-  paintings: allPainting(sortBy: "date", order: ASC) {
-    edges {
-      node {
-        id
-        path
-        item
-        title: paintingLabel
-        image
-        cover_image: image (width: 770, height: 380, blur: 10)
-        year: date (format: "YYYY")
-        location: locationLabel
-        materials
-        depicts
-      }
-    }
-  }
-}
-```
-
-**Fields:**
-- `id` (ID): Unique identifier
-- `path` (String): URL path to the painting page
-- `item` (String): Wikidata item ID
-- `title` (String): Painting title (from `paintingLabel`)
-- `image` (String): Full-size image URL
-- `cover_image` (String): Optimized cover image URL
-- `year` (String): Year created (formatted as YYYY)
-- `location` (String): Collection/location name
-- `materials` (String): Materials used (comma-separated)
-- `depicts` (String): Subjects depicted (comma-separated)
-
-**Sort Options:**
-- `sortBy: "date"` - Sort by creation date
-- `order: ASC | DESC` - Sort order
-
-#### Query Single Painting
-
-```graphql
-query painting ($id: ID!) {
-  painting: painting (id: $id) {
-    id
-    path
-    title: paintingLabel
-    image
-    year: date (format: "YYYY")
-    location: locationLabel
-    materials
-    depicts
-  }
-}
-```
-
-**Parameters:**
-- `$id` (ID!): The painting ID (required)
-
-### Image Transformations
-
-Gridsome's `g-image` component supports image transformations:
-
-```graphql
-cover_image: image (width: 770, height: 380, blur: 10)
-```
-
-**Available Transformations:**
-- `width`: Set image width
-- `height`: Set image height
-- `blur`: Apply blur effect (0-20)
-- `quality`: Image quality (0-100)
-
-### Date Formatting
-
-Dates can be formatted using the `format` parameter:
-
-```graphql
-year: date (format: "YYYY")
-```
-
-**Format Options:**
-- `"YYYY"` - Full year (e.g., "1503")
-- `"YYYY-MM-DD"` - Full date
-- Other moment.js format strings
-
-### Image Troubleshooting
-
-If images fail to load or are unavailable:
-
-1. **Broken Image Placeholder**: Cards display an "Image unavailable" placeholder when images fail to load, preventing layout shifts and broken visual states.
-
-2. **Common Issues**:
-   - **CORS errors**: If images are hosted on a server with strict CORS policies, they may fail to load. The placeholder will be displayed gracefully.
-   - **Wikidata URL Changes**: If Wikimedia Commons URLs are restructured, update the SPARQL query in `gridsome.config.js`.
-   - **Cache Issues**: The Wikidata cache has a 7-day TTL. To clear cache and re-fetch: delete `cache/` folder and rebuild.
-
-3. **Debugging**:
-   - Check browser console for 404 errors on image URLs
-   - Verify Wikimedia Commons URLs are still valid by visiting them directly
-   - Run `npm run build` to rebuild with fresh data
-
-4. **Image Load Optimization**:
-   - First card image uses `loading="eager"` for LCP optimization
-   - Other cards use `loading="lazy"` for better page load performance
-   - Images have `fetchpriority="high"` on first card to prioritize loading
-
-### Exploring the Schema
-
-Use Gridsome's GraphQL explorer:
-
-```bash
-npm run explore
-```
-
-This opens a GraphQL playground at `http://localhost:8080/___explore` where you can:
-- Browse the schema
-- Test queries
-- See available fields and types
+| Technique | Implementation |
+|-----------|----------------|
+| **Image Optimization** | Gridsome `<g-image>` with lazy loading and responsive srcsets |
+| **Code Splitting** | Automatic route-based splitting by Gridsome |
+| **Debouncing** | Resize handlers debounced (150ms) to prevent thrashing |
+| **Caching** | 7-day Wikidata cache + service worker for PWA |
+| **LCP Optimization** | First card uses `loading="eager"` and `fetchpriority="high"` |
+| **Content Visibility** | Cards use `content-visibility: auto` to skip off-screen rendering |
 
 ## 🛠️ Development
 
-### Available Scripts
+### Available Commands
 
 ```bash
 # Development
-npm run develop       # Start development server
+npm run develop       # Start dev server (http://localhost:8080)
 npm run build         # Build for production
 npm run explore       # Open GraphQL explorer
 
-# Testing
-npm test              # Run tests
+# Testing & Quality
+npm test              # Run unit tests (Jest)
 npm run test:watch    # Run tests in watch mode
-npm run test:coverage # Run tests with coverage
-
-# Code Quality
-npm run lint          # Run ESLint
-npm run lint:fix      # Fix ESLint errors
+npm run test:coverage # Generate coverage report
+npm run lint          # Check for linting errors
+npm run lint:fix      # Auto-fix linting errors
 npm run format        # Format code with Prettier
-npm run format:check  # Check code formatting
+npm run format:check  # Check formatting (no changes)
 npm run check:all     # Run all checks (format, lint, test, build)
 
 # Deployment
 npm run deploy        # Deploy to GitHub Pages
+npm run verify        # Run automated test checklist
+```
+
+### Environment Variables
+
+Create a `.env` file in the root directory (see `.env.example`):
+
+```env
+SITE_URL=http://localhost:8080      # Base URL for sitemap and PWA
+PATH_PREFIX=                         # Optional path prefix (e.g., /my-subpath)
 ```
 
 ### Local Build Verification
 
-To verify your local build, you can mount your `dist` folder into an nginx container:
+Test your build locally with Docker:
 
 ```bash
-docker run --rm --name nginx-stage -p 8080:80 \
-  -v ${PWD}/dist/:/usr/share/nginx/html/:ro \
-  -d nginx:latest
+npm run build
+
+# For root path:
+docker run --rm -p 8080:80 \
+  -v ${PWD}/dist:/usr/share/nginx/html:ro \
+  nginx:latest
+
+# For path prefix (e.g., /gridsome-starter-wikidata):
+docker run --rm -p 8080:80 \
+  -v ${PWD}/dist:/usr/share/nginx/html/gridsome-starter-wikidata:ro \
+  nginx:latest
 ```
 
-Visit [http://127.0.0.1:8080](http://localhost:8080)
-
-For projects with a path prefix:
-
-```bash
-docker run --rm --name nginx-stage -p 8080:80 \
-  -v ${PWD}/dist/:/usr/share/nginx/html/gridsome-starter-wikidata:ro \
-  -d nginx:latest
-```
-
-Visit [http://127.0.0.1:8080/gridsome-starter-wikidata](http://localhost:8080/gridsome-starter-wikidata)
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-SITE_URL=http://localhost:8080
-PATH_PREFIX=
-```
-
-See `.env.example` for reference.
-
-## 🧪 Testing
-
-The project uses Jest and Vue Test Utils for component testing.
-
-### Running Tests
-
-```bash
-npm test               # Run all tests
-npm run test:watch     # Run tests in watch mode
-npm run test:coverage  # Generate coverage report
-```
-
-### Test Structure
-
-Tests are located in `src/components/__tests__/`:
-- `ActionBar.spec.js` - Tests for ActionBar component
-- `CardLayout.spec.js` - Tests for CardLayout component
-- `ErrorBoundary.spec.js` - Tests for ErrorBoundary component
-
-### Automated Checklist
-
-Run the automated test checklist:
-
-```bash
-npm run verify
-```
-
-This verifies:
-- ✅ Build completes successfully
-- ✅ Tests pass
-- ✅ ESLint passes (no errors)
-- ✅ Prettier formatting is correct
-- ✅ Security headers configured
-- ✅ Package.json metadata is correct
-- ✅ Required documentation files exist
-- ✅ Test files exist
-- ✅ Accessibility attributes present
-- ✅ Alt text is dynamic
+Visit `http://localhost:8080` and verify all links and assets work correctly.
 
 ## 🚀 Deployment
 
 ### Build Process
 
-1. **Data Collection**: Fetch from Wikidata
-2. **GraphQL Schema**: Generate from data
-3. **Page Generation**: Create static pages
-4. **Asset Processing**: Optimize images, compile SCSS
-5. **PWA Assets**: Generate manifest and service worker
+1. **Data Collection** - Fetch from Wikidata via SPARQL query
+2. **GraphQL Schema** - Gridsome auto-generates from data
+3. **Page Generation** - Create static HTML pages
+4. **Asset Processing** - Optimize images, compile SCSS
+5. **PWA Assets** - Generate manifest and service worker
 
-### GitHub Actions
+### GitHub Pages
 
-The project includes GitHub Actions for CI/CD:
+The project includes GitHub Actions for automatic deployment:
 
-- **Automatic Builds**: Runs on every push
-- **Skip CI**: Add `skip ci` to commit message to skip a CI run
-- **GitHub Pages**: Deploy to GitHub Pages (requires `GH_TOKEN` secret)
+- **Automatic Builds**: On every push
+- **Skip CI**: Add `skip ci` to commit message to skip a build
+- **Deployment**: Automatic to GitHub Pages (requires `GH_TOKEN` secret)
 
-#### Setting up GitHub Pages Deployment
+**Setup Instructions:**
 
-1. Create a [Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token) with `repo` scope
-2. Add it as a repository secret named `GH_TOKEN`:
-   - Go to Settings → Secrets → Actions
+1. Create a Personal Access Token on GitHub:
+   - Visit https://github.com/settings/tokens
+   - Click "Generate new token (classic)"
+   - Select `repo` scope
+   - Copy the token
+
+2. Add as repository secret:
+   - Go to Settings → Secrets and variables → Actions
    - Click "New repository secret"
-   - Name: `GH_TOKEN`
-   - Value: Your token
+   - **Name**: `GH_TOKEN`
+   - **Value**: Paste your token
 
-### Static Hosting
+3. Update `.github/workflows/nodejs.yml` with your GitHub Pages URL:
+   - Change `SITE_URL: https://hunsalz.github.io` to your domain
 
-The `dist/` folder contains static files that can be deployed to:
-- GitHub Pages
-- Netlify
-- Vercel
-- Any static hosting service
+### Static Hosting Alternatives
+
+The `dist/` folder contains production-ready static files. Deploy to:
+- **Netlify** - Drag & drop or connect to Git
+- **Vercel** - Git-based deployment
+- **AWS S3** - Static hosting
+- **Any CDN** - Supports static files
 
 ### Security Headers
 
-Production deployments include security headers configured in `netlify.toml`:
-- `X-Frame-Options: DENY`
-- `X-XSS-Protection: 1; mode=block`
-- `X-Content-Type-Options: nosniff`
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy: geolocation=(), microphone=(), camera=()`
+Production deployments include security headers (configured in `netlify.toml`):
 
-## 📝 Contributing
+```
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: geolocation=(), microphone=(), camera=()
+```
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## ⚙️ Customization
+
+### Change the Data Source
+
+The project currently displays Leonardo da Vinci paintings. To adapt it for other data:
+
+1. **Edit SPARQL Query** in `gridsome.config.js`:
+   ```javascript
+   // Find the gridsome-source-wikidata plugin config
+   // Update the SPARQL query to fetch your data
+   ```
+
+2. **Update Data Field Mappings**:
+   - Modify field names in `gridsome.config.js`
+   - Update GraphQL queries in `Index.vue` and `Painting.vue`
+
+3. **Adjust Component Data Bindings**:
+   - Update `CardLayout.vue` to display your fields
+   - Update `Painting.vue` detail page template
+
+4. **Rebuild**:
+   ```bash
+   rm -rf cache/     # Clear Wikidata cache
+   npm run develop
+   ```
+
+### Customize Styling
+
+1. **Colors & Spacing**: Edit `src/assets/style/_variables.scss`
+2. **Base Styles**: Edit `src/assets/style/_base.scss`
+3. **Dark Mode**: Add theme variants in `_variables.scss`
+
+### Add New Components
+
+1. Create component in `src/components/MyComponent.vue`
+2. Register globally in `src/main.js` or use locally
+3. Add tests in `src/components/__tests__/MyComponent.spec.js`
+4. Verify with `npm run check:all`
+
+### Modify the Schema
+
+Edit the SPARQL query in `gridsome.config.js` to add/remove fields. Gridsome will automatically regenerate the GraphQL schema on rebuild.
+
+## 🧪 Testing
+
+### Running Tests
+
+```bash
+npm test               # Run all tests once
+npm run test:watch     # Run in watch mode during development
+npm run test:coverage  # Generate coverage report
+```
+
+### Test Files
+
+Located in `src/components/__tests__/`:
+- `ActionBar.spec.js` - Action button functionality
+- `CardLayout.spec.js` - Card rendering and props
+- `ErrorBoundary.spec.js` - Error handling
+
+### Automated Checklist
+
+Run comprehensive checks:
+
+```bash
+npm run verify
+```
+
+Verifies:
+- ✅ Build completes
+- ✅ Tests pass
+- ✅ Linting passes
+- ✅ Code formatting is correct
+- ✅ Security headers configured
+- ✅ Package.json metadata correct
+- ✅ Accessibility attributes present
+
+## 🐛 Troubleshooting
+
+### Images Not Loading
+
+**Issue**: "Image unavailable" placeholder appears
+
+**Solutions**:
+1. **CORS errors**: Verify the image source allows cross-origin requests
+2. **Broken URLs**: Check Wikimedia Commons URLs are still valid
+3. **Cache stale**: Clear and rebuild:
+   ```bash
+   rm -rf cache/
+   npm run build
+   ```
+
+### Build Fails with Rate Limiting
+
+**Issue**: Wikidata SPARQL endpoint returns 429 errors
+
+**Solution**: The GitHub Actions workflow includes auto-retry with exponential backoff. For local development:
+- Run during off-peak hours
+- Split SPARQL query into smaller batches
+
+### Styling Not Applied
+
+**Issue**: CSS variables not working
+
+**Solutions**:
+1. Verify SCSS imports: `@use "variables" as *;`
+2. Check CSS variables syntax: `var(--my-var, fallback)`
+3. For dark mode: Ensure class is on `<html>` element
+
+### Performance Issues
+
+**Issue**: Slow builds or page load
+
+**Solutions**:
+1. **Reduce image count** in SPARQL query
+2. **Increase Wikidata cache TTL** in `gridsome.config.js`
+3. **Profile with DevTools** to identify bottlenecks
+4. **Check network throttling** isn't enabled in browser
+
+## 📚 Additional Resources
+
+- **CLAUDE.md** - Architecture guide and Claude Code instructions
+- **SECURITY.md** - Vulnerability assessment and security guidelines
+- [Gridsome Documentation](https://gridsome.org)
+- [Wikidata Query Service](https://query.wikidata.org)
+- [Vue.js 2 Guide](https://vuejs.org/v2/guide/)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit issues and pull requests. Areas for contribution:
+- New features or components
+- Documentation improvements
+- Bug fixes
+- Performance optimizations
+- Additional test coverage
 
 ## 📄 License
 
@@ -482,10 +453,13 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- [Gridsome](https://gridsome.org/) - The static site generator
-- [Wikidata](https://www.wikidata.org/) - The free knowledge base
+- [Gridsome](https://gridsome.org/) - The static site generator for Vue.js
+- [Wikidata](https://www.wikidata.org/) - Free knowledge base that can be read and edited by anyone
 - [Vue.js](https://vuejs.org/) - The progressive JavaScript framework
+- [IONOS](https://www.ionos.com/) - Deployment infrastructure
 
 ---
 
-Made with ❤️ using Gridsome
+**Made with ❤️ using Gridsome**
+
+Questions? Open an issue on [GitHub](https://github.com/hunsalz/gridsome-starter-wikidata/issues)
