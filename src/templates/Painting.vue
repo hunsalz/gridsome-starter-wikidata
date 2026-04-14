@@ -21,7 +21,7 @@
                 ? `${$page.painting.paintingLabel} by Leonardo da Vinci`
                 : 'Painting by Leonardo da Vinci'
             "
-            loading="lazy"
+            loading="eager"
             class="painting__image"
           />
           <div v-if="$page.painting.year">Year: {{ $page.painting.year }}</div>

@@ -106,7 +106,8 @@ export default {
       }
       // Sanitize item ID to prevent path traversal or injection
       const sanitizedItem = this.paintingItem.replace(/[^A-Z0-9]/gi, "");
-      return "https://www.wikidata.org/wiki/" + sanitizedItem;
+      const url = new URL("https://www.wikidata.org/wiki/" + sanitizedItem);
+      return url.href;
     }
   },
   methods: {

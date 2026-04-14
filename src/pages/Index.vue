@@ -141,9 +141,10 @@ export default {
       }
     }
     // Preconnect to Wikidata for faster external link loading
+    const wikidataUrl = new URL("https://www.wikidata.org").href;
     linkTags.push({
       rel: "preconnect",
-      href: "https://www.wikidata.org",
+      href: wikidataUrl,
       crossorigin: "anonymous"
     });
 
@@ -239,8 +240,11 @@ export default {
     }
   },
   beforeDestroy() {
-    // unsubscribe from all event bus listeners at once
-    this.$eventBus.$off();
+    // Unsubscribe from component-specific event bus listeners (not global)
+    this.$eventBus.$off(ADD_TAG, this.onAddTag);
+    this.$eventBus.$off(REMOVE_TAG, this.onRemoveTag);
+    this.$eventBus.$off(TOGGLE_FAVORITE, this.onChangeFavorite);
+    this.$eventBus.$off(TOGGLE_VIEW, this.onToggleView);
     // Disconnect ResizeObserver
     if (isClient() && this.masonryObserver) {
       this.masonryObserver.disconnect();
