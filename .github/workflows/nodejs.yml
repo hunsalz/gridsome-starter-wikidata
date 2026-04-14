@@ -3,6 +3,8 @@ name: Gridsome CI-CD
 on: [push]
 
 env:
+  # Node.js 24 environment for GitHub Actions
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   # workaround until Actions supports something like exists()
   HAS_GH_TOKEN: ${{ secrets.GH_TOKEN }}
   # GH PAGES
