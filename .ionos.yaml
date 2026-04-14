@@ -7,10 +7,10 @@ setup:
     node-version: v12.22.3
 prepare:
   name: Prepare project environment
-  command: npm install yarn | yarn install
+  command: npm install
 build:
   name: Build project
-  command: yarn build
+  command: npm run build
   environment:
     SITE_URL: ${{ steps.project.outputs.site-url }}
     CI: true

@@ -322,7 +322,7 @@ If images fail to load or are unavailable:
 Use Gridsome's GraphQL explorer:
 
 ```bash
-yarn explore
+npm run explore
 ```
 
 This opens a GraphQL playground at `http://localhost:8080/___explore` where you can:
@@ -396,9 +396,9 @@ The project uses Jest and Vue Test Utils for component testing.
 ### Running Tests
 
 ```bash
-yarn test              # Run all tests
-yarn test:watch        # Run tests in watch mode
-yarn test:coverage     # Generate coverage report
+npm test               # Run all tests
+npm run test:watch     # Run tests in watch mode
+npm run test:coverage  # Generate coverage report
 ```
 
 ### Test Structure
@@ -413,7 +413,7 @@ Tests are located in `src/components/__tests__/`:
 Run the automated test checklist:
 
 ```bash
-yarn verify
+npm run verify
 ```
 
 This verifies:

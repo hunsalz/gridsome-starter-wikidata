@@ -53,7 +53,7 @@ console.log('='.repeat(50));
 // 1. Verify build works
 check('Build completes successfully', () => {
   try {
-    execSync('yarn build', { stdio: 'pipe', timeout: 120000 });
+    execSync('npm run build', { stdio: 'pipe', timeout: 120000 });
   } catch (error) {
     throw new Error('Build failed');
   }
@@ -62,7 +62,7 @@ check('Build completes successfully', () => {
 // 2. Verify tests pass
 check('Tests pass', () => {
   try {
-    execSync('yarn test', { stdio: 'pipe', timeout: 30000 });
+    execSync('npm test', { stdio: 'pipe', timeout: 30000 });
   } catch (error) {
     throw new Error('Tests failed');
   }
@@ -71,7 +71,7 @@ check('Tests pass', () => {
 // 3. Verify ESLint passes
 check('ESLint passes (no errors)', () => {
   try {
-    const result = execSync('yarn eslint src/ --max-warnings=0', { stdio: 'pipe', encoding: 'utf8' });
+    const result = execSync('npm run lint -- --max-warnings=0', { stdio: 'pipe', encoding: 'utf8' });
     // If there's any output, it means there are errors/warnings
     if (result && result.trim().length > 0) {
       throw new Error('ESLint found errors or warnings');
@@ -96,7 +96,7 @@ check('ESLint passes (no errors)', () => {
 // 4. Verify Prettier formatting
 check('Prettier formatting is correct', () => {
   try {
-    execSync('yarn format:check', { stdio: 'pipe' });
+    execSync('npm run format:check', { stdio: 'pipe' });
   } catch (error) {
     throw new Error('Code is not properly formatted');
   }

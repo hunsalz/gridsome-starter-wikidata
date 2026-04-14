@@ -35,7 +35,7 @@ As of the latest audit, there are **51 vulnerabilities** detected:
 
 **Development Risk: MODERATE to HIGH**
 - Vulnerabilities in build tools could potentially be exploited during development
-- Developers should be cautious when running `yarn develop` on untrusted networks
+- Developers should be cautious when running `npm run develop` on untrusted networks
 - Consider using a firewall or VPN when developing
 - Don't expose the development server to public networks
 
@@ -66,6 +66,7 @@ As of the latest audit, there are **51 vulnerabilities** detected:
    - Monitor for security advisories
    - Consider using a separate development environment
    - Don't expose the development server (default: `localhost:8080`)
+   - Run `npm run develop` instead of exposing the dev server
 
 3. **For CI/CD**:
    - GitHub Actions runs in isolated containers
@@ -80,8 +81,8 @@ As of the latest audit, there are **51 vulnerabilities** detected:
 ### Monitoring
 
 **Regular Checks:**
-- Run `yarn audit` regularly to check for new vulnerabilities
-- Run `yarn audit --summary` for a quick overview
+- Run `npm audit` regularly to check for new vulnerabilities
+- Run `npm audit --summary` for a quick overview
 - Monitor GitHub Security Advisories
 - Review Dependabot alerts (if enabled)
 - Check for updates to Gridsome (though unlikely)
@@ -101,5 +102,5 @@ As of the latest audit, there are **51 vulnerabilities** detected:
 **Last Updated**: 2024-12-13  
 **Audit Status**: 51 vulnerabilities detected (3 Critical, 21 High, 25 Moderate, 2 Low)  
 **Risk Level**: LOW (Production) | MODERATE-HIGH (Development)  
-**Next Audit**: Run `yarn audit` after dependency updates
+**Next Audit**: Run `npm audit` after dependency updates
 
